@@ -114,3 +114,7 @@ std::queue<PCB*>* PCB::getReadyProccesses() {
 	
 	return &readyQueue;
 }
+void PCB::sortQueue() {
+
+
+}

@@ -23,8 +23,7 @@ protected:
 	int registryD;
 	State state;
 
-	static std::queue<PCB*> readyQueue; //Real Time processes
-
+	
 
 	std::vector<std::string> openedFilesList;
 
@@ -34,14 +33,18 @@ protected:
 	//static void sortMapByPriority();
 	static void addToReadyQueue(PCB* pcb);
 
-	static std::map<std::string, PCB*> processesMap;
+	
 	//memoryPointer 
+
+	void sortQueue();
 
 public:
 	PCB() {};
 	PCB(std::string _pid, int _processAddress, int _priority, State _state);
 	~PCB() {};
 
+	static std::queue<PCB*> readyQueue; //Real Time processes
+	static std::map<std::string, PCB*> processesMap;
 
 	static std::queue<PCB*>* getReadyProccesses();
 	bool createProcess(std::string pid, int processAddress, int priority, State state);
