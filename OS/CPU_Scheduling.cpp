@@ -6,16 +6,16 @@
 CPU_Scheduling::CPU_Scheduling() {}
 void CPU_Scheduling::increasePriority() {
 
-	std::priority_queue < PCB*, std::vector<PCB*>> tempQueue = recivedQueue;
-	PCB* tmp = this->recivedQueue.top();
+	std::queue <PCB*>* tempQueue = recivedQueue;
+	PCB* tmp = this->recivedQueue->front();
 	readyQueue.pop();
 
-	while (!readyQueue.top()) {
+	while (!readyQueue.front()) {
 		readyQueue.pop();
 	}
 
-	while (!tempQueue.empty()) {
-		PCB* tempPCB = tempQueue.top();
+	while (!tempQueue->empty()) {
+		PCB* tempPCB = tempQueue->front();
 
 		if (tempPCB->getPriority() < 12) {
 			int tmp = tempPCB->getPriority();
@@ -27,7 +27,7 @@ void CPU_Scheduling::increasePriority() {
 		}
 
 		readyQueue.push(tempPCB);
-		tempQueue.pop();
+		tempQueue->pop();
 	}
 }
 void CPU_Scheduling::changeState(PCB* pcb) {
@@ -36,7 +36,7 @@ void CPU_Scheduling::changeState(PCB* pcb) {
 void CPU_Scheduling::addToTerminatedVec(PCB* pcb) {
 	this->addToTerminatedVec(pcb);
 }
-std::priority_queue < PCB*, std::vector<PCB*>> CPU_Scheduling::getProcesses() {
+std::queue<PCB*>* CPU_Scheduling::getProcesses() {
 
 	return this->recivedQueue = getReadyProccesses();
 }
@@ -57,25 +57,18 @@ void CPU_Scheduling::running() {
 		while (!readyQueue.empty()) {
 			for (int i = 0; i < 5; i++) {
 
-				if (commandCounter == readyQueue.top()->getCommandCounter()) {
+				if (commandCounter == readyQueue.front()->getCommandCounter()) {
 					this->commandCounter = 0;
 					break;
 				}
 
-				std::cout << readyQueue.top()->getPid() << " Priority: " << readyQueue.top()->getPriority();
+				std::cout << readyQueue.front()->getPid() << " Priority: " << readyQueue.front()->getPriority();
 
 				increasePriority();
 				commandCounter++;
 			}
 			std::cout << std::endl;
-
 		}
-
-
-
-
-
-
 	}
 
 

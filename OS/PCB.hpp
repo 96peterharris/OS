@@ -21,33 +21,9 @@ protected:
 	int registryB;
 	int registryC;
 	int registryD;
-
-
-
 	State state;
 
-
-
-	class Compare
-	{
-	public:
-		bool operator() (PCB* p1, PCB* p2)
-		{
-			if (p1->priority > p2->priority) {
-				return true;
-			}
-			else {
-				false;
-			}
-		}
-	};
-
-
-
-
-
-
-	static std::priority_queue < PCB*, std::vector<PCB*>, Compare> readyQueue; //Real Time processes
+	static std::queue<PCB*> readyQueue; //Real Time processes
 
 
 	std::vector<std::string> openedFilesList;
@@ -58,16 +34,6 @@ protected:
 	//static void sortMapByPriority();
 	static void addToReadyQueue(PCB* pcb);
 
-	//typedef std::function<bool(std::pair<std::string, PCB*>, std::pair<std::string, PCB*>)> Comparator;
-
-	/*lass MapComparer {
-
-		Comparator compFunctor = [](std::pair<std::string, PCB*> elem1, std::pair<std::string, PCB*> elem2)
-		{
-			return elem1.second->priority < elem2.second->priority;
-		};
-	};*/
-
 	static std::map<std::string, PCB*> processesMap;
 	//memoryPointer 
 
@@ -77,7 +43,7 @@ public:
 	~PCB() {};
 
 
-	static std::priority_queue < PCB*, std::vector<PCB*>, Compare> getReadyProccesses();
+	static std::queue<PCB*>* getReadyProccesses();
 	bool createProcess(std::string pid, int processAddress, int priority, State state);
 	bool removeProcess(std::string pid);
 	bool resumeProcess(std::string pid);

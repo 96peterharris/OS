@@ -109,35 +109,8 @@ bool PCB::haltProcess(std::string pid) {
 		return false;
 	}
 }
-std::priority_queue<PCB*, std::vector<PCB*>, Compare> PCB::getReadyProccesses() {
+std::queue<PCB*>* PCB::getReadyProccesses() {
 
-	for (auto const& e : processesMap) {
-		if (e.second->state == State::READY) {
-			addToReadyQueue(e.second);
-		}
-	}
-
-	return readyQueue;
+	
+	return &readyQueue;
 }
-/*void PCB::sortMapByPriority() {
-	/*int i = 1;
-	std::pair<std::string, PCB*>next = processesMap.at("dummy");
-
-	for (auto& e : processesMap) {
-
-		if (e.second->getPriority() < next.second->getPriority()) {
-			processesMap.emplace(next, e);
-		}
-		next = processesMap.at[i++];
-	}
-
-
-
-	std::sort(processesMap.begin(), processesMap.end());
-}
-bool PCB::operator<(const PCB& other) const
-{
-
-		return ((this->priority < other.priority) || (priority < other.priority));
-
-}*/
