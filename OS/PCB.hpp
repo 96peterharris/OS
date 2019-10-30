@@ -9,7 +9,7 @@
 #include "State.hpp"
 #include <functional>
 
-class PCB//
+class PCB
 {
 protected:
 	std::string pid;
@@ -22,11 +22,7 @@ protected:
 	int registryC;
 	int registryD;
 
-
-
 	State state;
-
-
 
 	class Compare
 	{
@@ -100,6 +96,26 @@ public:
 	State getState();
 	void setState(State state);
 
-
 };
 
+class Register {
+private:
+	int A;
+	int B;
+	int C;
+	int D;
+public:
+	void setA(int A) { this->A = A; }
+	void setB(int B) { this->B = B; }
+	void setC(int C) { this->C = C; }
+	void setD(int D) { this->D = D; }
+	int* getPointerA() { return &this->A; }
+	int* getPointerB() { return &this->B; }
+	int* getPointerC() { return &this->C; }
+	int* getPointerD() { return &this->D; }
+	int getA() { return this->A; }
+	int getB() { return this->B; }
+	int getC() { return this->C; }
+	int getD() { return this->D; }
+
+};
