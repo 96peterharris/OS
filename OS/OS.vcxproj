@@ -146,6 +146,7 @@
     <ClInclude Include="Interprocess_Com.hpp" />
     <ClInclude Include="PCB.hpp" />
     <ClInclude Include="RAM.hpp" />
+    <ClInclude Include="Register.hpp" />
     <ClInclude Include="State.hpp" />
     <ClInclude Include="Sync_Mech.hpp" />
     <ClInclude Include="Virtual_Mem.hpp" />
@@ -158,6 +159,7 @@
     <ClCompile Include="Interprocess_Com.cpp" />
     <ClCompile Include="PCB.cpp" />
     <ClCompile Include="RAM.cpp" />
+    <ClCompile Include="Source.cpp" />
     <ClCompile Include="Sync_Mech.cpp" />
     <ClCompile Include="Virtual_Mem.cpp" />
   </ItemGroup>
