@@ -83,5 +83,8 @@
     <ClCompile Include="PCB.cpp">
       <Filter>Pliki źródłowe\Process</Filter>
     </ClCompile>
+    <ClCompile Include="Source.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
