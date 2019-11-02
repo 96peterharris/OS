@@ -16,13 +16,12 @@ std::vector<PCB*>* PCB::getReadyQueuePointer() {
 	for (auto x : processesMap) {
 		if (x.second->getState() == READY) {
 			
-			
 		}
 	}
 }
 
 //Check all of the find methods and try something else
-bool createProcess(std::string pid, int processAddress, int priority) {
+bool createProcess(std::string pid, int processAddress, short priority) {
 	std::map<std::string, PCB*>* tmp = PCB::getProcessMapPointer();
 	std::map<std::string, PCB*>::iterator it = tmp->find(pid);
 

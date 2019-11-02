@@ -1,8 +1,6 @@
 //Pioter
 #include "CPU_Scheduling.hpp"
 
-
-
 CPU_Scheduling::CPU_Scheduling() {}
 void CPU_Scheduling::increasePriority() {
 

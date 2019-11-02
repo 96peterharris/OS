@@ -46,6 +46,9 @@ public:
 	//PID
 	std::string getPid() { return this->pid; }
 	void setPid(std::string pid) { this->pid = pid; }
+	//Process address
+	int getProcessAddress() { return this->processAddress; }
+	void setProcessAddress(int processAddress) { this->processAddress = processAddress; }
 	//Register
 	Register getRegister() { return this->reg; }
 	Register* getRegisterPointer() { return &this->reg; }
