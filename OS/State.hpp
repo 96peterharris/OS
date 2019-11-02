@@ -11,15 +11,25 @@ enum State
 	TERMINATED
 
 };
-/*std::string getStateName(State e) {
 
+std::string getStateName(State e) {
 	switch (e) {
 
-		case NEW: return "NEW";   break;
-		case RUNNING:return "RUNNING"; break;
-		case WAITING: return "WAITING";  break;
-		case READY: return "READY"; break;
-		case TERMINATED: return "TERMINATED";  break;
+		case NEW: 
+			return "NEW";   
+			break;
+		case RUNNING:
+			return "RUNNING";
+			break;
+		case WAITING: 
+			return "WAITING";  
+			break;
+		case READY: 
+			return "READY"; 
+			break;
+		case TERMINATED: 
+			return "TERMINATED"; 
+			break;
 	}
 
-};*/
+};

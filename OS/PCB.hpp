@@ -6,8 +6,11 @@
 #include <vector>
 #include <queue>
 #include <iterator>
-#include "State.hpp"
 #include <functional>
+
+#include "State.hpp"
+#include "Register.hpp"
+
 
 class PCB
 {
@@ -15,107 +18,54 @@ protected:
 	std::string pid;
 
 	int processAddress;
-	int priority;
+	short priority;
+	const short priority_default;
 	int commandCounter;
-	int registryA;
-	int registryB;
-	int registryC;
-	int registryD;
 
 	State state;
-
-	class Compare
-	{
-	public:
-		bool operator() (PCB* p1, PCB* p2)
-		{
-			if (p1->priority > p2->priority) {
-				return true;
-			}
-			else {
-				false;
-			}
-		}
-	};
-
-
-
-
-
-
-	static std::priority_queue < PCB*, std::vector<PCB*>, Compare> readyQueue; //Real Time processes
-
+	Register reg;
 
 	std::vector<std::string> openedFilesList;
 
-	int getProcessAddress();
-	void setProcessAddress(int _processAddress);
-
-	//static void sortMapByPriority();
-	static void addToReadyQueue(PCB* pcb);
-
-	//typedef std::function<bool(std::pair<std::string, PCB*>, std::pair<std::string, PCB*>)> Comparator;
-
-	/*lass MapComparer {
-
-		Comparator compFunctor = [](std::pair<std::string, PCB*> elem1, std::pair<std::string, PCB*> elem2)
-		{
-			return elem1.second->priority < elem2.second->priority;
-		};
-	};*/
-
 	static std::map<std::string, PCB*> processesMap;
+	static std::vector<PCB*> readyQueue;
 	//memoryPointer 
 
 public:
-	PCB() {};
-	PCB(std::string _pid, int _processAddress, int _priority, State _state);
+	PCB() : priority_default(1) {}
+	PCB(std::string pid, int processAddress, short priority, State state);
 	~PCB() {};
 
+	//Changing state inner function
+	//todo calling running
+	void removeProcess() { if(state = RUNNING) this->state = TERMINATED; }
+	void resumeProcess() { if(state = WAITING) this->state = READY; }
+	void haltProcess() { if(state = RUNNING) this->state = WAITING; }
+	void setRunning() { if (state = READY) this->state = RUNNING; }
 
-	static std::priority_queue < PCB*, std::vector<PCB*>, Compare> getReadyProccesses();
-	bool createProcess(std::string pid, int processAddress, int priority, State state);
-	bool removeProcess(std::string pid);
-	bool resumeProcess(std::string pid);
-	bool haltProcess(std::string pid);
-
-	std::string getPid();
-	void setPid(std::string pid);
-	int getRegistryA();
-	void setRegistryA(int registryA);
-	int getRegistryB();
-	void setRegistryB(int registryB);
-	int getRegistryC();
-	void setRegistryC(int registryC);
-	int getRegistryD();
-	void setRegistryD(int registryD);
-	int getCommandCounter();
-	void setCommandCounter(int commandCounter);
-	int getPriority();
-	void setPriority(int priority);
-	State getState();
-	void setState(State state);
-
+	//PID
+	std::string getPid() { return this->pid; }
+	void setPid(std::string pid) { this->pid = pid; }
+	//Register
+	Register getRegister() { return this->reg; }
+	Register* getRegisterPointer() { return &this->reg; }
+	//CC
+	int getCommandCounter() { return this->commandCounter; }
+	void setCommandCounter(int commandCounter) { this->commandCounter = commandCounter; }
+	//Priority data
+	short getDefaultPriority() { return this->priority_default; }
+	short getPriority() { return this->priority; }
+	void setPriority(short priority) { this->priority = priority; }
+	//State
+	State getState() { return this->state; }
+	void setState(State &state) { this->state = state; }
+	//Map getter
+	static std::map<std::string, PCB*>* getProcessMapPointer() { return &processesMap; }
+	//"Queue" getter
+	static std::vector<PCB*>* getReadyQueuePointer();
 };
 
-class Register {
-private:
-	int A;
-	int B;
-	int C;
-	int D;
-public:
-	void setA(int A) { this->A = A; }
-	void setB(int B) { this->B = B; }
-	void setC(int C) { this->C = C; }
-	void setD(int D) { this->D = D; }
-	int* getPointerA() { return &this->A; }
-	int* getPointerB() { return &this->B; }
-	int* getPointerC() { return &this->C; }
-	int* getPointerD() { return &this->D; }
-	int getA() { return this->A; }
-	int getB() { return this->B; }
-	int getC() { return this->C; }
-	int getD() { return this->D; }
-
-};
+bool createProcess(std::string pid, int processAddress, short priority);
+bool removeProcess(std::string pid);
+bool resumeProcess(std::string pid);
+bool haltProcess(std::string pid);
