@@ -36,7 +36,7 @@ bool ADD(PCB *pcb, std::string dest, std::string arg){
     }
     else if (std::regex_match(arg, m, memory))
     {
-        b = std::stoi(readRamNum(pcb, std::stoi(m[1]))); //FIXME: Skad odczytac ilosc cyfr jesli readFromRam zwraca po cyfrze
+        b = std::stoi(readRamNum(pcb, std::stoi(m[1])));
     }
     else
     {
@@ -74,11 +74,12 @@ bool ADD(PCB *pcb, std::string dest, std::string arg){
 }
 
 bool SUB(PCB *pcb, std::string dest, std::string arg){
-    //FIXME: Czy dzialac na unsigned czy nie?
+    //FIXME: Czy dzialac na signed czy unsigned?
 }
 
 bool MUL(PCB *pcb, std::string dest, std::string arg){
     bool ret;
+    //FIXME: arg == 0
     for (int i = 0; i < std::stoi(arg); i++)
     {
         ret = ADD(pcb, dest, dest);
