@@ -1,21 +1,34 @@
 #include "ram.hpp"
 
-void Ram::loadToRam(std::string file, int size) {
+/*void Ram::loadToRam(std::string file, int size) {
     if (size > 512) throw "Too large file"; //albo cos
     buddy(file, size, 0);
+}*/
+
+//baza, odleglosc, v/i, ramAddr, firstBlock (vec blocks), size
+
+void Ram::loadToRam(PCB* pcb, int segment, char sth, int logAddr) {
+    //dodac sprawdzenie, czy jest w ramie
+    if (pcb->segment_table[segment][2] == 0){ //? jesli jest w ramie
+        int pAddr = physAddr(pcb, segment, logAddr);
+        ram[pAddr] = sth;
+    }
+    else {
+        //dodaj z wirtualnej chyba
+    }
 }
 
 void Ram::buddy(std::string file, int fileSize, int divisionLvl) //file - wsk do memory, fileSize - rozmiar pliku, blockLevel - poziom bloku (6=512, 0=8)
 {
-    int blockSize = std::pow(2, 6 - divisionLvl);
-    int nextBlockSize;
+    int blockSize = std::pow(2, 6 - divisionLvl);  //rozmiar obecnego bloku
+    int nextBlockSize; //rozmiar kolejnego bloku
     if (fileSize > 7) nextBlockSize = blockSize/2;
     else nextBlockSize = 0;
-    int numOfBlocks = std::pow(2, divisionLvl);
-    int jump = blockSize/8;
-    bool ok;
-    int startAddr;
-    int startAddrBlocks;
+    int numOfBlocks = std::pow(2, divisionLvl); //liczba bloków danego podziału
+    int jump = blockSize/8; //rozmiar bloku
+    bool ok; //do sprawdzania, czy blok jest zajęty
+    int startAddr; //adres poczatkowy bloku
+    int startAddrBlocks; //adres poczatkowy bloku w vec blocks
 
     if (blockSize >= fileSize && nextBlockSize < fileSize) { //znaleziono rozmiar bloku
         for (int i = 0; i < 64; i=i+jump) { //dla polowek
@@ -28,9 +41,10 @@ void Ram::buddy(std::string file, int fileSize, int divisionLvl) //file - wsk do
         }
         if (!ok) throw "No space"; //jak nie to pal wroty razy 2 (potem zrobie to ladnie)
         else {
-            //insert
+            //insert:
             for (int i = 0; i < fileSize; i++) //ram
             {
+                clearBlocks(startAddrBlocks, numOfBlocks);
                 ram[startAddr+i] = file[i];
             }
             for (int i = 0; i < jump; i++) //blocks
@@ -43,6 +57,30 @@ void Ram::buddy(std::string file, int fileSize, int divisionLvl) //file - wsk do
         divisionLvl++;
         buddy(file, fileSize, divisionLvl);
     }
+}
+
+char Ram::readFromRam(PCB* pcb, int segment, int logAddr) {
+    int pAddr = physAddr(pcb, segment, logAddr);
+    return ram[pAddr];
+}
+
+void Ram::deleteFromRam(PCB* pcb) { //usuwanie całego procesu
+    int numOfBlocks = (pcb->segment_table[0][5])/8; //liczba blokow
+    for (int i = pcb->segment_table[0][4]; i <numOfBlocks; i++) { //dla blokow tego procesu
+        blocks[i] = 0;
+    }
+}
+
+void Ram::clearBlocks(int firstBlock, int numOfBlocks) {
+    for (int i = firstBlock; i<numOfBlocks; i++) { //dla bloków
+        for (int j = 0; j < 8; j++) { //dla elementow blokow
+            ram[i*8+j] = 0;
+        }
+    }
+}
+
+int physAddr(PCB* pcb, int segment, int logAddr) {
+    return logAddr+=(pcb->segment_table[segment][4])*8;
 }
 
 //stara wersja - usunelabym gdybym nie byla pizda lel
