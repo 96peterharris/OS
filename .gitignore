@@ -340,6 +340,7 @@ ASALocalRun/
 healthchecksdb
 
 # SEBA - VSCode
-.vscode/*
-.settings/*
+.vscode/
+.settings/
 .exe
+Interpreter_syntax.hpp
