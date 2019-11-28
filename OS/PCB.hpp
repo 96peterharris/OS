@@ -38,10 +38,10 @@ public:
 
 	//Changing state inner function
 	//todo calling running
-	void removeProcess() { if(state = RUNNING) this->state = TERMINATED; }
-	void resumeProcess() { if(state = WAITING) this->state = READY; }
-	void haltProcess() { if(state = RUNNING) this->state = WAITING; }
-	void setRunning() { if (state = READY) this->state = RUNNING; }
+	void removeProcess() { if(state == RUNNING) this->state = TERMINATED; }
+	void resumeProcess() { if(state == WAITING) this->state = READY; }
+	void haltProcess() { if(state == RUNNING) this->state = WAITING; }
+	void setRunning() { if (state == READY) this->state = RUNNING; }
 
 	//PID
 	std::string getPid() { return this->pid; }
@@ -61,14 +61,19 @@ public:
 	void setPriority(short priority) { this->priority = priority; }
 	//State
 	State getState() { return this->state; }
-	void setState(State &state) { this->state = state; }
+	void setState(State state) { this->state = state; }
 	//Map getter
 	static std::map<std::string, PCB*>* getProcessMapPointer() { return &processesMap; }
 	//"Queue" getter
 	static std::vector<PCB*>* getReadyQueuePointer();
+	//if there is need to update queue
+	static bool NEW_PROCESS;
 };
+
+bool PCB::NEW_PROCESS = false;
 
 bool createProcess(std::string pid, int processAddress, short priority);
 bool removeProcess(std::string pid);
 bool resumeProcess(std::string pid);
 bool haltProcess(std::string pid);
+bool update();
