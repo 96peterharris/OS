@@ -65,22 +65,22 @@ bool interprate(PCB *pcb){
     else if (command == "JP") //unconditional jump
     {
         args = getArgs(pcb, 1, takenBytes);
-        ret = jump(pcb, args[0]);
+        return jump(pcb, args[0]);
     }
     else if (command == "JZ")
     {
         args = getArgs(pcb, 2, takenBytes);
-        ret = jumpIf0(pcb, args[0], args[1]);
+        return jumpIf0(pcb, args[0], args[1]);
     }
     else if (command == "JN")
     {
         args = getArgs(pcb, 2, takenBytes);
-        ret = jumpIfN0(pcb, args[0], args[1]);
+        return jumpIfN0(pcb, args[0], args[1]);
     }
     else if (command == "WT")
     {
         pcb->setCommandCounter(pcb->getCommandCounter()+2);
-        ret = haltProcess(pcb->getPid());
+        // ret = haltProcess(pcb->getPid());
     }
     else if (command == "MV")
     {

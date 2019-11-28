@@ -341,6 +341,6 @@ healthchecksdb
 
 # SEBA - VSCode
 .vscode/
-.settings/
-.exe
+Interpreter.exe
 Interpreter_syntax.hpp
+Interpreter.cpp

@@ -16,7 +16,7 @@ public:
 	char* getPointerA() { return &this->A; }
 	char* getPointerB() { return &this->B; }
 	char* getPointerC() { return &this->C; }
-	cha* getPointerD() { return &this->D; }
+	char* getPointerD() { return &this->D; }
 	char getA() { return this->A; }
 	char getB() { return this->B; }
 	char getC() { return this->C; }
