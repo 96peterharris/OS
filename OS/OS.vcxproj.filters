@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Pliki nagłówkowe\Process">
+      <UniqueIdentifier>{fe44f860-87fb-4536-9af3-20f554ba014f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pliki źródłowe\Process">
+      <UniqueIdentifier>{3025a5dc-8762-4700-9a3c-c898b8ec6631}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sync_Mech.hpp">
@@ -40,10 +46,13 @@
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
     <ClInclude Include="PCB.hpp">
-      <Filter>Pliki nagłówkowe</Filter>
+      <Filter>Pliki nagłówkowe\Process</Filter>
+    </ClInclude>
+    <ClInclude Include="Register.hpp">
+      <Filter>Pliki nagłówkowe\Process</Filter>
     </ClInclude>
     <ClInclude Include="State.hpp">
-      <Filter>Pliki nagłówkowe</Filter>
+      <Filter>Pliki nagłówkowe\Process</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -72,6 +81,9 @@
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
     <ClCompile Include="PCB.cpp">
+      <Filter>Pliki źródłowe\Process</Filter>
+    </ClCompile>
+    <ClCompile Include="Source.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
   </ItemGroup>
