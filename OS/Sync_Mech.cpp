@@ -1,5 +1,5 @@
 //Karol
-#include"Sync.h"
+#include"Sync_Mech.hpp"
 
 void Semaphore::signal_sem() {
 	value++;
