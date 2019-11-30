@@ -4,10 +4,22 @@
 #include <regex>
 
 #include "interpreter_functions\arythmetics.hpp"
-#include "interpreter_functions\Interpreter_syntax.hpp"
+// #include "interpreter_functions\Interpreter_syntax.hpp"
 #include "interpreter_functions\jumps.hpp"
 #include "PCB.hpp"
+#include "RAM.hpp"
+#include "Interprocess_Com.hpp"
 
+/**
+ * Reads arguments from RAM and increases takenBytes
+ * 
+ * Reades chars from RAM to string increasing takenBytes param for each read byte. The end of each argument (string) is recognised by space character, which is poped from the string.
+ * 
+ * @param pcb pointer to running PCB object
+ * @param argNum number of separate arguments needed to read
+ * @param takenBytes reference to a value of already read bytes from RAM
+ * @return vector with each argument as a string in seperate cell in order of their appearance in RAM
+*/
 std::vector<std::string> getArgs(PCB *pcb, int argNum, int &takenBytes){
     std::vector<std::string> vector;
     takenBytes += pcb->getCommandCounter();
@@ -67,25 +79,38 @@ bool interprate(PCB *pcb){
         args = getArgs(pcb, 1, takenBytes);
         return jump(pcb, args[0]);
     }
-    else if (command == "JZ")
+    else if (command == "JZ") //jump if register == 0
     {
         args = getArgs(pcb, 2, takenBytes);
         return jumpIf0(pcb, args[0], args[1]);
     }
-    else if (command == "JN")
+    else if (command == "JN") //jump if register != 0
     {
         args = getArgs(pcb, 2, takenBytes);
         return jumpIfN0(pcb, args[0], args[1]);
     }
-    else if (command == "WT")
-    {
-        pcb->setCommandCounter(pcb->getCommandCounter()+2);
-        // ret = haltProcess(pcb->getPid());
-    }
-    else if (command == "MV")
+    else if (command == "MV") //copy value to dest
     {
         args = getArgs(pcb, 2, takenBytes);
-        //TODO: Code
+        ret = MOV(pcb, args[0], args[1]);
+    }
+
+    // ------- NIE SEBOWE FUNKCJE ---------
+
+    else if (command == "WT") //set process as waiting
+    {
+        pcb->setCommandCounter(pcb->getCommandCounter()+2);
+        ret = haltProcess(pcb->getPid());
+    }
+    else if (command == "SM") //FIXME: skad brac argumenty jak PID?
+    {
+        args = getArgs(pcb, 3, takenBytes);
+        ret = sendMessage(args[0], args[1], args[2]);
+    }
+    else if (command == "RM") //FIXME: skad brac argumenty jak PID?
+    {
+        args = getArgs(pcb, 3, takenBytes);
+        ret = receiveMessage(args[0], args[1], args[2]);
     }
     
 
