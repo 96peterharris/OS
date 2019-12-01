@@ -4,11 +4,11 @@
 
 //Constructor 
 PCB::PCB(std::string pid, int processAddress, short priority, State state) : priority_default(priority), priority(priority) {
-
+	//all the shitty init goes here;
 }
 
 PCB::~PCB() {
-
+	//bruh leave ram empty etc
 }
 
 std::vector<PCB*>* PCB::getReadyQueuePointer() {
@@ -72,4 +72,8 @@ bool haltProcess(std::string pid) {
 	else {
 		return false;
 	}
+}
+
+bool update() {
+	return false;
 }

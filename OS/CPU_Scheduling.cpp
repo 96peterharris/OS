@@ -1,20 +1,14 @@
 //Pioter
 #include "CPU_Scheduling.hpp"
+#include "Interpreter.hpp"
 
 
 CPU_Scheduling::CPU_Scheduling() {}
 void CPU_Scheduling::increasePriority() {
 
-	std::queue <PCB*>* tempQueue = recivedQueue;
-	PCB* tmp = this->recivedQueue->front();
-	readyQueue.pop();
 
-	while (!readyQueue.front()) {
-		readyQueue.pop();
-	}
-
-	while (!tempQueue->empty()) {
-		PCB* tempPCB = tempQueue->front();
+	for (int i = 1; i < recivedQueue->size(); i++){
+		PCB* tempPCB = recivedQueue->at(i);
 
 		if (tempPCB->getPriority() < 12) {
 			int tmp = tempPCB->getPriority();
@@ -24,51 +18,50 @@ void CPU_Scheduling::increasePriority() {
 		else {
 			tempPCB->setPriority(15);
 		}
-
-		readyQueue.push(tempPCB);
-		tempQueue->pop();
 	}
-}
-void CPU_Scheduling::changeState(PCB* pcb) {
-	pcb->setState(State::TERMINATED);
 }
 void CPU_Scheduling::addToTerminatedVec(PCB* pcb) {
 	this->addToTerminatedVec(pcb);
 }
-std::queue<PCB*>* CPU_Scheduling::getProcesses() {
+void CPU_Scheduling::getProcesses() {
 
-	return this->recivedQueue = getReadyProccesses();
+	this->recivedQueue = PCB::getReadyQueuePointer();
 }
-void CPU_Scheduling::countingDown() {
-	for (int i = 1; i < 6; i++) {
-		std::cout << " Commands counter: " << i;
-		std::cout << "\x1B[2K\r";
+void CPU_Scheduling::cpu_sch() {
+
+	if (recivedQueue->size() > 1) {
+		update();							//Updating process queue
+		running == recivedQueue->at(1);
+		commandCounter = running->getCommandCounter();
+
+	}
+	else {
+	
+		recivedQueue = PCB::getReadyQueuePointer();
+		running == recivedQueue->at(1);
+		commandCounter = running->getCommandCounter();
 	}
 }
+void CPU_Scheduling::nexStep() {
 
-void CPU_Scheduling::running() {
+	if (commandCounter < 5 && PCB::NEW_PROCESS = false) {
 
-
-	while (true) {
-
-		countingDown();//Imitacja dummy taka tymczasowa
-
-		while (!readyQueue.empty()) {
-			for (int i = 0; i < 5; i++) {
-
-				if (commandCounter == readyQueue.front()->getCommandCounter()) {
-					this->commandCounter = 0;
-					break;
-				}
-
-				std::cout << readyQueue.front()->getPid() << " Priority: " << readyQueue.front()->getPriority();
-
-				increasePriority();
-				commandCounter++;
-			}
-			std::cout << std::endl;
+		if (interprate() == false) {		//dlaczego false co zrobiæ
+			
+			haltProcess(running->getPid());	// halt process
+			running->setCommandCounter(commandCounter);
+			commandCounter = 0;
+			increasePriority();
+			cpu_sch();
 		}
+
+		commandCounter++;
 	}
-
-
+	else {
+		running->setState(State::READY);
+		running->setCommandCounter(commandCounter);
+		commandCounter = 0;
+		increasePriority();
+		cpu_sch();
+	}
 }

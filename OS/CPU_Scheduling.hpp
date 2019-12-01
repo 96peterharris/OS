@@ -7,26 +7,25 @@
 #include <string>
 #include <algorithm>
 
-class CPU_Scheduling : protected PCB
+class CPU_Scheduling
 {
 private:
 
-
-
-	std::queue<PCB*>* recivedQueue; //Queue of processes
-	std::vector<PCB*> terminatedProcesses; //Vector of Terminated processes
+	std::vector<PCB*>* recivedQueue; //Vector of Terminated processes
+	std::vector<std::string> terminatedPrcID;
+	int commandCounter;
+	PCB* running;
 
 	void increasePriority();
-	void changeState(PCB* pcb);
 	void addToTerminatedVec(PCB* pcb);
-	std::queue<PCB*>* getProcesses();
-	void countingDown();
+	void getProcesses();
 
 public:
 	CPU_Scheduling();
 	~CPU_Scheduling() {};
 
-	void running();
+	void cpu_sch();
+	void nexStep();
 
 };
 
