@@ -3,29 +3,30 @@
 //baza, odleglosc, v/i, ramAddr, firstBlock (vec blocks), size
 //v/i - 0-virtual, 1-ram
 //segment - 0-text, 1-data
-std::string PROG;
+//loadFromVirtual i buddy - 0-git, 1-brak miejsca
+//std::string PROG;
 
 void Ram::loadToRam(PCB* pcb, int segment, char sth, int logAddr) {
     if (isInRam(pcb, segment)){
         int pAddr = physAddr(pcb, segment, logAddr);
         ram[pAddr] = sth;
     }
+
+    //!!! co jak nie ma w ramie?
     else {
-        loadFromVirtual(pcb, segment);
+        //loadFromVirtual(pcb, bytes, segment);
     }
 }
 
-void Ram::loadFromVirtual(PCB* pcb, int segment) {
-    if(!isInRam(pcb, segment)) {
-        buddy(pcb, segment, 0);
-    }
-    pcb->segment_table[segment][2] = 1; //jesli segment_table jest public
+//!!!
+void Ram::loadFromVirtual(PCB* pcb, std::string bytes, int segment) {
+    buddy(pcb, segment, 0, bytes);
 }
 
-void Ram::buddy(PCB* pcb, int segment, int divisionLvl) {
-    int fileSize = pcb->segment_table[segment][1];
-    int blockSize = std::pow(2, 6 - divisionLvl);  //rozmiar obecnego bloku
-    int nextBlockSize; //rozmiar kolejnego bloku
+void Ram::buddy(PCB* pcb, int segment, int divisionLvl, std::string bytes) {
+    int fileSize = pcb->segTab[segment]->limit;
+    int blockSize = std::pow(2, 9 - divisionLvl);  //rozmiar obecnego bloku
+    int nextBlockSize; //rozmiar kolejnego (mniejszego) bloku
     if (fileSize > 7) nextBlockSize = blockSize/2;
     else nextBlockSize = 0;
     int numOfBlocks = std::pow(2, divisionLvl); //liczba blokow danego podzialu
@@ -36,30 +37,37 @@ void Ram::buddy(PCB* pcb, int segment, int divisionLvl) {
 
     if (blockSize >= fileSize && nextBlockSize < fileSize) { //znaleziono rozmiar bloku
         for (int i = 0; i < 64; i=i+jump) { //dla polowek
-            for (int j = i; j<jump; j++) { //sprawdzenie, czy polowka jest pusta
-                if (j==i) startAddr = j*8; //ustawienie poczatkowego adresu bloku
+            for (int j = i; j<i+jump; j++) { //sprawdzenie, czy polowka jest pusta
+                if (j==i){
+                    startAddr = j*8; //ustawienie poczatkowego adresu bloku
+                    startAddrBlocks = j;
+                    }
                 if(!blocks[j]) ok = true; //jeśli blok pusty to gituwa
+                else ok = false;
                 if (!ok) break; //jak nie to pal wroty
             }
             if (ok) break; //jeśli gituwa to gituwa
         }
-        if (!ok) throw "No space"; //jak nie to pal wroty razy 2 (potem zrobie to ladnie)
+        if (!ok){
+            //nie ma miejsca - wywolac Karola
+        }
         else {
             //insert:
             for (int i = 0; i < fileSize; i++) //ram
             {
-                clearBlocks(startAddrBlocks, numOfBlocks);
-                ram[startAddr+i] = PROG[i];  //PROG?
+                //clearBlocks(startAddrBlocks, numOfBlocks);
+                ram[startAddr+i] = bytes[i];  //
             }
             for (int i = 0; i < jump; i++) //blocks
             {
                 blocks[startAddrBlocks+i] = 1;
             }
+            pcb->segTab[segment]->vi = 1; //do poprawy
         }
     }
     else{
         divisionLvl++;
-        buddy(pcb, segment, divisionLvl);
+        buddy(pcb, segment, divisionLvl, bytes);
     }
 }
 
@@ -67,33 +75,75 @@ char Ram::readFromRam(PCB* pcb, int segment, int logAddr) {
     if (isInRam(pcb, segment)){
         int pAddr = physAddr(pcb, segment, logAddr);
         return ram[pAddr];
-    } else {
-        loadFromVirtual(pcb, segment);
+    }
+    //!!! co jak nie ma w ramie?
+    else {
+        //loadFromVirtual(pcb, segment);
     }
 
 }
 
 void Ram::deleteFromRam(PCB* pcb) { //usuwanie calego procesu
-    int numOfBlocks = (pcb->segment_table[0][5])/8; //liczba blokow
-    for (int i = pcb->segment_table[0][4]; i <numOfBlocks; i++) { //dla blokow tego procesu
-        blocks[i] = 0;
-    }
-}
+//??? tylko zerowanie blokow czy czyszczenie ramu tez?
+    //segment 0
+    int numOfBlocks; //liczba blokow
+    int num1 = pcb->segTab[0]->limit/8;
+    int num2 = pcb->segTab[0]->limit%8;
+    if (num2==0) numOfBlocks = num1;
+    else numOfBlocks = num1+1;
 
-void Ram::clearBlocks(int firstBlock, int numOfBlocks) {
-    for (int i = firstBlock; i<numOfBlocks; i++) { //dla blokow
+    int firstBlock = pcb->segTab[0]->baseRAM/8; //liczone od 0
+
+    for (int i = firstBlock; i < numOfBlocks+firstBlock; i++) { //dla blokow tego procesu
+        blocks[i] = 0;
+        for (int j = 0; j < 8; j++) { //dla elementow blokow
+            ram[i*8+j] = 0;
+        }
+    }
+    //segment 1
+    num1 = pcb->segTab[1]->limit/8;
+    num2 = pcb->segTab[1]->limit%8;
+    if (num2==0) numOfBlocks = num1;
+    else numOfBlocks = num1+1;
+
+    firstBlock = pcb->segTab[1]->baseRAM/8; //liczone od 0
+
+    //update
+    std::string state;// = PCB->state.getStateName;  do przywrocenia potem
+    if (state == "WAITING"){
+        std::string bytes;
+        for (int i = firstBlock; i < numOfBlocks+firstBlock; i++) { //dla blokow tego procesu
+            for (int j = 0; j < 8; j++) { //dla elementow blokow
+                bytes.append[i*8+j];
+            }
+        }
+        updateVM(pcb, bytes);
+    }
+
+    //segment 1
+    for (int i = firstBlock; i < numOfBlocks+firstBlock; i++) { //dla blokow tego procesu
+        blocks[i] = 0;
         for (int j = 0; j < 8; j++) { //dla elementow blokow
             ram[i*8+j] = 0;
         }
     }
 }
 
+//??? kiedy wywolywac? przy usuwaniu procesu czy przed zapisaniem?
+/*void Ram::clearBlocks(int firstBlock, int numOfBlocks) { 
+    for (int i = firstBlock; i<numOfBlocks; i++) { //dla blokow
+        for (int j = 0; j < 8; j++) { //dla elementow blokow
+            ram[i*8+j] = 0;
+        }
+    }
+}*/
+
 int Ram::physAddr(PCB* pcb, int segment, int logAddr) {
-    return logAddr+=(pcb->segment_table[segment][4])*8;
+    return logAddr+pcb->segTab[segment]->baseRAM;
 }
 
 bool Ram::isInRam(PCB* pcb, int segment) {
-    return(pcb->segment_table[segment][2]); //vi
+    return pcb->segTab[segment]->vi; //vi
 }
 
 /*
