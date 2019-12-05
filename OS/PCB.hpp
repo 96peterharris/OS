@@ -10,7 +10,7 @@
 
 #include "State.hpp"
 #include "Register.hpp"
-
+#include "Virtual_Mem.hpp"
 
 class PCB
 {
@@ -29,7 +29,9 @@ protected:
 
 	static std::map<std::string, PCB*> processesMap;
 	static std::vector<PCB*> readyQueue;
+	
 	//memoryPointer 
+	static std::vector<SegmentPCB*> segTab;
 
 public:
 	PCB() : priority_default(1) {}
@@ -68,6 +70,8 @@ public:
 	static std::vector<PCB*>* getReadyQueuePointer();
 	//if there is need to update queue
 	static bool NEW_PROCESS;
+	//Segment table getter
+	static std::vector<SegmentPCB*>* getSegTab() { return &segTab; }
 };
 
 bool PCB::NEW_PROCESS = false;
