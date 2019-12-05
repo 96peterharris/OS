@@ -2,6 +2,7 @@
 
 //baza, odleglosc, v/i, ramAddr, firstBlock (vec blocks), size
 //v/i - 0-virtual, 1-ram
+//segment - 0-text, 1-data
 std::string PROG;
 
 void Ram::loadToRam(PCB* pcb, int segment, char sth, int logAddr) {
@@ -92,7 +93,7 @@ int Ram::physAddr(PCB* pcb, int segment, int logAddr) {
 }
 
 bool Ram::isInRam(PCB* pcb, int segment) {
-    return(pcb->segment_table[segment][2]);
+    return(pcb->segment_table[segment][2]); //vi
 }
 
 /*
