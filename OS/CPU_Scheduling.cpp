@@ -57,7 +57,7 @@ void CPU_Scheduling::cpu_sch()
 }
 void CPU_Scheduling::nexStep()
 {
-	if (commandCounter < 5 && PCB::NEW_PROCESS = false) 
+	if ((commandCounter < 5) && (PCB::NEW_PROCESS = false)) 
 	{
 		if (interprate() == true)
 		{	
