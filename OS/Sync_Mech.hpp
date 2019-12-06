@@ -1,17 +1,21 @@
 #pragma once
 #include <vector>
+#include <string>
+#include <iostream>
 #include "PCB.hpp"
 //Karol
 class Semaphore {
 protected:
 	int value;
-	std::vector<PCB*> queue;
+	std::vector<std::string> queue;
+
+	void step_sem();
 
 public:
-	Semaphore(unsigned int v) : value(v) {}
+	Semaphore(int v) : value(v) {}
 	~Semaphore() {}
 
-	void signal_sem();
+	bool signal_sem();
 
-	void wait_sem(PCB* pcb);
+	bool wait_sem(std::string pcbid);
 };
