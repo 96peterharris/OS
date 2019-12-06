@@ -2,7 +2,7 @@
 
 #include <regex>
 
-// #include "Interpreter_syntax.hpp"
+#include "Interpreter_syntax.hpp"
 #include "..\PCB.hpp"
 #include "..\RAM.hpp"
 
@@ -19,7 +19,7 @@ bool ADD(PCB *pcb, std::string dest, std::string arg){
     std::regex regi("([ABCD])X");
     std::regex memory("\\[(\\d+)\\]");
     std::smatch m;
-    char b;
+    unsigned char a, b;
 
     if (std::regex_match(arg, m, regi))
     {
@@ -43,7 +43,7 @@ bool ADD(PCB *pcb, std::string dest, std::string arg){
     else if (std::regex_match(arg, m, memory))
     {
         // b = std::stoi(readRamNum(pcb, std::stoi(m[1])));
-        b = readFromRam(pcb, std::stoi(m[1]));
+        b = readFromRam(pcb, 1, std::stoi(m[1]));
 
     }
     else if (arg.size() == 1)
@@ -61,24 +61,50 @@ bool ADD(PCB *pcb, std::string dest, std::string arg){
     {
         if (m[1] == "A")
         {
-            pcb->getRegisterPointer()->setA(pcb->getRegisterPointer()->getA()+b);
+            a = pcb->getRegisterPointer()->getA();
+            if (a+b>255){
+                pcb->getRegisterPointer()->setA(255);
+            } else{
+                pcb->getRegisterPointer()->setA(a+b);
+            }
+            
         }
         else if (m[1] == "B")
         {
-            pcb->getRegisterPointer()->setB(pcb->getRegisterPointer()->getB()+b);
+            a = pcb->getRegisterPointer()->getB();
+            if (a+b>255){
+                pcb->getRegisterPointer()->setB(255);
+            } else{
+                pcb->getRegisterPointer()->setB(a+b);
+            }
         }
         else if(m[1] == "C")
         {
-            pcb->getRegisterPointer()->setC(pcb->getRegisterPointer()->getC()+b);
+            a = pcb->getRegisterPointer()->getC();
+            if (a+b>255){
+                pcb->getRegisterPointer()->setC(255);
+            } else{
+                pcb->getRegisterPointer()->setC(a+b);
+            }
         }
         else if(m[1] == "D")
         {
-            pcb->getRegisterPointer()->setD(pcb->getRegisterPointer()->getD()+b);
+            a = pcb->getRegisterPointer()->getD();
+            if (a+b>255){
+                pcb->getRegisterPointer()->setD(255);
+            } else{
+                pcb->getRegisterPointer()->setD(a+b);
+            }
         }
     }
     else if(std::regex_match(dest, m, memory))
     {
-        loadToRam(pcb, readFromRam(pcb, std::stoi(m[1]))+b, std::stoi(m[1]));
+        a = readFromRam(pcb, 1, std::stoi(m[1]));
+        if (a+b>255){
+            loadToRam(pcb, 1, 255, std::stoi(m[1]));
+        } else{
+            loadToRam(pcb, 1, a+b, std::stoi(m[1]));
+        }
     }
     else
     {
@@ -98,12 +124,10 @@ bool ADD(PCB *pcb, std::string dest, std::string arg){
  * @see Interpreter SB command
 */
 bool SUB(PCB *pcb, std::string dest, std::string arg){
-    //FIXME: Czy dzialac na signed czy unsigned?
-
     std::regex regi("([ABCD])X");
     std::regex memory("\\[(\\d+)\\]");
     std::smatch m;
-    char b;
+    unsigned char a, b;
 
     if (std::regex_match(arg, m, regi))
     {
@@ -127,7 +151,7 @@ bool SUB(PCB *pcb, std::string dest, std::string arg){
     else if (std::regex_match(arg, m, memory))
     {
         // b = std::stoi(readRamNum(pcb, std::stoi(m[1])));
-        b = readFromRam(pcb, std::stoi(m[1]));
+        b = readFromRam(pcb, 1, std::stoi(m[1]));
 
     }
     else if (arg.size() == 1)
@@ -145,24 +169,50 @@ bool SUB(PCB *pcb, std::string dest, std::string arg){
     {
         if (m[1] == "A")
         {
-            pcb->getRegisterPointer()->setA(pcb->getRegisterPointer()->getA()-b);
+            a = pcb->getRegisterPointer()->getA();
+            if (a < b){
+                pcb->getRegisterPointer()->setA(0);
+            } else{
+                pcb->getRegisterPointer()->setA(a-b);
+            }
+            
         }
         else if (m[1] == "B")
         {
-            pcb->getRegisterPointer()->setB(pcb->getRegisterPointer()->getB()-b);
+            a = pcb->getRegisterPointer()->getB();
+            if (a < b){
+                pcb->getRegisterPointer()->setB(0);
+            } else{
+                pcb->getRegisterPointer()->setB(a-b);
+            }
         }
         else if(m[1] == "C")
         {
-            pcb->getRegisterPointer()->setC(pcb->getRegisterPointer()->getC()-b);
+            a = pcb->getRegisterPointer()->getC();
+            if (a < b){
+                pcb->getRegisterPointer()->setC(0);
+            } else{
+                pcb->getRegisterPointer()->setC(a-b);
+            }
         }
         else if(m[1] == "D")
         {
-            pcb->getRegisterPointer()->setD(pcb->getRegisterPointer()->getD()-b);
+            a = pcb->getRegisterPointer()->getD();
+            if (a < b){
+                pcb->getRegisterPointer()->setD(0);
+            } else{
+                pcb->getRegisterPointer()->setD(a-b);
+            }
         }
     }
     else if(std::regex_match(dest, m, memory))
     {
-        loadToRam(pcb, readFromRam(pcb, std::stoi(m[1]))-b, std::stoi(m[1]));
+        a = readFromRam(pcb, 1, std::stoi(m[1]));
+        if (a < b){
+            loadToRam(pcb, 1, 0, std::stoi(m[1]));
+        } else{
+            loadToRam(pcb, 1, a-b, std::stoi(m[1]));
+        }
     }
     else
     {
@@ -185,7 +235,7 @@ bool MUL(PCB *pcb, std::string dest, std::string arg){
     std::regex regi("([ABCD])X");
     std::regex memory("\\[(\\d+)\\]");
     std::smatch m;
-    char b;
+    unsigned char a, b;
 
     if (std::regex_match(arg, m, regi))
     {
@@ -208,7 +258,9 @@ bool MUL(PCB *pcb, std::string dest, std::string arg){
     }
     else if (std::regex_match(arg, m, memory))
     {
-        b = readFromRam(pcb, std::stoi(m[1]));
+        // b = std::stoi(readRamNum(pcb, std::stoi(m[1])));
+        b = readFromRam(pcb, 1, std::stoi(m[1]));
+
     }
     else if (arg.size() == 1)
     {
@@ -219,29 +271,56 @@ bool MUL(PCB *pcb, std::string dest, std::string arg){
     {
         return 0;
     }
+    
 
     if(std::regex_match(dest, m, regi))
     {
         if (m[1] == "A")
         {
-            pcb->getRegisterPointer()->setA(pcb->getRegisterPointer()->getA()*b);
+            a = pcb->getRegisterPointer()->getA();
+            if (a*b>255){
+                pcb->getRegisterPointer()->setA(255);
+            } else{
+                pcb->getRegisterPointer()->setA(a*b);
+            }
+            
         }
         else if (m[1] == "B")
         {
-            pcb->getRegisterPointer()->setB(pcb->getRegisterPointer()->getB()*b);
+            a = pcb->getRegisterPointer()->getB();
+            if (a*b>255){
+                pcb->getRegisterPointer()->setB(255);
+            } else{
+                pcb->getRegisterPointer()->setB(a*b);
+            }
         }
         else if(m[1] == "C")
         {
-            pcb->getRegisterPointer()->setC(pcb->getRegisterPointer()->getC()*b);
+            a = pcb->getRegisterPointer()->getC();
+            if (a*b>255){
+                pcb->getRegisterPointer()->setC(255);
+            } else{
+                pcb->getRegisterPointer()->setC(a*b);
+            }
         }
         else if(m[1] == "D")
         {
-            pcb->getRegisterPointer()->setD(pcb->getRegisterPointer()->getD()*b);
+            a = pcb->getRegisterPointer()->getD();
+            if (a*b>255){
+                pcb->getRegisterPointer()->setD(255);
+            } else{
+                pcb->getRegisterPointer()->setD(a*b);
+            }
         }
     }
     else if(std::regex_match(dest, m, memory))
     {
-        loadToRam(pcb, readFromRam(pcb, std::stoi(m[1]))*b, std::stoi(m[1]));
+        a = readFromRam(pcb, 1, std::stoi(m[1]));
+        if (a*b>255){
+            loadToRam(pcb, 1, 255, std::stoi(m[1]));
+        } else{
+            loadToRam(pcb, 1, a*b, std::stoi(m[1]));
+        }
     }
     else
     {
@@ -250,6 +329,7 @@ bool MUL(PCB *pcb, std::string dest, std::string arg){
 
     return 1;
 }
+
 
 /**
  * Multiply a given register or RAM memory cell by a value
@@ -287,7 +367,7 @@ bool MOV(PCB *pcb, std::string dest, std::string arg){
     }
     else if (std::regex_match(arg, m, memory))
     {
-        b = readFromRam(pcb, std::stoi(m[1]));
+        b = readFromRam(pcb, 1, std::stoi(m[1]));
     }
     else if (arg.size() == 1)
     {
@@ -320,7 +400,7 @@ bool MOV(PCB *pcb, std::string dest, std::string arg){
     }
     else if(std::regex_match(dest, m, memory))
     {
-        loadToRam(pcb, b, std::stoi(m[1]));
+        loadToRam(pcb, 1, b, std::stoi(m[1]));
     }
     else
     {
