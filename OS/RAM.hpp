@@ -37,15 +37,11 @@ class Ram{
         blocks.fill(0);
     }
 
-    void loadToRam(PCB* pcb, int segment, char sth, int logAddr); //zapisuje od interpretera
-    void loadFromVirtual(PCB* pcb,  std::string bytes, int segment); //pobranie segmentu z pamięci wirtualnej
+    void saveInRam(PCB* pcb, int segment, char sth, int logAddr); //zapisuje od interpretera
+    void loadToRam(PCB* pcb,  std::string bytes, int segment); //pobranie segmentu z pamięci wirtualnej
     char readFromRam(PCB* pcb, int segment, int logAddr); //przekazuje do interpretera
-    void deleteFromRam(PCB* pcb); //usuwa z ramu
-    //do zrobienia:
-    /*
-    void sendMessage(statements st); //zapisanie wiadomosci   //argumenty
-    statements readMessage(something); //oczytanie wiadomosci   //argumenty
-    */
+    void deleteFromRam(PCB* pcb); //usuwanie procesu z ramu
+    std::string readMessage(PCB* pcb, int size, int ramAddr); //przekazywanie tresci komunikatu
 
     private:
     void buddy(PCB* pcb, int segment, int divisionLvl, std::string bytes);
@@ -55,8 +51,11 @@ class Ram{
 };
 
 /*
-DO OMOWIENIA:
-- komunikaty
+DO OMOWIENIA/POPRAWIENIA:
 - semafory, jak nie ma miejsca
-
+- jesli segmentu nie ma w ramie - std::string getSegment(PCB*, int segment)
+- updateVM, sprawdzenie state WAITING
+- nazwa funkcji loadToRam, loadFromVirtual:
+loadToRam -> saveInRam
+loadFromVirtual -> loadToRam
 */
