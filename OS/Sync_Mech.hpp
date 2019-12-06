@@ -18,4 +18,6 @@ public:
 	bool signal_sem();
 
 	bool wait_sem(std::string pcbid);
+
+	int value_sem();
 };

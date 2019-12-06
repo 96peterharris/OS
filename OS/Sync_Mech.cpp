@@ -35,3 +35,7 @@ void Semaphore::step_sem() {
 		}
 	}
 }
+
+int Semaphore::value_sem() {
+	return value;
+}
