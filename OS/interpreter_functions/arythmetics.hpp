@@ -2,7 +2,7 @@
 
 #include <regex>
 
-#include "Interpreter_syntax.hpp"
+//#include "Interpreter_syntax.hpp"
 #include "..\PCB.hpp"
 #include "..\RAM.hpp"
 

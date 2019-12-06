@@ -4,7 +4,7 @@
 #include <regex>
 
 #include "interpreter_functions\arythmetics.hpp"
-#include "interpreter_functions\Interpreter_syntax.hpp"
+//#include "interpreter_functions\Interpreter_syntax.hpp"
 #include "interpreter_functions\jumps.hpp"
 #include "PCB.hpp"
 #include "RAM.hpp"
