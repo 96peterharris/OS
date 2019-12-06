@@ -1,9 +1,10 @@
 #include "ram.hpp"
 
 //v/i - 0-virtual, 1-ram
-//segment - 0-text, 1-data
+//segment - 0-text, 1-data, 2-komunikaty
 
 void Ram::saveInRam(PCB* pcb, int segment, char sth, int logAddr) {
+    //zabezpieczenie przed zlym logAddr?
     if (isInRam(pcb, segment)){
         int pAddr = physAddr(pcb, segment, logAddr);
         ram[pAddr] = sth;
@@ -21,7 +22,7 @@ void Ram::loadToRam(PCB* pcb, std::string bytes, int segment) {
 
 void Ram::buddy(PCB* pcb, int segment, int divisionLvl, std::string bytes) {
     int fileSize;
-    if (segment == 2) fileSize = bytes.size();
+    if (segment == 2) fileSize = bytes.size(); //??? czy nie ma tego w klasie komunikatow
     else fileSize = pcb->segTab[segment]->limit;
     int blockSize = std::pow(2, 9 - divisionLvl);  //rozmiar obecnego bloku
     int nextBlockSize; //rozmiar kolejnego (mniejszego) bloku
@@ -47,13 +48,13 @@ void Ram::buddy(PCB* pcb, int segment, int divisionLvl, std::string bytes) {
             if (ok) break; //jeśli gituwa to gituwa
         }
         if (!ok){
+            if(ramSem.wait_sem(pcb->getPid())); //bool
             //nie ma miejsca - wywolac Karola
         }
         else {
             //insert:
             for (int i = 0; i < fileSize; i++) //ram
             {
-                //clearBlocks(startAddrBlocks, numOfBlocks);
                 ram[startAddr+i] = bytes[i];
             }
             for (int i = 0; i < jump; i++) //blocks
@@ -80,9 +81,6 @@ char Ram::readFromRam(PCB* pcb, int segment, int logAddr) {
         int pAddr = physAddr(pcb, segment, logAddr);
         return ram[pAddr];
     }
-    //odczytywanie komunikatu
-
-
     //!!! co jak nie ma w ramie?
     else {
         //loadFromVirtual(pcb, segment);
@@ -90,7 +88,7 @@ char Ram::readFromRam(PCB* pcb, int segment, int logAddr) {
 
 }
 
-std::string Ram::readMessage(PCB* pcb, int size, int ramAddr) {
+std::string Ram::readMessage(PCB* pcb, int size, int ramAddr) { //czy argument pcb jest potrzebny
     std::string msg;
     for (int i = ramAddr; i < ramAddr+size; i++) {
         msg.push_back(ram[i]);
@@ -110,7 +108,6 @@ std::string Ram::readMessage(PCB* pcb, int size, int ramAddr) {
             ram[i*8+j] = ' '; //zerowanie ramu
         }
     }
-
     return msg;
 }
 
@@ -141,7 +138,7 @@ void Ram::deleteFromRam(PCB* pcb) { //usuwanie calego procesu
 
     //update
     std::string state;// = PCB->state.getStateName;  do przywrocenia potem
-    if (state == "WAITING"){ //do poprawienia
+    if (pcb->getState() == WAITING) {
         std::string bytes;
         for (int i = firstBlock; i < numOfBlocks+firstBlock; i++) { //dla blokow tego procesu
             for (int j = 0; j < 8; j++) { //dla elementow blokow
@@ -158,21 +155,13 @@ void Ram::deleteFromRam(PCB* pcb) { //usuwanie calego procesu
             ram[i*8+j] = ' '; //zerowanie ramu
         }
     }
+    if(ramSem.signal_sem()); //bool
 }
-
-//??? kiedy wywolywac? przy usuwaniu procesu czy przed zapisaniem?
-/*void Ram::clearBlocks(int firstBlock, int numOfBlocks) { 
-    for (int i = firstBlock; i<numOfBlocks; i++) { //dla blokow
-        for (int j = 0; j < 8; j++) { //dla elementow blokow
-            ram[i*8+j] = 0;
-        }
-    }
-}*/
 
 int Ram::physAddr(PCB* pcb, int segment, int logAddr) {
     return logAddr+pcb->segTab[segment]->baseRAM;
 }
 
 bool Ram::isInRam(PCB* pcb, int segment) {
-    return pcb->segTab[segment]->vi; //vi
+    return pcb->segTab[segment]->vi;
 }

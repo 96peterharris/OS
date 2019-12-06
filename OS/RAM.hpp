@@ -5,6 +5,7 @@
 #include <memory> //std::shared_ptr
 //#include "Virtual_Mem.hpp"
 //#include "PCB.hpp"
+//#include "Sync_Mech.hpp"
 
 //do usuniecia potem
 void updateVM(PCB*pcb, std::string bytes);
@@ -37,6 +38,8 @@ class Ram{
         blocks.fill(0);
     }
 
+    Semaphore ramSem(1); //public czy private? czy Robert potrzebuje?
+
     void saveInRam(PCB* pcb, int segment, char sth, int logAddr); //zapisuje od interpretera
     void loadToRam(PCB* pcb,  std::string bytes, int segment); //pobranie segmentu z pamięci wirtualnej
     char readFromRam(PCB* pcb, int segment, int logAddr); //przekazuje do interpretera
@@ -46,16 +49,16 @@ class Ram{
     private:
     void buddy(PCB* pcb, int segment, int divisionLvl, std::string bytes);
     int physAddr(PCB* pcb, int segment, int logAddr);
-    //void clearBlocks(int firstBlock, int numOfBlocks);
     bool isInRam(PCB* pcb, int segment);
 };
 
 /*
 DO OMOWIENIA/POPRAWIENIA:
-- semafory, jak nie ma miejsca
+- semafory, jak nie ma miejsca - done
 - jesli segmentu nie ma w ramie - std::string getSegment(PCB*, int segment)
-- updateVM, sprawdzenie state WAITING
-- nazwa funkcji loadToRam, loadFromVirtual:
+- updateVM
+- sprawdzenie state WAITING - done
+- nazwa funkcji loadToRam, loadFromVirtual - done
 loadToRam -> saveInRam
 loadFromVirtual -> loadToRam
 */
