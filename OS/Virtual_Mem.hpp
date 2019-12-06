@@ -1,35 +1,40 @@
 #pragma once
 #include <array>
 #include <vector>
+#include <regex>
+#include <locale>
 #include "PCB.hpp"
 
 class SegmentPCB {
 public:
 	int baseVM;
-	int blockNo;
-	int size;
+	int baseRAM;
+	int limit;
 	bool vi;
 };
 
-class Segment {
+class SegmentVM {
 public:
 	int base;
 	int limit;
-	bool vi;
+
+	bool operator<(const SegmentVM& segVM) const;
 };
 
 class Virtual_Mem
 {
 private:
-	std::array<char, 2048> pagefile;
-	std::vector<Segment> pfSegTab; //Pagefile Segment Table
-	//std::vector<SegmentPCB> segTab; - stored in PCB
+	std::array<char, 4096> pagefile;
+	std::vector<SegmentVM> pfSegTab; //Pagefile Segment Table
+	//std::vector<SegmentPCB*>* segTab; - stored in PCB
 public:
 	Virtual_Mem();
 	~Virtual_Mem();
 
 	int findFreeSpace(int limit);
-	void loadProg(PCB *pcb);
+	void loadProg(PCB *pcb, std::string data);
 	void DeleteProg(PCB *pcb);
+	std::string getSegment(PCB *pcb, const int segment);
+	void loadToVM(PCB *pcb, const std::string data);
 };
 

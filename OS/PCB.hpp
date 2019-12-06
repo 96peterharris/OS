@@ -10,7 +10,8 @@
 
 #include "State.hpp"
 #include "Register.hpp"
-#include "Virtual_Mem.hpp"
+
+class SegmentPCB;
 
 class PCB
 {
