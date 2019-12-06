@@ -8,12 +8,10 @@ CPU_Scheduling::CPU_Scheduling()
 	this->commandCounter = 0;
 	this->running = NULL;
 }
-void CPU_Scheduling::increasePriority() {
-
-
+void CPU_Scheduling::increasePriority()
+{
 	for (int i = 1; i < recivedQueue->size(); i++)
 	{
-
 		if (recivedQueue->at(i)->getPriority() < 12)
 		{
 			int tmp = recivedQueue->at(i)->getPriority();
@@ -33,16 +31,16 @@ void CPU_Scheduling::getProcesses() {
 
 	this->recivedQueue = PCB::getReadyQueuePointer();
 }
-void CPU_Scheduling::cpu_sch() {
-
-	if (recivedQueue->size() > 1) {
+void CPU_Scheduling::cpu_sch() 
+{
+	if (recivedQueue->size() > 1) 
+	{
 		update();							//Updating process queue
 		running = recivedQueue->at(1);
 		commandCounter = 0;
-
 	}
-	else {
-	
+	else 
+	{
 		recivedQueue = PCB::getReadyQueuePointer();
 		
 		if (recivedQueue->size() > 1)
@@ -57,22 +55,22 @@ void CPU_Scheduling::cpu_sch() {
 		commandCounter = 0;
 	}
 }
-void CPU_Scheduling::nexStep() {
-
+void CPU_Scheduling::nexStep()
+{
 	if (commandCounter < 5 && PCB::NEW_PROCESS = false) 
 	{
-
-		if (interprate() == false)
+		if (interprate() == true)
 		{	
-			
-			haltProcess(running->getPid());	
+			commandCounter++;
+		}
+		else
+		{
+			haltProcess(running->getPid());
 			running->setCommandCounter(+commandCounter);
 			commandCounter = 0;
 			increasePriority();
 			cpu_sch();
 		}
-
-		commandCounter++;
 	}
 	else
 	{
