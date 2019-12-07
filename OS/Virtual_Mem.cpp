@@ -61,13 +61,19 @@ void Virtual_Mem::loadProg(PCB *pcb, std::string data)
 		int number = 0;
 		int correction = 0;
 		for (int k = 0; k < data.length(); k++) { //filling per byte to pagefile in found free space of memory
-			if (isdigit(data.at(k))) { //if bytes create a number, convert them to 1-sign digit
+			if (data.at(k - 1) == ' ' && isdigit(data.at(k))) {
+				int numLength = 0;
 				snumber += data.at(k);
-				correction++; //count how many digits were found to correct index in pagefile later
-				if (!isdigit(data.at(k + 1))) { //if next byte is not digit, it means we found whole number, convert it to int
-					number = std::stoi(snumber);
-					snumber.clear(); //clear string as preparation for next number
-					pagefile.at(freeSpace + k - correction) = number; //fill pagefile byte with converted number
+				for (int i = 0; i < 3; i++) {
+					correction++; //count how many digits were found to correct index in pagefile later
+					numLength++;
+					if (!isdigit(data.at(k + 1))) { //if next byte is not digit, it means we found whole number, convert it to int
+						number = std::stoi(snumber);
+						snumber.clear(); //clear string as preparation for next number
+						pagefile.at(freeSpace + k - correction) = number; //fill pagefile byte with converted number
+						k += numLength; 
+						break;
+					}
 				}
 			}
 			else { //if byte is not a number, just copy it to pagefile (using correction counted earlier)
@@ -153,6 +159,75 @@ void Virtual_Mem::loadToVM(PCB * pcb, const std::string data)
 		pagefile.at(base + i) = data.at(i);
 	}
 }
+
+ void Virtual_Mem::printPCBSegTab(PCB * pcb)
+ {
+	 auto segTab = pcb->getSegTab();
+	 std::cout << "PCB segment table:\n";
+	 std::cout << " ----------------------------------\n";
+	 std::cout << " | BaseVM | BaseRAM | Limit | v/i |\n";
+	 for (int i = 0; i < segTab->size(); i++) {
+		 std::cout << " | ";
+		 if (segTab->at(i)->baseVM > 999)	  std::cout << "  ";
+		 else if (segTab->at(i)->baseVM > 99) std::cout << "   ";
+		 else if (segTab->at(i)->baseVM > 9)  std::cout << "    ";
+		 else								  std::cout << "     ";
+		 std::cout << segTab->at(i)->baseVM << " | ";
+
+
+		 if (segTab->at(i)->baseRAM > 99)	  std::cout << "    ";
+		 else if (segTab->at(i)->baseRAM > 9) std::cout << "     ";
+		 else								  std::cout << "      ";
+		 std::cout << segTab->at(i)->baseRAM << " | ";
+
+		 if (segTab->at(i)->limit > 999) 	 std::cout << " ";
+		 else if (segTab->at(i)->limit > 99) std::cout << "  ";
+		 else if (segTab->at(i)->limit > 9)  std::cout << "   ";
+		 else if (segTab->at(i)->limit > 0)  std::cout << "    ";
+		 std::cout << segTab->at(i)->limit << " |  ";
+		 std::cout << segTab->at(i)->vi << "  |\n";
+	 }
+	 std::cout << " ----------------------------------\n";
+ }
+
+ void Virtual_Mem::printVMSegTab()
+ {
+	 std::cout << "Pagefile segment table:\n";
+	 std::cout << " ----------------\n";
+	 std::cout << " | Base | Limit |\n";
+	 for (int i = 0; i < pfSegTab.size(); i++) {
+		 std::cout << " | ";
+		 if (pfSegTab.at(i).base > 999)     std::cout << "";
+		 else if (pfSegTab.at(i).base > 99) std::cout << " ";
+		 else if (pfSegTab.at(i).base > 9)  std::cout << "  ";
+		 else							    std::cout << "   ";
+		 std::cout << pfSegTab.at(i).base << " | ";
+
+		 if (pfSegTab.at(i).limit > 999)     std::cout << " ";
+		 else if (pfSegTab.at(i).limit > 99) std::cout << "  ";
+		 else if (pfSegTab.at(i).limit > 9)  std::cout << "   ";
+		 else								 std::cout << "    ";
+		 std::cout << pfSegTab.at(i).limit << " |\n";
+	 }
+	 std::cout << " ----------------\n";
+ }
+
+ void Virtual_Mem::printVM(PCB * pcb)
+ {
+	 int last = pfSegTab.at(pfSegTab.size() - 1).base + pfSegTab.at(pfSegTab.size() - 1).base - 1;
+
+	 std::cout << "Pagefile bytes:\n";
+	 std::cout << "{ ";
+	 for (int i = 0; i < last + 10; i++) {
+		 std::cout << pagefile.at(i) << ", ";
+		 if (i % 30 == 29) std::cout << "\n";
+		 if (i % 30 == 0) std::cout << " ";
+	 }
+ }
+
+ void Virtual_Mem::printPCBSegTab()
+ {
+ }
 
 bool SegmentVM::operator<(const SegmentVM & segVM) const
 {

@@ -30,11 +30,17 @@ private:
 public:
 	Virtual_Mem();
 	~Virtual_Mem();
-
-	int findFreeSpace(int limit);
 	void loadProg(PCB *pcb, std::string data);
 	void DeleteProg(PCB *pcb);
 	std::string getSegment(PCB *pcb, const int segment);
 	void loadToVM(PCB *pcb, const std::string data);
+
+	void printPCBSegTab(PCB *pcb);
+	void printVMSegTab();
+	void printVM(PCB *pcb);
+	void printPCBSegTab();
+
+private:
+	int findFreeSpace(int limit);
 };
 
