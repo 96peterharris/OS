@@ -1,63 +1,100 @@
 #include "ram.hpp"
 
-//v/i - 0-virtual, 1-ram
-//segment - 0-text, 1-data, 2-komunikaty
-
-void Ram::saveInRam(PCB* pcb, int segment, char sth, int logAddr) {
-    //zabezpieczenie przed zlym logAddr?
-    if (isInRam(pcb, segment)){
-        int pAddr = physAddr(pcb, segment, logAddr);
-        ram[pAddr] = sth;
-    }
-
-    //!!! co jak nie ma w ramie?
-    else {
-        //loadFromVirtual(pcb, bytes, segment);
-    }
+Ram::Ram(){
+    ram.fill(' ');
+    blocks.fill(0);
 }
-//komunikaty - segment = 2
-void Ram::loadToRam(PCB* pcb, std::string bytes, int segment) {
+
+Ram::~Ram(){}
+
+/**
+ * Saves data to RAM from Interpreter.
+ * 
+ * Checks if segment has been loaded to RAM. If not, loads it.
+ * Interpret logical address to physical address and loads character to RAM.
+ * 
+ * @param pcb Pointer to PCB needed to call other functions.
+ * @param segment Int specifing VM segment: 1 for data.
+ * @param ch Character to load to RAM.
+ * @param logAddr Logical address where the character is going to be saved.
+ */
+void Ram::saveInRam(PCB* pcb, int segment, char ch, int logAddr) {
+    if(!isInRam(pcb,segment)){
+        std::string text = getSegment(pcb, segment);
+        loadToRam(pcb, text, segment); //will it work?
+    }
+    int pAddr = physAddr(pcb, segment, logAddr);
+    ram[pAddr] = ch;
+}
+
+/**
+ * Calls buddy function.
+ * 
+ * Calls buddy function which Loads segment to RAM from Virtual Memory or message from Interprocess Communication.
+ * 
+ * @param pcb Pointer to PCB needed to call buddy function.
+ * @param bytes String which contains data to be loaded.
+ * @param segment Int specifing VM segment or that a message is going to be loaded: 0 for text segment, 1 for data segment, 2 for message.
+ * @return buddy function's value, true for success or false for failure.
+ */
+bool Ram::loadToRam(PCB* pcb, std::string bytes, int segment) {
     buddy(pcb, segment, 0, bytes);
+    return buddy(pcb, bytes, segment, 0);
 }
 
-void Ram::buddy(PCB* pcb, int segment, int divisionLvl, std::string bytes) {
+/**
+ * Loads segment to RAM from Virtual Memory or message from Interprocess Communication
+ * 
+ * Recursive function.
+ * Starts with maximum length of RAM.
+ * Finds optimum length by calling itself with inceremnting divisionLvl param.
+ * Finds free space in RAM of the found length. If it doesn't exist, returns false.
+ * Loads data to found free space and sets blocks as busy
+ * Sets physical address in PCB, v/i bit or message.
+ * 
+ * @param pcb Pointer to PCB to find segment size, set physical address in RAM and v/i bit.
+ * @param segment Int specifing VM segment or that a message is going to be loaded: 0 for text segment, 1 for data segment, 2 for message.
+ * @param divisionLvl Int specifing the level of memory division. Maximum value is 6.
+ * @param bytes String which contains data to be loaded.
+ * @return true for success or false for failure.
+ */
+bool Ram::buddy(PCB* pcb, std::string bytes, int segment, int divisionLvl) {
     int fileSize;
     if (segment == 2) fileSize = bytes.size(); //??? czy nie ma tego w klasie komunikatow
     else fileSize = pcb->segTab[segment]->limit;
-    int blockSize = std::pow(2, 9 - divisionLvl);  //rozmiar obecnego bloku
-    int nextBlockSize; //rozmiar kolejnego (mniejszego) bloku
+    int blockSize = std::pow(2, 9 - divisionLvl);
+    int nextBlockSize;
     if (fileSize > 7) nextBlockSize = blockSize/2;
     else nextBlockSize = 0;
-    int numOfBlocks = std::pow(2, divisionLvl); //liczba blokow danego podzialu
-    int jump = blockSize/8; //rozmiar bloku
-    bool ok; //do sprawdzania, czy blok jest zajety
-    int startAddr; //adres poczatkowy bloku
-    int startAddrBlocks; //adres poczatkowy bloku w vec blocks
+    int numOfBlocks = std::pow(2, divisionLvl);
+    int jump = blockSize/8;
+    bool ok;
+    int startAddr;
+    int startAddrBlocks;
 
-    if (blockSize >= fileSize && nextBlockSize < fileSize) { //znaleziono rozmiar bloku
-        for (int i = 0; i < 64; i=i+jump) { //dla polowek
-            for (int j = i; j<i+jump; j++) { //sprawdzenie, czy polowka jest pusta
+    if (blockSize >= fileSize && nextBlockSize < fileSize) {
+        for (int i = 0; i < 64; i=i+jump) {
+            for (int j = i; j<i+jump; j++) {
                 if (j==i){
-                    startAddr = j*8; //ustawienie poczatkowego adresu bloku
+                    startAddr = j*8;
                     startAddrBlocks = j;
                     }
-                if(!blocks[j]) ok = true; //jeśli blok pusty to gituwa
+                if(!blocks[j]) ok = true;
                 else ok = false;
-                if (!ok) break; //jak nie to pal wroty
+                if (!ok) break;
             }
-            if (ok) break; //jeśli gituwa to gituwa
+            if (ok) break;
         }
         if (!ok){
-            if(ramSem.wait_sem(pcb->getPid())); //bool
-            //nie ma miejsca - wywolac Karola
+            if(ramSem.wait_sem(pcb->getPid()));
+            return 0;
         }
         else {
-            //insert:
-            for (int i = 0; i < fileSize; i++) //ram
+            for (int i = 0; i < fileSize; i++)
             {
                 ram[startAddr+i] = bytes[i];
             }
-            for (int i = 0; i < jump; i++) //blocks
+            for (int i = 0; i < jump; i++)
             {
                 blocks[startAddrBlocks+i] = 1;
             }
@@ -67,34 +104,59 @@ void Ram::buddy(PCB* pcb, int segment, int divisionLvl, std::string bytes) {
             else {
                 pcb->segTab[segment]->baseRAM = startAddr;
                 pcb->segTab[segment]->vi = 1;
+                return 1;
             }
         }
     }
     else{
         divisionLvl++;
-        buddy(pcb, segment, divisionLvl, bytes);
+        buddy(pcb, bytes, segment, divisionLvl);
     }
 }
 
+/**
+ * Reads character from RAM.
+ * 
+ * Checks if segment has been loaded to RAM. If not, loads it.
+ * Interpret logical address to physical address and reads character from RAM.
+ * 
+ * @param pcb Pointer to PCB needed to call other functions.
+ * @param segment Int specifing VM segment: 0 for text, 1 for data.
+ * @param logAddr Int meaning logical address where the character is.
+ * @return Char found in requested place.
+ */
 char Ram::readFromRam(PCB* pcb, int segment, int logAddr) {
-    if (isInRam(pcb, segment)){
-        int pAddr = physAddr(pcb, segment, logAddr);
-        return ram[pAddr];
+    if(!isInRam(pcb, segment)){
+        std::string text = getSegment(pcb, segment);
+        loadToRam(pcb, text, segment); //will it work?
     }
-    //!!! co jak nie ma w ramie?
-    else {
-        //loadFromVirtual(pcb, segment);
-    }
-
+    int pAddr = physAddr(pcb, segment, logAddr);
+    return ram[pAddr];
 }
 
-std::string Ram::readMessage(PCB* pcb, int size, int ramAddr) { //czy argument pcb jest potrzebny
+/**
+ * Reads message from RAM.
+ * 
+ * Creates string for message.
+ * Pushes back characters from got physical address until second ' ' is found.
+ * Deletes message from RAM and sets blocks as free.
+ * Returns message.
+ * 
+ * @param ramAddr Int meaning physical address in RAM where the message begins.
+ * @return String containing message.
+ */
+std::string Ram::readMessage(int ramAddr) {
+    int space = 0;
     std::string msg;
-    for (int i = ramAddr; i < ramAddr+size; i++) {
+    int i = ramAddr;
+
+    while (space != 2) {
+        if (ram[i] == ' ') space++;
         msg.push_back(ram[i]);
     }
-    //usuwanie
-    int numOfBlocks; //liczba blokow
+
+    int size = msg.size();
+    int numOfBlocks;
     int num1 = size/8;
     int num2 = size%8;
     if (num2==0) numOfBlocks = num1;
@@ -102,30 +164,37 @@ std::string Ram::readMessage(PCB* pcb, int size, int ramAddr) { //czy argument p
 
     int firstBlock = size/8;
 
-    for (int i = firstBlock; i < numOfBlocks+firstBlock; i++) { //dla blokow tego procesu
-        blocks[i] = 0; //zerowanie blokow
-        for (int j = 0; j < 8; j++) { //dla elementow blokow
-            ram[i*8+j] = ' '; //zerowanie ramu
+    for (int i = firstBlock; i < numOfBlocks+firstBlock; i++) {
+        blocks[i] = 0;
+        for (int j = 0; j < 8; j++) {
+            ram[i*8+j] = ' ';
         }
     }
     return msg;
 }
 
-void Ram::deleteFromRam(PCB* pcb) { //usuwanie calego procesu
-//??? tylko zerowanie blokow czy czyszczenie ramu tez?
+/**
+ * Deletes process from RAM.
+ * 
+ * Releases segment 0 by setting blocks as free and deleting data from RAM.
+ * Does the same for segment 1 but before it, updates segment 1 if PCB state is WAITING.
+ * 
+ * @param pcb Pointer to PCB needed to get data's size, physical address.
+ */
+void Ram::deleteFromRam(PCB* pcb) {
     //segment 0
-    int numOfBlocks; //liczba blokow
+    int numOfBlocks;
     int num1 = pcb->segTab[0]->limit/8;
     int num2 = pcb->segTab[0]->limit%8;
     if (num2==0) numOfBlocks = num1;
     else numOfBlocks = num1+1;
 
-    int firstBlock = pcb->segTab[0]->baseRAM/8; //liczone od 0
+    int firstBlock = pcb->segTab[0]->baseRAM/8;
 
-    for (int i = firstBlock; i < numOfBlocks+firstBlock; i++) { //dla blokow tego procesu
-        blocks[i] = 0; //zerowanie blokow
-        for (int j = 0; j < 8; j++) { //dla elementow blokow
-            ram[i*8+j] = ' '; //zerowanie ramu
+    for (int i = firstBlock; i < numOfBlocks+firstBlock; i++) {
+        blocks[i] = 0;
+        for (int j = 0; j < 8; j++) {
+            ram[i*8+j] = ' ';
         }
     }
     //segment 1
@@ -134,34 +203,56 @@ void Ram::deleteFromRam(PCB* pcb) { //usuwanie calego procesu
     if (num2==0) numOfBlocks = num1;
     else numOfBlocks = num1+1;
 
-    firstBlock = pcb->segTab[1]->baseRAM/8; //liczone od 0
+    firstBlock = pcb->segTab[1]->baseRAM/8;
 
     //update
-    std::string state;// = PCB->state.getStateName;  do przywrocenia potem
     if (pcb->getState() == WAITING) {
         std::string bytes;
-        for (int i = firstBlock; i < numOfBlocks+firstBlock; i++) { //dla blokow tego procesu
-            for (int j = 0; j < 8; j++) { //dla elementow blokow
+        for (int i = firstBlock; i < numOfBlocks+firstBlock; i++) {
+            for (int j = 0; j < 8; j++) {
                 bytes.push_back(i*8+j);
             }
         }
-        updateVM(pcb, bytes);  //???
+        loadToVM(pcb, bytes);
     }
 
     //segment 1
-    for (int i = firstBlock; i < numOfBlocks+firstBlock; i++) { //dla blokow tego procesu
-        blocks[i] = 0; //zerowanie blokow
-        for (int j = 0; j < 8; j++) { //dla elementow blokow
-            ram[i*8+j] = ' '; //zerowanie ramu
+    for (int i = firstBlock; i < numOfBlocks+firstBlock; i++) {
+        blocks[i] = 0;
+        for (int j = 0; j < 8; j++) {
+            ram[i*8+j] = ' ';
         }
     }
-    if(ramSem.signal_sem()); //bool
+    if(ramSem.value_sem() <= 0){
+        if(ramSem.signal_sem());
+    }
+    pcb->segTab[0]->vi = 1;
+    pcb->segTab[1]->vi = 1;
 }
 
+/**
+ * Converts logical address to physical address in RAM.
+ * 
+ * Adds physical address of the segment's beginning to logical address.
+ * 
+ * @param pcb Pointer to PCB needed to get data's physical address.
+ * @param segment Int specifing VM segment: 0 for text, 1 for data.
+ * @param logAddr Int specifing logical address.
+ * @return Int specifing physical address.
+ */
 int Ram::physAddr(PCB* pcb, int segment, int logAddr) {
     return logAddr+pcb->segTab[segment]->baseRAM;
 }
 
+/**
+ * Informs if RAM contains segment.
+ * 
+ * Returns the value of v/i bit from segment table.
+ * 
+ * @param pcb Pointer to PCB needed to get data's v/i bit.
+ * @param segment Int specifing VM segment: 0 for text, 1 for data.
+ * @return true if RAM contains segment or false for not.
+ */
 bool Ram::isInRam(PCB* pcb, int segment) {
     return pcb->segTab[segment]->vi;
 }
