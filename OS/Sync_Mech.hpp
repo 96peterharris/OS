@@ -20,4 +20,7 @@ public:
 	bool wait_sem(std::string pcbid);
 
 	int value_sem();
+
+	bool print_value();
+	bool print_queue();
 };

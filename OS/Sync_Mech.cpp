@@ -39,3 +39,14 @@ void Semaphore::step_sem() {
 int Semaphore::value_sem() {
 	return value;
 }
+
+bool Semaphore::print_value() {
+	std::cout << "Semaphore value is " << value << std::endl;
+}
+
+bool Semaphore::print_queue() {
+	std::cout << "In the queue are:\n";
+	for (int i = 0; i < queue.size(); i++) {
+		std::cout << queue.at(i) << std::endl;
+	}
+}
