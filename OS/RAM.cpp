@@ -87,6 +87,7 @@ bool Ram::buddy(PCB* pcb, std::string bytes, int segment, int divisionLvl) {
         }
         if (!ok){
             if(ramSem.wait_sem(pcb->getPid()));
+
             return 0;
         }
         else {
@@ -255,4 +256,33 @@ int Ram::physAddr(PCB* pcb, int segment, int logAddr) {
  */
 bool Ram::isInRam(PCB* pcb, int segment) {
     return pcb->segTab[segment]->vi;
+}
+
+void Ram::printRam() {
+    std::cout << "RAM" << std::endl;
+    for (int i = 0; i < 512; i++) {
+        std::cout << i << "   " << ram[i] << std::endl;
+    }
+}
+
+void Ram::printProcess(PCB* pcb) {
+    std::cout << pcb->getPid() << std::endl;
+    std::cout << "Segment text" << std::endl;
+    for (int i = pcb->segTab[0]->baseRAM; i < pcb->segTab[0]->limit) {
+        std::cout << i << "   " << ram[i] << std::endl;
+    }
+    std::cout << std::endl;
+    std::cout << "Segment data" << std::endl;
+    for (int i = pcb->segTab[1]->baseRAM; i < pcb->segTab[1]->limit) {
+        std::cout << i << "   " << ram[i] << std::endl;
+    }
+}
+
+void Ram::printSegment(PCB* pcb, int segment) {
+    std::cout << pcb->getPid() << std::endl;
+    if (segment == 0) std::cout << "Segment text" << std::endl;
+    else if (segment == 1) std::cout << "Segment data" << std::endl;
+    for (int i = pcb->segTab[segment]->baseRAM; i < pcb->segTab[segment]->limit) {
+        std::cout << i << "   " << ram[i] << std::endl;
+    }
 }

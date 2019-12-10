@@ -5,6 +5,7 @@
 #include "Virtual_Mem.hpp"
 #include "PCB.hpp"
 #include "Sync_Mech.hpp"
+#include "CPU_Scheduling.hpp"
 
 class Ram{
     private:
@@ -16,13 +17,16 @@ class Ram{
     Ram();
     ~Ram();
 
-    Semaphore ramSem(1); //public czy private?
+    Semaphore ramSem(1);
 
     void saveInRam(PCB* pcb, int segment, char ch, int logAddr);
     bool loadToRam(PCB* pcb,  std::string bytes, int segment);
     char readFromRam(PCB* pcb, int segment, int logAddr);
     void deleteFromRam(PCB* pcb);
     std::string readMessage(int ramAddr);
+    void printRam();
+    void printProcess(PCB* pcb);
+    void printSegment(PCB* pcb, int segment);
 
     private:
     bool buddy(PCB* pcb, std::string bytes, int segment, int divisionLvl);
