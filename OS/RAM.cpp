@@ -20,7 +20,7 @@ Ram::~Ram(){}
  */
 bool Ram::saveInRam(PCB* pcb, int segment, char ch, int logAddr) {
     if(!isInRam(pcb,segment)){
-        std::string text = getSegment(pcb, segment); //will it work?
+        std::string text = VM.getSegment(pcb, segment);
         loadToRam(pcb, text, segment);
     }
     int pAddr = physAddr(pcb, segment, logAddr);
@@ -61,7 +61,7 @@ bool Ram::loadToRam(PCB* pcb, std::string bytes, int segment) {
 bool Ram::buddy(PCB* pcb, int segment, std::string bytes, int divisionLvl) {
     int fileSize;
     if (fileSize>512) return 0;
-    if (segment == 2) fileSize = bytes.size(); //??? czy nie ma tego w klasie komunikatow
+    if (segment == 2) fileSize = bytes.size();
     else fileSize = pcb->segTab[segment]->limit;
     int blockSize = std::pow(2, 9 - divisionLvl);
     int nextBlockSize;
@@ -101,7 +101,7 @@ bool Ram::buddy(PCB* pcb, int segment, std::string bytes, int divisionLvl) {
                 blocks[startAddrBlocks+i] = 1;
             }
             if(segment == 2) {
-                //ustawic adres komunikatu
+                pcb->messages.at(messages.size()).RAMaddress =  startAddr;
             }
             else {
                 pcb->segTab[segment]->baseRAM = startAddr;
@@ -129,7 +129,7 @@ bool Ram::buddy(PCB* pcb, int segment, std::string bytes, int divisionLvl) {
  */
 char Ram::readFromRam(PCB* pcb, int segment, int logAddr) {
     if(!isInRam(pcb, segment)){
-        std::string text = getSegment(pcb, segment); //will it work?
+        std::string text = VM.getSegment(pcb, segment);
         loadToRam(pcb, text, segment);
     }
     int pAddr = physAddr(pcb, segment, logAddr);
@@ -155,7 +155,9 @@ std::string Ram::readMessage(int ramAddr) {
     while (space != 2) {
         if (ram[i] == ' ') space++;
         msg.push_back(ram[i]);
+        i++;
     }
+    msg.pop_back();
 
     int size = msg.size();
     int numOfBlocks;
@@ -290,6 +292,7 @@ void Ram::printSegment(PCB* pcb, int segment) {
     }
 }
 
-void Ram::printSemafore(PCB*) {
-    std::cout << "Semaphore value: " << ramSem.value_sem() << std::endl;
+void Ram::printSemafore() {
+    ramSem.print_value();
+    ramSem.print_queue();
 }
