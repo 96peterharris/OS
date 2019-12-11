@@ -27,7 +27,7 @@ std::vector<std::string> getArgs(PCB *pcb, int argNum, int &takenBytes){
         std::string str="";
         do
         {
-            read = readFromRam(pcb, 0, takenBytes);
+            read = RAM.readFromRam(pcb, 0, takenBytes);
             str.append(1,read);
             takenBytes++;
         } while (read != ' ');
@@ -41,8 +41,8 @@ std::vector<std::string> getArgs(PCB *pcb, int argNum, int &takenBytes){
 bool interprate(PCB *pcb){
     std::string command = "";
     bool ret;
-    command.append(1, readFromRam(pcb, 0, pcb->getCommandCounter()));
-    command.append(1, readFromRam(pcb, 0, pcb->getCommandCounter()+1));
+    command.append(1, RAM.readFromRam(pcb, 0, pcb->getCommandCounter()));
+    command.append(1, RAM.readFromRam(pcb, 0, pcb->getCommandCounter()+1));
 
     int takenBytes = 0;
     if (command.size() == 2){
@@ -101,15 +101,18 @@ bool interprate(PCB *pcb){
         pcb->setCommandCounter(pcb->getCommandCounter()+2);
         ret = haltProcess(pcb->getPid());
     }
-    else if (command == "SM") //FIXME: skad brac argumenty jak PID?
+    else if (command == "SM") //FIXME: WOJTEK! Lista argumentow
     {
         args = getArgs(pcb, 3, takenBytes);
         ret = sendMessage(args[0], args[1], args[2]);
     }
-    else if (command == "RM") //FIXME: skad brac argumenty jak PID?
+    else if (command == "RM") 
     {
-        args = getArgs(pcb, 3, takenBytes);
-        ret = receiveMessage(args[0], args[1], args[2]);
+        ret = receiveMessage();
+    }
+    else if (command == "")
+    {
+
     }
     
 
