@@ -90,4 +90,12 @@ public:
 	static void printPCB(std::string pid);
 	static void printMap();
 	static void printReadyQueue();
+
+	//To IPC work
+
+	std::vector<Message> messages;
+
+	bool sendMessage(std::string pid_receiver, std::string content);
+	bool receiveMessage();
+
 };
