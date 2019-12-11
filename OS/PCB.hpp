@@ -7,6 +7,7 @@
 #include <queue>
 #include <iterator>
 #include <functional>
+#include <fstream>
 
 #include "State.hpp"
 #include "Register.hpp"
@@ -30,17 +31,17 @@ protected:
 	static std::map<std::string, PCB*> processesMap;
 	static std::vector<PCB*> readyQueue;
 	//memoryPointer 
-
 public:
+
 	PCB() : priority_default(1) {}
 	PCB(std::string pid, int processAddress, short priority, State state);
-	~PCB() {};
+	~PCB();
 
 	//Changing state inner function
 	//todo calling running
-	void removeProcess() { if(state == RUNNING) this->state = TERMINATED; }
-	void resumeProcess() { if(state == WAITING) this->state = READY; }
-	void haltProcess() { if(state == RUNNING) this->state = WAITING; }
+	void setTerminated() { if (state == RUNNING) this->state = TERMINATED; }
+	void setReady() { if (state == WAITING || state == RUNNING) this->state = READY; }
+	void setWaiting() { if (state == RUNNING || state == READY) this->state = WAITING; }
 	void setRunning() { if (state == READY) this->state = RUNNING; }
 
 	//PID
@@ -61,19 +62,32 @@ public:
 	void setPriority(short priority) { this->priority = priority; }
 	//State
 	State getState() { return this->state; }
-	void setState(State state) { this->state = state; }
+	void setState(State &state) { this->state = state; }
 	//Map getter
 	static std::map<std::string, PCB*>* getProcessMapPointer() { return &processesMap; }
 	//"Queue" getter
 	static std::vector<PCB*>* getReadyQueuePointer();
 	//if there is need to update queue
 	static bool NEW_PROCESS;
+
+	//re did into pcb::function() as static ones
+	static bool createProcess(std::string pid, int processAddress, short priority);
+	//Terminates and deletes
+	static bool removeProcess(std::string pid);
+	//Changes state to READY
+	static bool resumeProcess(std::string pid);
+	//Changes state to WAITING
+	static bool haltProcess(std::string pid);
+	//Returns PCB
+	static PCB* getPCB(std::string pid);
+	//Update a Ready Process Queue
+	static bool update();
+
+	//File read and removing the spaces
+	static bool readFile(std::string name, std::string &text);
+
+	//Value prints
+	static void printPCB(std::string pid);
+	static void printMap();
+	static void printReadyQueue();
 };
-
-bool PCB::NEW_PROCESS = false;
-
-bool createProcess(std::string pid, int processAddress, short priority);
-bool removeProcess(std::string pid);
-bool resumeProcess(std::string pid);
-bool haltProcess(std::string pid);
-bool update();
