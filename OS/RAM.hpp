@@ -24,9 +24,11 @@ class Ram{
     char readFromRam(PCB* pcb, int segment, int logAddr);
     bool deleteFromRam(PCB* pcb);
     std::string readMessage(int ramAddr);
+
     void printRam();
     void printProcess(PCB* pcb);
     void printSegment(PCB* pcb, int segment);
+    void printSemaphore(PCB*);
 
     private:
     bool buddy(PCB* pcb, int segment, std::string bytes, int divisionLvl);

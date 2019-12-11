@@ -289,3 +289,7 @@ void Ram::printSegment(PCB* pcb, int segment) {
         std::cout << i << "   " << ram[i] << std::endl;
     }
 }
+
+void Ram::printSemafore(PCB*) {
+    std::cout << "Semaphore value: " << ramSem.value_sem() << std::endl;
+}
