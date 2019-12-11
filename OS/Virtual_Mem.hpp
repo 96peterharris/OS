@@ -11,6 +11,11 @@ public:
 	int baseRAM;
 	int limit;
 	bool vi;
+
+	int getBaseVM() { return baseVM; }
+	int getBaseRAM() { return baseRAM; }
+	int getLimit() { return limit; }
+	bool getVI() { return vi; }
 };
 
 class SegmentVM {
@@ -30,17 +35,17 @@ private:
 public:
 	Virtual_Mem();
 	~Virtual_Mem();
-	void loadProg(PCB *pcb, std::string data);
-	void DeleteProg(PCB *pcb);
+	bool createProg(PCB *pcb, std::string data);
+	bool loadProg(PCB *pcb);
+	bool deleteProg(PCB *pcb);
 	std::string getSegment(PCB *pcb, const int segment);
-	void loadToVM(PCB *pcb, const std::string data);
+	bool loadToVM(PCB *pcb, const std::string data);
 
-	void printPCBSegTab(PCB *pcb);
+	void printPCBSegments(PCB *pcb);
 	void printVMSegTab();
 	void printVM(PCB *pcb);
 	void printPCBSegTab();
 
 private:
 	int findFreeSpace(int limit);
-};
-
+}VM;
