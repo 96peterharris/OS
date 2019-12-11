@@ -292,7 +292,7 @@ void Ram::printSegment(PCB* pcb, int segment) {
     }
 }
 
-void Ram::printSemafore() {
+void Ram::printSemaphore() {
     ramSem.print_value();
     ramSem.print_queue();
 }
