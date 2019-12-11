@@ -4,7 +4,7 @@
 #include <regex>
 
 #include "interpreter_functions\arythmetics.hpp"
-// #include "interpreter_functions\Interpreter_syntax.hpp"
+//#include "interpreter_functions\Interpreter_syntax.hpp"
 #include "interpreter_functions\jumps.hpp"
 #include "PCB.hpp"
 #include "RAM.hpp"
@@ -28,7 +28,7 @@ std::vector<std::string> getArgs(PCB *pcb, int argNum, int &takenBytes){
         std::string str="";
         do
         {
-            read = readFromRam(pcb, takenBytes);
+            read = readFromRam(pcb, 0, takenBytes);
             str.append(1,read);
             takenBytes++;
         } while (read != ' ');
@@ -42,8 +42,8 @@ std::vector<std::string> getArgs(PCB *pcb, int argNum, int &takenBytes){
 bool interprate(PCB *pcb){
     std::string command = "";
     bool ret;
-    command.append(1, readFromRam(pcb, pcb->getCommandCounter()));
-    command.append(1, readFromRam(pcb, pcb->getCommandCounter()+1));
+    command.append(1, readFromRam(pcb, 0, pcb->getCommandCounter()));
+    command.append(1, readFromRam(pcb, 0, pcb->getCommandCounter()+1));
 
     int takenBytes = 0;
     if (command.size() == 2){
