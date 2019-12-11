@@ -12,9 +12,9 @@ Message::Message(std::string sender, std::string content) {
 	this->pid_sender = sender;
 	this->content = content;
 
-	this->size = content.size()
+	this->size = content.size(); 
 
-	//this->size = loadToRam() ???czekam na kinie
+		//this->size = loadToRam() ???czekam na kinie
 
 }
 
