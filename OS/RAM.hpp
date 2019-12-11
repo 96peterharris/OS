@@ -32,4 +32,4 @@ class Ram{
     bool buddy(PCB* pcb, std::string bytes, int segment, int divisionLvl);
     int physAddr(PCB* pcb, int segment, int logAddr);
     bool isInRam(PCB* pcb, int segment);
-};
+} RAM;

@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <exception>
 
-
+#include "RAM.hpp"
 #include "PCB.hpp"
 
 
@@ -40,6 +40,8 @@ public:
 
 	//ReadMessage
 	//LoadToRam
+
+	bool printMessage();
 
 };
 
