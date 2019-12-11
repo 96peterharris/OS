@@ -10,7 +10,7 @@ CPU_Scheduling::CPU_Scheduling()
 }
 void CPU_Scheduling::increasePriority()
 {
-	for (int i = 1; i < recivedQueue->size(); i++)
+	for (int i = 0; i < recivedQueue->size()-1; i++)
 	{
 		if (recivedQueue->at(i)->getPriority() < 12)
 		{
@@ -36,7 +36,7 @@ void CPU_Scheduling::cpu_sch()
 	if (recivedQueue->size() > 1) 
 	{
 		update();							//Updating process queue
-		running = recivedQueue->at(1);
+		running = recivedQueue->at(0);
 		commandCounter = 0;
 	}
 	else 
@@ -45,7 +45,7 @@ void CPU_Scheduling::cpu_sch()
 		
 		if (recivedQueue->size() > 1)
 		{
-			running = recivedQueue->at(1);
+			running = recivedQueue->at(0);
 		}
 		else
 		{
@@ -66,7 +66,7 @@ void CPU_Scheduling::nexStep()
 		else
 		{
 			haltProcess(running->getPid());
-			running->setCommandCounter(+commandCounter);
+			running->setCommandCounter(+commandCounter); //attention!!!!
 			commandCounter = 0;
 			increasePriority();
 			cpu_sch();
