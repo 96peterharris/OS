@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include "Virtual_Mem.hpp"
 
 class CPU_Scheduling
 {
@@ -28,7 +29,7 @@ private:
 	void getProcesses();
 
 public:
-	//Coinstructor
+	//Constructor
 	CPU_Scheduling();
 	~CPU_Scheduling() {};
 
@@ -37,5 +38,8 @@ public:
 	//This method is responsible for make nex step (for example increase commandCounter) and it use another methods in this class
 	void nexStep();
 
+	std::string getRunningPID();
+
 };
+CPU_Scheduling cpu;
 

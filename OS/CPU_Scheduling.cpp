@@ -37,22 +37,27 @@ void CPU_Scheduling::cpu_sch()
 	{
 		update();							//Updating process queue
 		running = recivedQueue->at(0);
+		running->setRunning(); //Attention!!!
 		commandCounter = 0;
+		Virtual_Mem::loadProg(running);
 	}
 	else 
 	{
 		recivedQueue = PCB::getReadyQueuePointer();
 		
-		if (recivedQueue->size() > 1)
+		/*if (recivedQueue->size() > 1)
 		{
 			running = recivedQueue->at(0);
 		}
 		else
 		{
 			running = recivedQueue->at(0);
-		}
-		
+		}*/
+
+		running = recivedQueue->at(0);
+		running->setTerminated();
 		commandCounter = 0;
+		Virtual_Mem::loadProg(running);
 	}
 }
 void CPU_Scheduling::nexStep()
@@ -65,7 +70,8 @@ void CPU_Scheduling::nexStep()
 		}
 		else
 		{
-			haltProcess(running->getPid());
+			running->setTerminated(); //eryk zmieni³ funkcje
+			//haltProcess(running->getPid());
 			running->setCommandCounter(+commandCounter); //attention!!!!
 			commandCounter = 0;
 			increasePriority();
@@ -74,10 +80,13 @@ void CPU_Scheduling::nexStep()
 	}
 	else
 	{
-		running->setState(State::READY);
+		running->setTerminated();
 		running->setCommandCounter(+commandCounter);
 		commandCounter = 0;
 		increasePriority();
 		cpu_sch();
 	}
+}
+std::string CPU_Scheduling::getRunningPID() {
+	return running->getPid();
 }
