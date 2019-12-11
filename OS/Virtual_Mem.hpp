@@ -5,6 +5,7 @@
 #include <locale>
 #include "PCB.hpp"
 
+
 class SegmentPCB {
 public:
 	int baseVM;

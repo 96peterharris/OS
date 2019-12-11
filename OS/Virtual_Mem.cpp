@@ -4,12 +4,9 @@ Virtual_Mem::Virtual_Mem()
 {
 }
 
-
 Virtual_Mem::~Virtual_Mem()
 {
 }
-
-
 
 /**
  * Finds space in pagefile that could contain whole new segment.

@@ -31,9 +31,9 @@ protected:
 
 	static std::map<std::string, PCB*> processesMap;
 	static std::vector<PCB*> readyQueue;
+public:
 	//memoryPointer 
 	std::vector<SegmentPCB*> segTab;
-public:
 
 	PCB() : priority_default(1) {}
 	PCB(std::string pid, int processAddress, short priority, State state);
