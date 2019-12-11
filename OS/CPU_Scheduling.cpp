@@ -35,11 +35,11 @@ void CPU_Scheduling::cpu_sch()
 {
 	if (recivedQueue->size() > 1) 
 	{
-		update();							//Updating process queue
+		PCB::update();							//Updating process queue
 		running = recivedQueue->at(0);
 		running->setRunning(); //Attention!!!
 		commandCounter = 0;
-		Virtual_Mem::loadProg(running);
+		Virtual_Mem::loadProg(running); //robbert musi utworzyæ
 	}
 	else 
 	{
@@ -57,14 +57,14 @@ void CPU_Scheduling::cpu_sch()
 		running = recivedQueue->at(0);
 		running->setTerminated();
 		commandCounter = 0;
-		Virtual_Mem::loadProg(running);
+		Virtual_Mem::loadProg(running); //robbert musi utworzyæ
 	}
 }
 void CPU_Scheduling::nexStep()
 {
 	if ((commandCounter < 5) && (PCB::NEW_PROCESS = false)) 
 	{
-		if (interprate() == true)
+		if (interprate(running) == true)
 		{	
 			commandCounter++;
 		}
