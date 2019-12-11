@@ -37,8 +37,13 @@ public:
 	void cpu_sch();
 	//This method is responsible for make nex step (for example increase commandCounter) and it use another methods in this class
 	void nexStep();
-
+	//This function return PID of current running PCB
 	std::string getRunningPID();
+	//THis function display content of PCB queue
+	void displayPCBqueue();
+	//THis function print infromation of PCB which is running
+	void displayRunning();
+
 
 };
 CPU_Scheduling cpu;

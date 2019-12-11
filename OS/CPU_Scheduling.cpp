@@ -39,7 +39,7 @@ void CPU_Scheduling::cpu_sch()
 		running = recivedQueue->at(0);
 		running->setRunning(); //Attention!!!
 		commandCounter = 0;
-		Virtual_Mem::loadProg(running); //robbert musi utworzyæ
+		VM.loadProg(running); //robbert musi utworzyæ
 	}
 	else 
 	{
@@ -57,7 +57,7 @@ void CPU_Scheduling::cpu_sch()
 		running = recivedQueue->at(0);
 		running->setTerminated();
 		commandCounter = 0;
-		Virtual_Mem::loadProg(running); //robbert musi utworzyæ
+		VM.loadProg(running); //robbert musi utworzyæ
 	}
 }
 void CPU_Scheduling::nexStep()
@@ -89,4 +89,17 @@ void CPU_Scheduling::nexStep()
 }
 std::string CPU_Scheduling::getRunningPID() {
 	return running->getPid();
+}
+void CPU_Scheduling::displayPCBqueue()
+{
+	std::cout << "PID\t PRIORITY \tSTATE" << std::endl;
+
+	for(int i = 0; i < recivedQueue->size(); i++)
+	{
+		std::cout << recivedQueue->at(i)->getPid() << "\t " << recivedQueue->at(i)->getPriority() << "\t" << recivedQueue->at(i)->getState() << std::endl;
+	}
+}
+void CPU_Scheduling::displayRunning()
+{
+	PCB::printPCB(running->getPid());
 }
