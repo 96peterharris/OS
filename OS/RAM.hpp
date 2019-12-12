@@ -1,11 +1,5 @@
 #pragma once
-#include <array>
-#include <vector>
-#include <cmath>
-
-#include "Virtual_Mem.hpp"
-#include "PCB.hpp"
-#include "Sync_Mech.hpp"
+#include "Headers.h"
 
 class Ram{
     private:
@@ -17,7 +11,7 @@ class Ram{
     Ram();
     ~Ram();
 
-    Semaphore ramSem(1);
+    Semaphore ramSem;
 
     bool saveInRam(PCB* pcb, int segment, char ch, int logAddr);
     bool loadToRam(PCB* pcb,  std::string bytes, int segment);
