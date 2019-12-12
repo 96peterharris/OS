@@ -1,14 +1,7 @@
 #pragma once
 //Seba
 
-#include <regex>
-
-#include "interpreter_functions\arythmetics.hpp"
-#include "interpreter_functions\jumps.hpp"
-#include "PCB.hpp"
-#include "RAM.hpp"
-#include "Interprocess_Com.hpp"
-#include "Files_And_Directory_Management.hpp"
+#include "Headers.h"
 
 /**
  * Reads arguments from RAM and increases takenBytes
