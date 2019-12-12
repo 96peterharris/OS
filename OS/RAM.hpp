@@ -1,11 +1,5 @@
 #pragma once
-#include <array> //std::array
-#include <cmath> //std::pow
-
-#include "Virtual_Mem.hpp"
-#include "PCB.hpp"
-#include "Sync_Mech.hpp"
-#include "CPU_Scheduling.hpp"
+#include "Headers.h"
 
 class Ram{
     private:

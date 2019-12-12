@@ -1,11 +1,7 @@
 //Krzysio
-//Krzysio
 
-#include "Files_And_Directory_management.hpp"
-#include <iostream>
-#include "Drive.hpp"
-#include "CPU_Scheduling.hpp"
-#include <cmath>
+#include "Files_And_Directory_Management.hpp"
+
 //Znajdowanie wolnych bloków//DZIA£A
 int Filesystem::findFreeBlock(std::bitset<Drive::blocks> &bt)
 {

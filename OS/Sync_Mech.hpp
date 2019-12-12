@@ -1,8 +1,7 @@
 #pragma once
-#include <vector>
-#include <string>
-#include <iostream>
-#include "PCB.hpp"
+
+#include "Headers.h"
+
 //Karol
 class Semaphore {
 protected:

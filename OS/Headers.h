@@ -12,14 +12,20 @@
 #include <exception>
 #include <array>
 #include <bitset>
-
+#include <cmath>
+#include <locale>
 
 #include "State.hpp"
 #include "Register.hpp"
 #include "PCB.hpp"
+
 #include "CPU_Scheduling.hpp"
 #include "Drive.hpp"
+
 #include "Interpreter.hpp"
+#include "jumps.hpp"
+#include "arythmetics.hpp"
+
 #include "Files_And_Directory_Management.hpp"
 #include "Interprocess_Com.hpp"
 #include "RAM.hpp"

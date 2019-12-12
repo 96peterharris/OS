@@ -1,10 +1,5 @@
 #pragma once
-#include <array>
-#include <vector>
-#include <regex>
-#include <locale>
-#include "PCB.hpp"
-#include "RAM.hpp"
+#include "Headers.h"
 
 
 class SegmentPCB {

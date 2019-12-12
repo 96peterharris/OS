@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="arythmetics.hpp" />
     <ClInclude Include="CPU_Scheduling.hpp" />
     <ClInclude Include="Drive.hpp" />
     <ClInclude Include="Files_And_Directory_Management.hpp" />
@@ -146,6 +147,7 @@
     <ClInclude Include="Headers.h" />
     <ClInclude Include="Interpreter.hpp" />
     <ClInclude Include="Interprocess_Com.hpp" />
+    <ClInclude Include="jumps.hpp" />
     <ClInclude Include="PCB.hpp" />
     <ClInclude Include="RAM.hpp" />
     <ClInclude Include="Register.hpp" />
@@ -157,7 +159,6 @@
     <ClCompile Include="CPU_Scheduling.cpp" />
     <ClCompile Include="Files_And_Directory_Management.cpp" />
     <ClCompile Include="GUI.cpp" />
-    <ClCompile Include="Interpreter.cpp" />
     <ClCompile Include="Interprocess_Com.cpp" />
     <ClCompile Include="PCB.cpp" />
     <ClCompile Include="RAM.cpp" />

@@ -1,6 +1,4 @@
-//Pioter
 #include "CPU_Scheduling.hpp"
-#include "Interpreter.hpp"
 
 
 CPU_Scheduling::CPU_Scheduling() 

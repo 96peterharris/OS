@@ -1,10 +1,5 @@
 //Wojtek
-
-
-
 #include "Interprocess_Com.hpp"
-#include "PCB.hpp"
-
 
 Message::Message() {}
 
