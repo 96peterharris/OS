@@ -103,8 +103,8 @@ bool interprate(PCB *pcb){
     }
     else if (command == "SM") //FIXME: WOJTEK! Lista argumentow
     {
-        args = getArgs(pcb, 3, takenBytes);
-        ret = sendMessage(args[0], args[1], args[2]);
+        args = getArgs(pcb, 2, takenBytes);
+        ret = sendMessage(args[0], args[1]);
     }
     else if (command == "RM") 
     {
@@ -112,7 +112,7 @@ bool interprate(PCB *pcb){
     }
     else if (command == "")
     {
-
+        //DODAC PLIKI I PROCESY
     }
     
 
