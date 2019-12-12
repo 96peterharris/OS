@@ -24,14 +24,28 @@ bool PCB::sendMessage(std::string pid_receiver, std::string content) {
 	PCB* receiver = getPCB(pid_receiver);
 	Message temp = Message(pid_receiver, content);
 
+	std::string RAMmessage;
+	if (RAMmessage = prepareMessage(temp)) {
+		return false;
+
+	}
+
 	if (receiver != nullptr) {
 		receiver->messages.push_back(temp);
 
-		if (!RAM.loadToRam(receiver, content, 2)) return false;
+		if (!RAM.loadToRam(receiver, content, 2)) {
+			std::cout << "\n\n Pomyslnie wyslano komunikat.";
+		}
+		else {
+			return false;
+			throw RAMreadingError();
+		}
 
 	}
-	else return false;
-
+	else {
+		return false;
+		throw receiverNotFound();
+	}
 
 
 	return true;
@@ -64,7 +78,10 @@ bool PCB::receiveMessage() {
 
 		messages.erase(messages.begin());
 	}
-	else return false;
+	else {
+		return false;
+		throw messageNotFound();
+	}
 
 	return true;
 }
@@ -81,10 +98,16 @@ bool showMessages(PCB* pcb) {
 
 bool Message::printMessage() {
 
-	std::cout <<
-		"\n NADAWCA: " << pid_sender <<
-		"\n TRESC: " << content <<
-		"\n ADRES POCZATKU: " << RAMadrress;
+
+		std::cout <<
+			"\n NADAWCA: " << pid_sender <<
+			"\n TRESC: " << content <<
+			"\n ADRES POCZATKU: " << RAMadrress;
+
 
 	return true;
+}
+
+std::string prepareMessage(Message mess) {
+
 }
