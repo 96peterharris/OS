@@ -68,6 +68,13 @@ public:
 	static std::vector<PCB*>* getReadyQueuePointer();
 	//if there is need to update queue
 	static bool NEW_PROCESS;
+
+	//To IPC work
+
+	std::vector<Message> messages;
+
+	bool sendMessage(std::string pid_receiver, std::string content);
+	bool receiveMessage(std::string pid_sender);
 };
 
 bool PCB::NEW_PROCESS = false;
