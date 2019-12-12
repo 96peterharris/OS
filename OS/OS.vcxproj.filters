@@ -105,4 +105,9 @@
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="si">
+      <Filter>Pliki zasobów</Filter>
+    </Text>
+  </ItemGroup>
 </Project>

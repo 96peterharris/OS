@@ -61,7 +61,7 @@ bool Ram::loadToRam(PCB* pcb, std::string bytes, int segment) {
  * @return true for success or false for failure.
  */
 bool Ram::buddy(PCB* pcb, int segment, std::string bytes, int divisionLvl) {
-    int fileSize;
+    int fileSize = 0;
     if (fileSize>512) return 0;
     if (segment == 2) fileSize = bytes.size();
     else fileSize = pcb->segTab[segment]->limit;
