@@ -159,6 +159,8 @@
     <ClCompile Include="CPU_Scheduling.cpp" />
     <ClCompile Include="Files_And_Directory_Management.cpp" />
     <ClCompile Include="GUI.cpp" />
+    <ClCompile Include="Headers.cpp" />
+    <ClCompile Include="Interperter.cpp" />
     <ClCompile Include="Interprocess_Com.cpp" />
     <ClCompile Include="PCB.cpp" />
     <ClCompile Include="RAM.cpp" />

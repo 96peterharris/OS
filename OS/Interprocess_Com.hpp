@@ -35,6 +35,7 @@ public:
 
 	Message();
 	Message(std::string sender, std::string content);
+	~Message() {}
 
 	//ReadMessage
 	//LoadToRam
@@ -42,9 +43,3 @@ public:
 	bool printMessage();
 
 };
-
-
-bool operator==(Message& m1, Message& m2) {
-	if (m1.pid_sender == m2.pid_sender && m1.content == m2.content && m1.RAMadrress == m2.RAMadrress) return true;
-	return false;
-}

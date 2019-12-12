@@ -45,4 +45,4 @@ public:
 
 private:
 	int findFreeSpace(const int limit);
-}VM;
+};

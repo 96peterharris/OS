@@ -1,7 +1,6 @@
 //Enrique
 #include "PCB.hpp"
 
-
 bool PCB::NEW_PROCESS = false;
 std::map<std::string, PCB*> PCB::processesMap;
 std::vector<PCB*> PCB::readyQueue;

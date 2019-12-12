@@ -40,4 +40,4 @@ private:
     bool buddy(PCB* pcb, int segment, std::string bytes, int divisionLvl);
     int physAddr(PCB* pcb, int segment, int logAddr);
     bool isInRam(PCB* pcb, int segment);
-}RAM;
+};

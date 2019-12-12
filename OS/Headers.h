@@ -1,33 +1,21 @@
 #pragma once
-#include <iostream>
-#include <string>
-#include <map>
-#include <vector>
-#include <queue>
-#include <iterator>
-#include <functional>
-#include <fstream>
-#include <regex>
-#include <algorithm>
-#include <exception>
-#include <array>
-#include <bitset>
-#include <cmath>
-#include <locale>
 
-#include "State.hpp"
-#include "Register.hpp"
-#include "PCB.hpp"
 
-#include "CPU_Scheduling.hpp"
-#include "Drive.hpp"
-
-#include "Interpreter.hpp"
-#include "jumps.hpp"
-#include "arythmetics.hpp"
-
-#include "Files_And_Directory_Management.hpp"
-#include "Interprocess_Com.hpp"
 #include "RAM.hpp"
-#include "Sync_Mech.hpp"
 #include "Virtual_Mem.hpp"
+#include "Files_And_Directory_Management.hpp"
+#include "CPU_Scheduling.hpp"
+
+class Ram;
+class Virtual_Mem;
+class CPU_Scheduling;
+class Filesystem;
+
+class System {
+public:
+	static Ram RAM;
+	static Virtual_Mem VM;
+	static CPU_Scheduling CPU;
+	static Filesystem FS;
+	System();
+};
