@@ -1,5 +1,6 @@
 #include "CPU_Scheduling.hpp"
 
+#include "Headers.h"
 
 CPU_Scheduling::CPU_Scheduling() 
 {
@@ -37,7 +38,7 @@ void CPU_Scheduling::cpu_sch()
 		running = recivedQueue->at(0);
 		running->setRunning(); //Attention!!!
 		commandCounter = 0;
-		VM.loadProg(running); //robbert musi utworzyæ
+		System::VM.loadProg(running); //robbert musi utworzyæ
 	}
 	else 
 	{
@@ -55,7 +56,7 @@ void CPU_Scheduling::cpu_sch()
 		running = recivedQueue->at(0);
 		running->setTerminated();
 		commandCounter = 0;
-		VM.loadProg(running); //robbert musi utworzyæ
+		System::VM.loadProg(running); //robbert musi utworzyæ
 	}
 }
 void CPU_Scheduling::nexStep()

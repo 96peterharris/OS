@@ -13,9 +13,8 @@
 #include "State.hpp"
 #include "Register.hpp"
 
-class Message;
-
 class SegmentPCB;
+class Message;
 
 class PCB
 {

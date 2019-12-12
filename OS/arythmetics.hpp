@@ -5,7 +5,6 @@
 #include "PCB.hpp"
 #include "RAM.hpp"
 
-class Ram;
 
 bool ADD(PCB *pcb, std::string dest, std::string arg);
 bool SUB(PCB *pcb, std::string dest, std::string arg);

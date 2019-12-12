@@ -2,6 +2,7 @@
 //Seba
 #include "Interpreter.hpp"
 
+#include "Headers.h"
 /**
  * Reads arguments from RAM and increases takenBytes
  *
@@ -20,7 +21,7 @@ std::vector<std::string> getArgs(PCB *pcb, int argNum, int &takenBytes) {
 		std::string str = "";
 		do
 		{
-			read = RAM.readFromRam(pcb, 0, takenBytes);
+			read = System::RAM.readFromRam(pcb, 0, takenBytes);
 			str.append(1, read);
 			takenBytes++;
 		} while (read != ' ');
@@ -34,8 +35,8 @@ std::vector<std::string> getArgs(PCB *pcb, int argNum, int &takenBytes) {
 bool interprate(PCB *pcb) {
 	std::string command = "";
 	bool ret;
-	command.append(1, RAM.readFromRam(pcb, 0, pcb->getCommandCounter()));
-	command.append(1, RAM.readFromRam(pcb, 0, pcb->getCommandCounter() + 1));
+	command.append(1, System::RAM.readFromRam(pcb, 0, pcb->getCommandCounter()));
+	command.append(1, System::RAM.readFromRam(pcb, 0, pcb->getCommandCounter() + 1));
 
 	int takenBytes = 0;
 	if (command.size() == 2) {
@@ -113,37 +114,37 @@ bool interprate(PCB *pcb) {
 	else if (command == "CF")
 	{
 		args = getArgs(pcb, 1, takenBytes);
-		ret = fs.createFile(args[0]);
+		ret = System::FS.createFile(args[0]);
 	}
 	else if (command == "CL")
 	{
 		args = getArgs(pcb, 2, takenBytes);
-		ret = fs.closeFile(args[0], args[1]);
+		ret = System::FS.closeFile(args[0], args[1]);
 	}
 	else if (command == "DF")
 	{
 		args = getArgs(pcb, 2, takenBytes);
-		ret = fs.deleteFile(args[0], args[1]);
+		ret = System::FS.deleteFile(args[0], args[1]);
 	}
 	else if (command == "OP")
 	{
 		args = getArgs(pcb, 2, takenBytes);
-		ret = fs.openFile(args[0], args[1]);
+		ret = System::FS.openFile(args[0], args[1]);
 	}
 	else if (command == "OW")
 	{
 		args = getArgs(pcb, 3, takenBytes);
-		ret = fs.overwriteFile(args[0], args[1], args[2]);
+		ret = System::FS.overwriteFile(args[0], args[1], args[2]);
 	}
 	else if (command == "NF")
 	{
 		args = getArgs(pcb, 3, takenBytes);
-		ret = fs.renameFile(args[0], args[1], args[2]);
+		ret = System::FS.renameFile(args[0], args[1], args[2]);
 	}
 	else if (command == "WF")
 	{
 		args = getArgs(pcb, 3, takenBytes);
-		ret = fs.writeToFile(args[0], args[1], args[2]);
+		ret = System::FS.writeToFile(args[0], args[1], args[2]);
 	}
 
 
@@ -241,7 +242,7 @@ bool ADD(PCB *pcb, std::string dest, std::string arg) {
 	else if (std::regex_match(arg, m, memory))
 	{
 		// b = std::stoi(readRamNum(pcb, std::stoi(m[1])));
-		b = RAM.readFromRam(pcb, 1, std::stoi(m[1]));
+		b = System::RAM.readFromRam(pcb, 1, std::stoi(m[1]));
 
 	}
 	else if (arg.size() == 1)
@@ -301,12 +302,12 @@ bool ADD(PCB *pcb, std::string dest, std::string arg) {
 	}
 	else if (std::regex_match(dest, m, memory))
 	{
-		a = RAM.readFromRam(pcb, 1, std::stoi(m[1]));
+		a = System::RAM.readFromRam(pcb, 1, std::stoi(m[1]));
 		if (a + b > 255) {
-			RAM.saveInRam(pcb, 1, 255, std::stoi(m[1]));
+			System::RAM.saveInRam(pcb, 1, 255, std::stoi(m[1]));
 		}
 		else {
-			RAM.saveInRam(pcb, 1, a + b, std::stoi(m[1]));
+			System::RAM.saveInRam(pcb, 1, a + b, std::stoi(m[1]));
 		}
 	}
 	else
@@ -354,7 +355,7 @@ bool SUB(PCB *pcb, std::string dest, std::string arg) {
 	else if (std::regex_match(arg, m, memory))
 	{
 		// b = std::stoi(readRamNum(pcb, std::stoi(m[1])));
-		b = RAM.readFromRam(pcb, 1, std::stoi(m[1]));
+		b = System::RAM.readFromRam(pcb, 1, std::stoi(m[1]));
 
 	}
 	else if (arg.size() == 1)
@@ -414,12 +415,12 @@ bool SUB(PCB *pcb, std::string dest, std::string arg) {
 	}
 	else if (std::regex_match(dest, m, memory))
 	{
-		a = RAM.readFromRam(pcb, 1, std::stoi(m[1]));
+		a = System::RAM.readFromRam(pcb, 1, std::stoi(m[1]));
 		if (a < b) {
-			RAM.saveInRam(pcb, 1, 0, std::stoi(m[1]));
+			System::RAM.saveInRam(pcb, 1, 0, std::stoi(m[1]));
 		}
 		else {
-			RAM.saveInRam(pcb, 1, a - b, std::stoi(m[1]));
+			System::RAM.saveInRam(pcb, 1, a - b, std::stoi(m[1]));
 		}
 	}
 	else
@@ -467,7 +468,7 @@ bool MUL(PCB *pcb, std::string dest, std::string arg) {
 	else if (std::regex_match(arg, m, memory))
 	{
 		// b = std::stoi(readRamNum(pcb, std::stoi(m[1])));
-		b = RAM.readFromRam(pcb, 1, std::stoi(m[1]));
+		b = System::RAM.readFromRam(pcb, 1, std::stoi(m[1]));
 
 	}
 	else if (arg.size() == 1)
@@ -527,12 +528,12 @@ bool MUL(PCB *pcb, std::string dest, std::string arg) {
 	}
 	else if (std::regex_match(dest, m, memory))
 	{
-		a = RAM.readFromRam(pcb, 1, std::stoi(m[1]));
+		a = System::RAM.readFromRam(pcb, 1, std::stoi(m[1]));
 		if (a*b > 255) {
-			RAM.saveInRam(pcb, 1, 255, std::stoi(m[1]));
+			System::RAM.saveInRam(pcb, 1, 255, std::stoi(m[1]));
 		}
 		else {
-			RAM.saveInRam(pcb, 1, a*b, std::stoi(m[1]));
+			System::RAM.saveInRam(pcb, 1, a*b, std::stoi(m[1]));
 		}
 	}
 	else
@@ -580,7 +581,7 @@ bool MOV(PCB *pcb, std::string dest, std::string arg) {
 	}
 	else if (std::regex_match(arg, m, memory))
 	{
-		b = RAM.readFromRam(pcb, 1, std::stoi(m[1]));
+		b = System::RAM.readFromRam(pcb, 1, std::stoi(m[1]));
 	}
 	else if (arg.size() == 1)
 	{
@@ -613,7 +614,7 @@ bool MOV(PCB *pcb, std::string dest, std::string arg) {
 	}
 	else if (std::regex_match(dest, m, memory))
 	{
-		RAM.saveInRam(pcb, 1, b, std::stoi(m[1]));
+		System::RAM.saveInRam(pcb, 1, b, std::stoi(m[1]));
 	}
 	else
 	{

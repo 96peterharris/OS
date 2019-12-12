@@ -1,4 +1,5 @@
 #include "RAM.hpp"
+#include "Headers.h"
 
 Ram::Ram() : ramSem(1){
     ram.fill(' ');
@@ -21,7 +22,7 @@ Ram::~Ram(){}
  */
 bool Ram::saveInRam(PCB* pcb, int segment, char ch, int logAddr) {
     if(!isInRam(pcb,segment)){
-        std::string text = VM.getSegment(pcb, segment);
+        std::string text = System::VM.getSegment(pcb, segment);
         loadToRam(pcb, text, segment);
     }
     int pAddr = physAddr(pcb, segment, logAddr);
@@ -130,7 +131,7 @@ bool Ram::buddy(PCB* pcb, int segment, std::string bytes, int divisionLvl) {
  */
 char Ram::readFromRam(PCB* pcb, int segment, int logAddr) {
     if(!isInRam(pcb, segment)){
-        std::string text = VM.getSegment(pcb, segment);
+        std::string text = System::VM.getSegment(pcb, segment);
         loadToRam(pcb, text, segment);
     }
     int pAddr = physAddr(pcb, segment, logAddr);
@@ -219,7 +220,7 @@ bool Ram::deleteFromRam(PCB* pcb) {
                 bytes.push_back(i*8+j);
             }
         }
-        VM.loadToVM(pcb, bytes);
+		System::VM.loadToVM(pcb, bytes);
     }
 
     //segment 1

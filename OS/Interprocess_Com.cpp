@@ -1,6 +1,6 @@
 //Wojtek
 #include "Interprocess_Com.hpp"
-
+#include "Headers.h"
 Message::Message() {}
 
 Message::Message(std::string sender, std::string content) {
@@ -22,7 +22,7 @@ bool PCB::sendMessage(std::string pid_receiver, std::string content) {
 	if (receiver != nullptr) {
 		receiver->messages.push_back(temp);
 
-		if (!RAM.loadToRam(receiver, content, 2)) return false;
+		if (!System::RAM.loadToRam(receiver, content, 2)) return false;
 
 	}
 	else return false;
@@ -34,7 +34,7 @@ bool PCB::sendMessage(std::string pid_receiver, std::string content) {
 bool PCB::receiveMessage() {
 	//ReceiveMessage
 	Message* received;
-	std::string RAM_string = RAM.readMessage((*received).RAMadrress);
+	std::string RAM_string = System::RAM.readMessage((*received).RAMadrress);
 	Message* RAM_received;
 	//
 	
@@ -49,7 +49,7 @@ bool PCB::receiveMessage() {
 
 	if (!messages.empty()) {
 		received = messages.at(0);
-		(*received).content = RAM.readMessage((*received).RAMadrress);
+		(*received).content = System::RAM.readMessage((*received).RAMadrress);
 
 		//comparing if RAM values and object values are similar
 		if (!(received == RAM_received)) return false;
