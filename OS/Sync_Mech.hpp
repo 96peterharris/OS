@@ -1,9 +1,6 @@
 #pragma once
 //Required libraries.
-#include <vector>
-#include <string>
-#include <iostream>
-#include "PCB.hpp"
+#include "Headers.h"
 
 class Semaphore {
 protected:

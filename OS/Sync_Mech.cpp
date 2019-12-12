@@ -10,7 +10,7 @@ bool Semaphore::signal_sem() {
 	if (queue.size() != 0) {
 		pcbid = queue.at(0);
 		queue.erase(queue.begin());
-		if (resumeProcess(pcbid)) return true;
+		if (PCB::resumeProcess(pcbid)) return true;
 		else return false;
 	}
 	return true;
@@ -25,7 +25,7 @@ bool Semaphore::wait_sem(std::string pcbid) {
 	if (value <= 0) {
 		value--;
 		queue.push_back(pcbid);
-		if (haltProcess(pcbid)) return true;
+		if (PCB::haltProcess(pcbid)) return true;
 		else return false;
 	}
 	else {

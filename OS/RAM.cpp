@@ -1,4 +1,4 @@
-#include "ram.hpp"
+#include "RAM.hpp"
 
 Ram::Ram() : ramSem(1){
     ram.fill(' ');

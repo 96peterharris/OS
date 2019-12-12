@@ -1,7 +1,5 @@
 #pragma once
-#include <array>
-#include "PCB.hpp"
-#include "RAM.hpp"
+#include "Headers.h"
 
 class SegmentPCB {
 public:

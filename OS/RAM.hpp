@@ -1,11 +1,5 @@
 #pragma once
-#include <array>
-#include <vector>
-#include <cmath>
-
-#include "Virtual_Mem.hpp"
-#include "PCB.hpp"
-#include "Sync_Mech.hpp"
+#include "Headers.h"
 
 class Ram{
     private:
