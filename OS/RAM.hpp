@@ -17,7 +17,7 @@ class Ram{
     Ram();
     ~Ram();
 
-    Semaphore ramSem(1);
+    Semaphore ramSem;
 
     bool saveInRam(PCB* pcb, int segment, char ch, int logAddr);
     bool loadToRam(PCB* pcb,  std::string bytes, int segment);
@@ -36,4 +36,4 @@ class Ram{
     bool buddy(PCB* pcb, int segment, std::string bytes, int divisionLvl);
     int physAddr(PCB* pcb, int segment, int logAddr);
     bool isInRam(PCB* pcb, int segment);
-} RAM;
+}RAM;

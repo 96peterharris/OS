@@ -1,8 +1,9 @@
 #include "ram.hpp"
 
-Ram::Ram(){
+Ram::Ram() : ramSem(1){
     ram.fill(' ');
     blocks.fill(0);
+    
 }
 
 Ram::~Ram(){}
@@ -101,7 +102,7 @@ bool Ram::buddy(PCB* pcb, int segment, std::string bytes, int divisionLvl) {
                 blocks[startAddrBlocks+i] = 1;
             }
             if(segment == 2) {
-                pcb->messages.at(messages.size()).RAMaddress =  startAddr;
+                pcb->messages.at(pcb->messages.size()).RAMadrress =  startAddr;
             }
             else {
                 pcb->segTab[segment]->baseRAM = startAddr;
