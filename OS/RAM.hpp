@@ -1,14 +1,22 @@
 #pragma once
-#include "Headers.h"
+#include <array> //std::array
+#include <cmath> //std::pow
+
+#include "Virtual_Mem.hpp"
+#include "PCB.hpp"
+#include "Sync_Mech.hpp"
+#include "CPU_Scheduling.hpp"
+
+class Virtual_Mem;
 
 class Ram{
-    private:
+private:
     std::array<char,512> ram;
     std::array<bool, 64> blocks;
     const int maxDivision = 6;
     Semaphore ramSem;
 
-    public:
+public:
     Ram();
     ~Ram();
 
@@ -25,7 +33,7 @@ class Ram{
     void printMessage(int ramAddr);
     void printSemaphore();
 
-    private:
+private:
     bool buddy(PCB* pcb, int segment, std::string bytes, int divisionLvl);
     int physAddr(PCB* pcb, int segment, int logAddr);
     bool isInRam(PCB* pcb, int segment);

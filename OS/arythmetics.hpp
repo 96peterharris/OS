@@ -1,6 +1,11 @@
 #pragma once
 
-#include "Headers.h"
+#include <regex>
+
+#include "PCB.hpp"
+#include "RAM.hpp"
+
+class Ram;
 
 /**
  * Adds value to a given register or RAM memory cell

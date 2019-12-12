@@ -1,11 +1,17 @@
 //Pioter
 #pragma once
-#include "Headers.h"
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include "Virtual_Mem.hpp"
+#include "PCB.hpp"
+#include "Interpreter.hpp"
 
 class CPU_Scheduling
 {
 private:
-
 	//Vector of recived processes
 	std::vector<PCB*>* recivedQueue; 
 	//Vector of Terminated processes

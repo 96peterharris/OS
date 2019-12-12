@@ -1,6 +1,6 @@
 //Krzysio
 #include "Files_And_Directory_Management.hpp"
-
+#include "CPU_Scheduling.hpp"
 
 int Filesystem::findFreeBlock(std::bitset<Drive::blocks> &bt)
 {
@@ -16,7 +16,7 @@ bool Filesystem::fileExists(const string &filename)
 	{
 		for (int i = 0; i < maincatalogue.size(); i++)
 		{
-			if (maincatalogue.[i].name() == filename)
+			if (maincatalogue.at(i).name == filename)
 			{
 				return true;
 			}

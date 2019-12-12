@@ -1,13 +1,19 @@
 //Enrique
 #pragma once
-#include <vector>
+#pragma once
 #include <iostream>
-#include <map>
 #include <string>
+#include <map>
+#include <vector>
+#include <queue>
+#include <iterator>
+#include <functional>
+#include <fstream>
 
 #include "State.hpp"
 #include "Register.hpp"
-#include "Interprocess_Com.hpp"
+
+class Message;
 
 class SegmentPCB;
 

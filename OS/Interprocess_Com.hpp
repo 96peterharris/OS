@@ -3,7 +3,11 @@
 
 //Mateusz jak cos to wszystkie couty mozesz zmienic na te swoje SFMLowe okienka nara
 
-#include "Headers.h"
+#include <algorithm>
+#include <exception>
+
+#include "RAM.hpp"
+#include "PCB.hpp"
 
 struct messageNotFound : public std::exception
 {
