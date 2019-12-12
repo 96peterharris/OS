@@ -5,6 +5,8 @@
 #include <iostream>
 #include "PCB.hpp"
 
+class PCB;
+
 class Semaphore {
 protected:
 	//The data hold by the semaphore.
