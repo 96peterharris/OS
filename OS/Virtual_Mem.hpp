@@ -1,6 +1,7 @@
 #pragma once
-#include "Headers.h"
-
+#include <array>
+#include "PCB.hpp"
+#include "RAM.hpp"
 
 class SegmentPCB {
 public:
@@ -8,11 +9,6 @@ public:
 	int baseRAM;
 	int limit;
 	bool vi;
-
-	int getBaseVM() { return baseVM; }
-	int getBaseRAM() { return baseRAM; }
-	int getLimit() { return limit; }
-	bool getVI() { return vi; }
 };
 
 class SegmentVM {
@@ -44,5 +40,5 @@ public:
 	void printPCBSegTab();
 
 private:
-	int findFreeSpace(int limit);
+	int findFreeSpace(const int limit);
 }VM;
