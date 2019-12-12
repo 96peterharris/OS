@@ -13,7 +13,7 @@ void CPU_Scheduling::increasePriority()
 		if (recivedQueue->at(i)->getPriority() < 12)
 		{
 			int tmp = recivedQueue->at(i)->getPriority();
-			tmp + 3;
+			tmp += 3;
 			recivedQueue->at(i)->setPriority(tmp);
 		}
 		else 

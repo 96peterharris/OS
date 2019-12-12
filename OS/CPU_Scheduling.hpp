@@ -1,13 +1,15 @@
 //Pioter
 #pragma once
 #include "Headers.h"
+#include "PCB.hpp"
+class PCB;
 
 class CPU_Scheduling
 {
 private:
 
 	//Vector of recived processes
-	std::vector<PCB*>* recivedQueue; 
+	std::vector<PCB* >* recivedQueue; 
 	//Vector of Terminated processes
 	std::vector<std::string> terminatedPrcID;
 	//Command counter (0-5) inside this class
@@ -33,7 +35,7 @@ public:
 	void nexStep();
 	//This function return PID of current running PCB
 	std::string getRunningPID();
-	//THis function display content of PCB queue
+	//This function display content of PCB queue
 	void displayPCBqueue();
 	//THis function print infromation of PCB which is running
 	void displayRunning();
