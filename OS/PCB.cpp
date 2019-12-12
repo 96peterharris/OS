@@ -1,16 +1,17 @@
 //Enrique
 #include "PCB.hpp"
+#include "Sync_Mech.hpp"
+#include "Headers.h"
 
 bool PCB::NEW_PROCESS = false;
 std::map<std::string, PCB*> PCB::processesMap;
 std::vector<PCB*> PCB::readyQueue;
 
 //Constructor 
-PCB::PCB(std::string pid, int processAddress, short priority, State state) : priority_default(priority), priority(priority) {
+PCB::PCB(std::string pid, short priority, State state) : priority_default(priority), priority(priority), pSem(1) {
 	if (state == NEW) {
 		this->state = READY;
 		this->pid = pid;
-		this->processAddress = processAddress;
 		this->reg = Register();
 	}
 }
@@ -47,13 +48,25 @@ bool PCB::update() {
 }
 
 //Check all of the find methods and try something else
-bool PCB::createProcess(std::string pid, int processAddress, short priority) {
+bool PCB::createProcess(std::string pid, std::string file, short priority) {
 	if (getPCB(pid) != nullptr) {
+		std::cout << " PCB:003 - PCB already existing" << std::endl;
 		return false;
 	}
 	else {
 		//This should to everything
-		PCB* pcb = new PCB(pid, processAddress, priority, NEW);
+		PCB* pcb = new PCB(pid, priority, NEW);
+
+		std::string text;
+		if (!PCB::readFile(file, text)) {
+			std::cout << " PCB:001 - Cant read file " << std::endl;
+			return false;
+		}
+
+		if (!System::VM.createProg(pcb, text)) {
+			std::cout << " PCB:002 - Cant load program to memory " << std::endl;
+			return false;
+		}
 
 		processesMap.insert(std::pair<std::string, PCB*>(pid, pcb));
 		NEW_PROCESS = true;
@@ -63,10 +76,12 @@ bool PCB::createProcess(std::string pid, int processAddress, short priority) {
 
 bool PCB::removeProcess(std::string pid) {
 	PCB* tPCB = getPCB(pid);
-	if (getPCB(pid) != nullptr) {
+	if (tPCB != nullptr) {
 		tPCB->setTerminated();
+
 		processesMap.erase(pid);
 
+		delete tPCB;
 		//call fbi remove etc
 
 		return true;
@@ -76,9 +91,22 @@ bool PCB::removeProcess(std::string pid) {
 	}
 }
 
+bool PCB::createDummy() {
+	PCB* pcb = new PCB("DM", 0, NEW);
+
+	if (!System::VM.createProg(pcb, ".text JP 0 .data")) {
+		std::cout << " PCB:002 - Cant load program to memory " << std::endl;
+		return false;
+	}
+
+	processesMap.insert(std::pair<std::string, PCB*>("DM", pcb));
+	NEW_PROCESS = true;
+	return true;
+}
+
 bool PCB::resumeProcess(std::string pid) {
 	PCB* tPCB = getPCB(pid);
-	if (tPCB == nullptr) {
+	if (tPCB != nullptr) {
 		tPCB->setReady();
 		return true;
 	}
@@ -89,7 +117,7 @@ bool PCB::resumeProcess(std::string pid) {
 
 bool PCB::haltProcess(std::string pid) {
 	PCB* tPCB = getPCB(pid);
-	if (tPCB == nullptr) {
+	if (tPCB != nullptr) {
 		tPCB->setWaiting();
 		return true;
 	}
