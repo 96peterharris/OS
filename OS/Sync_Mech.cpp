@@ -39,7 +39,8 @@ bool Semaphore::wait_sem(std::string pcbid) {
 * @return true if no problem was found or false if signal had any problem.
 */
 bool Semaphore::delete_sem() {
-	for (int i = 0; i < queue.size(); i++) {
+	int loop = queue.size();
+	for (int i = 0; i < loop; i++) {
 		if (!signal_sem()) return false;
 	}
 	return true;
