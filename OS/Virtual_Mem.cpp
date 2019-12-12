@@ -1,4 +1,5 @@
 #include "Virtual_Mem.hpp"
+#include "RAM.hpp"
 
 Virtual_Mem::Virtual_Mem()
 {

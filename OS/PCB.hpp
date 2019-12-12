@@ -101,7 +101,7 @@ public:
 
 	//To IPC work
 
-	std::vector<Message> messages;
+	std::vector<Message*> messages;
 
 	bool sendMessage(std::string pid_receiver, std::string content);
 	bool receiveMessage();

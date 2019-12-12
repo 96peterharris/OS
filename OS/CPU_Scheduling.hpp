@@ -46,5 +46,4 @@ public:
 
 
 };
-CPU_Scheduling cpu;
 

@@ -35,6 +35,7 @@ public:
 
 	Message();
 	Message(std::string sender, std::string content);
+	~Message() {}
 
 	//ReadMessage
 	//LoadToRam
