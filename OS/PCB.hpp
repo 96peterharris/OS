@@ -1,6 +1,13 @@
 //Enrique
 #pragma once
-#include "Headers.h"
+#include <vector>
+#include <iostream>
+#include <map>
+#include <string>
+
+#include "State.hpp"
+#include "Register.hpp"
+#include "Interprocess_Com.hpp"
 
 class SegmentPCB;
 
