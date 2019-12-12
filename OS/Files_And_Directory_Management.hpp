@@ -1,8 +1,14 @@
 #pragma once
 //Krzysio
 
-#include "Headers.h"
-
+#include <string>
+#include <vector>
+#include <set>
+#include <bitset>
+#include "Drive.hpp"
+#include "Sync_Mech.hpp"
+#include "CPU_Scheduling.hpp"
+#include <map>
 //SEMAFOR W PLIKU COŒ DZIA£A
 //CZY MOGÊ ZAMIAST ZNAKU ODPOWIADAJ¥CEGO NUMEROWI BLOKU WYŒWIETLAÆ NUMER TEGO BLOKU PRZY WYŒWIETLANIU DYSKU?
 //SKORO MAMY WSKAZYWAÆ NA Nastêpne pole do zapisu, to co wtedy gdy ostatnie zapisane pole bêdzie ostatnim polem bloku?
