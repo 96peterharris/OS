@@ -8,6 +8,7 @@
 #include "PCB.hpp"
 #include "RAM.hpp"
 #include "Interprocess_Com.hpp"
+#include "Files_And_Directory_Management.hpp"
 
 /**
  * Reads arguments from RAM and increases takenBytes
@@ -101,6 +102,9 @@ bool interprate(PCB *pcb){
         pcb->setCommandCounter(pcb->getCommandCounter()+2);
         ret = haltProcess(pcb->getPid());
     }
+
+    // KOMUNIKACJA PROCESOW
+
     else if (command == "SM") //FIXME: WOJTEK! Lista argumentow
     {
         args = getArgs(pcb, 2, takenBytes);
@@ -110,10 +114,48 @@ bool interprate(PCB *pcb){
     {
         ret = receiveMessage();
     }
-    else if (command == "")
+
+    // FILE SYSTEM
+
+    else if (command == "CF")
     {
-        //DODAC PLIKI I PROCESY
+        args = getArgs(pcb, 1, takenBytes);
+        ret = fs.createFile(args[0]);
     }
+    else if (command == "CL")
+    {
+        args = getArgs(pcb, 2, takenBytes);
+        ret = fs.closeFile(args[0], args[1]);
+    }
+    else if (command == "DF")
+    {
+        args = getArgs(pcb, 2, takenBytes);
+        ret = fs.deleteFile(args[0], args[1]);
+    }
+    else if (command == "OP")
+    {
+        args = getArgs(pcb, 2, takenBytes);
+        ret = fs.openFile(args[0], args[1]);
+    }
+    else if (command == "OW")
+    {
+        args = getArgs(pcb, 3, takenBytes);
+        ret = fs.overwriteFile(args[0], args[1], args[2]);
+    }
+    else if (command == "NF")
+    {
+        args = getArgs(pcb, 3, takenBytes);
+        ret = fs.renameFile(args[0], args[1], args[2]);
+    }
+    else if (command == "WF")
+    {
+        args = getArgs(pcb, 3, takenBytes);
+        ret = fs.writeToFile(args[0], args[1], args[2]);
+    }
+    
+    
+    
+    
     
 
     pcb->setCommandCounter(pcb->getCommandCounter()+takenBytes);
