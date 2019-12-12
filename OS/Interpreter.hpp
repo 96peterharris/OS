@@ -29,7 +29,7 @@ std::vector<std::string> getArgs(PCB *pcb, int argNum, int &takenBytes){
         do
         {
             read = RAM.readFromRam(pcb, 0, takenBytes);
-            str.append(1,read);
+            str += read;
             takenBytes++;
         } while (read != ' ');
         str.pop_back();        
@@ -42,8 +42,8 @@ std::vector<std::string> getArgs(PCB *pcb, int argNum, int &takenBytes){
 bool interprate(PCB *pcb){
     std::string command = "";
     bool ret;
-    command.append(1, RAM.readFromRam(pcb, 0, pcb->getCommandCounter()));
-    command.append(1, RAM.readFromRam(pcb, 0, pcb->getCommandCounter()+1));
+    command += RAM.readFromRam(pcb, 0, pcb->getCommandCounter());
+    command += RAM.readFromRam(pcb, 0, pcb->getCommandCounter()+1);
 
     int takenBytes = 0;
     if (command.size() == 2){
