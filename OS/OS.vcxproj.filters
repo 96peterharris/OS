@@ -54,6 +54,9 @@
     <ClInclude Include="State.hpp">
       <Filter>Pliki nagłówkowe\Process</Filter>
     </ClInclude>
+    <ClInclude Include="Drive.hpp">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sync_Mech.cpp">
