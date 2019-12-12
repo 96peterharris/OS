@@ -12,12 +12,11 @@ class Ram{
     std::array<char,512> ram;
     std::array<bool, 64> blocks;
     const int maxDivision = 6;
+    Semaphore ramSem;
 
     public:
     Ram();
     ~Ram();
-
-    Semaphore ramSem;
 
     bool saveInRam(PCB* pcb, int segment, char ch, int logAddr);
     bool loadToRam(PCB* pcb,  std::string bytes, int segment);
