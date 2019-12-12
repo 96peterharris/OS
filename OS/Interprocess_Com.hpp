@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <exception>
 
+#include "RAM.hpp"
 #include "PCB.hpp"
 
 
@@ -40,10 +41,12 @@ public:
 	//ReadMessage
 	//LoadToRam
 
+	bool printMessage();
+
 };
 
 bool sendMessage(std::string pid_receiver, std::string content);
-bool receiveMessage(std::string pid_sender);
+bool receiveMessage();
 
 bool operator==(Message& m1, Message& m2) {
 	if (m1.pid_sender == m2.pid_sender && m1.content == m2.content && m1.RAMadrress == m2.RAMadrress) return true;
