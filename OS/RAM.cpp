@@ -18,13 +18,14 @@ Ram::~Ram(){}
  * @param ch Character to load to RAM.
  * @param logAddr Logical address where the character is going to be saved.
  */
-void Ram::saveInRam(PCB* pcb, int segment, char ch, int logAddr) {
+bool Ram::saveInRam(PCB* pcb, int segment, char ch, int logAddr) {
     if(!isInRam(pcb,segment)){
-        std::string text = getSegment(pcb, segment);
-        loadToRam(pcb, text, segment); //will it work?
+        std::string text = VM.getSegment(pcb, segment);
+        loadToRam(pcb, text, segment);
     }
     int pAddr = physAddr(pcb, segment, logAddr);
     ram[pAddr] = ch;
+    return 1;
 }
 
 /**
@@ -38,8 +39,7 @@ void Ram::saveInRam(PCB* pcb, int segment, char ch, int logAddr) {
  * @return buddy function's value, true for success or false for failure.
  */
 bool Ram::loadToRam(PCB* pcb, std::string bytes, int segment) {
-    buddy(pcb, segment, 0, bytes);
-    return buddy(pcb, bytes, segment, 0);
+    return buddy(pcb, segment, bytes, 0);
 }
 
 /**
@@ -58,9 +58,10 @@ bool Ram::loadToRam(PCB* pcb, std::string bytes, int segment) {
  * @param bytes String which contains data to be loaded.
  * @return true for success or false for failure.
  */
-bool Ram::buddy(PCB* pcb, std::string bytes, int segment, int divisionLvl) {
+bool Ram::buddy(PCB* pcb, int segment, std::string bytes, int divisionLvl) {
     int fileSize;
-    if (segment == 2) fileSize = bytes.size(); //??? czy nie ma tego w klasie komunikatow
+    if (fileSize>512) return 0;
+    if (segment == 2) fileSize = bytes.size();
     else fileSize = pcb->segTab[segment]->limit;
     int blockSize = std::pow(2, 9 - divisionLvl);
     int nextBlockSize;
@@ -88,7 +89,7 @@ bool Ram::buddy(PCB* pcb, std::string bytes, int segment, int divisionLvl) {
         if (!ok){
             if(ramSem.wait_sem(pcb->getPid()));
 
-            return 0;
+            return 1;
         }
         else {
             for (int i = 0; i < fileSize; i++)
@@ -100,7 +101,7 @@ bool Ram::buddy(PCB* pcb, std::string bytes, int segment, int divisionLvl) {
                 blocks[startAddrBlocks+i] = 1;
             }
             if(segment == 2) {
-                //ustawic adres komunikatu
+                pcb->messages.at(messages.size()).RAMaddress =  startAddr;
             }
             else {
                 pcb->segTab[segment]->baseRAM = startAddr;
@@ -111,7 +112,7 @@ bool Ram::buddy(PCB* pcb, std::string bytes, int segment, int divisionLvl) {
     }
     else{
         divisionLvl++;
-        buddy(pcb, bytes, segment, divisionLvl);
+        buddy(pcb, segment, bytes, divisionLvl);
     }
 }
 
@@ -128,8 +129,8 @@ bool Ram::buddy(PCB* pcb, std::string bytes, int segment, int divisionLvl) {
  */
 char Ram::readFromRam(PCB* pcb, int segment, int logAddr) {
     if(!isInRam(pcb, segment)){
-        std::string text = getSegment(pcb, segment);
-        loadToRam(pcb, text, segment); //will it work?
+        std::string text = VM.getSegment(pcb, segment);
+        loadToRam(pcb, text, segment);
     }
     int pAddr = physAddr(pcb, segment, logAddr);
     return ram[pAddr];
@@ -154,7 +155,9 @@ std::string Ram::readMessage(int ramAddr) {
     while (space != 2) {
         if (ram[i] == ' ') space++;
         msg.push_back(ram[i]);
+        i++;
     }
+    msg.pop_back();
 
     int size = msg.size();
     int numOfBlocks;
@@ -182,7 +185,8 @@ std::string Ram::readMessage(int ramAddr) {
  * 
  * @param pcb Pointer to PCB needed to get data's size, physical address.
  */
-void Ram::deleteFromRam(PCB* pcb) {
+bool Ram::deleteFromRam(PCB* pcb) {
+    if (!pcb->segTab[0]->vi && !pcb->segTab[1]->vi) return 0;
     //segment 0
     int numOfBlocks;
     int num1 = pcb->segTab[0]->limit/8;
@@ -214,7 +218,7 @@ void Ram::deleteFromRam(PCB* pcb) {
                 bytes.push_back(i*8+j);
             }
         }
-        loadToVM(pcb, bytes);
+        VM.loadToVM(pcb, bytes);
     }
 
     //segment 1
@@ -229,6 +233,7 @@ void Ram::deleteFromRam(PCB* pcb) {
     }
     pcb->segTab[0]->vi = 1;
     pcb->segTab[1]->vi = 1;
+    return 1;
 }
 
 /**
@@ -258,22 +263,29 @@ bool Ram::isInRam(PCB* pcb, int segment) {
     return pcb->segTab[segment]->vi;
 }
 
-void Ram::printRam() {
+void Ram::printAllRam() {
     std::cout << "RAM" << std::endl;
     for (int i = 0; i < 512; i++) {
         std::cout << i << "   " << ram[i] << std::endl;
     }
 }
 
+void Ram::printRam(int start, int stop) {
+   std::cout << "RAM from " << start << " to " << stop << std::endl;
+    for (int i = start; i < stop+1; i++) {
+        std::cout << i << "   " << ram[i] << std::endl;
+    } 
+}
+
 void Ram::printProcess(PCB* pcb) {
     std::cout << pcb->getPid() << std::endl;
     std::cout << "Segment text" << std::endl;
-    for (int i = pcb->segTab[0]->baseRAM; i < pcb->segTab[0]->limit) {
+    for (int i = pcb->segTab[0]->baseRAM; i < pcb->segTab[0]->baseRAM + pcb->segTab[0]->limit; i++) {
         std::cout << i << "   " << ram[i] << std::endl;
     }
     std::cout << std::endl;
     std::cout << "Segment data" << std::endl;
-    for (int i = pcb->segTab[1]->baseRAM; i < pcb->segTab[1]->limit) {
+    for (int i = pcb->segTab[1]->baseRAM; i < pcb->segTab[1]->baseRAM + pcb->segTab[1]->limit; i++) {
         std::cout << i << "   " << ram[i] << std::endl;
     }
 }
@@ -282,7 +294,24 @@ void Ram::printSegment(PCB* pcb, int segment) {
     std::cout << pcb->getPid() << std::endl;
     if (segment == 0) std::cout << "Segment text" << std::endl;
     else if (segment == 1) std::cout << "Segment data" << std::endl;
-    for (int i = pcb->segTab[segment]->baseRAM; i < pcb->segTab[segment]->limit) {
+    for (int i = pcb->segTab[segment]->baseRAM; i < pcb->segTab[segment]->baseRAM + pcb->segTab[segment]->limit; i++) {
         std::cout << i << "   " << ram[i] << std::endl;
     }
+}
+
+void Ram::printMessage(int ramAddr) {
+    int space = 0;
+    int i = ramAddr;
+
+    while (space != 2) {
+        if (ram[i] == ' ') space++;
+        if(space==2) return;
+        std::cout << i << "   " << ram[i] << std::endl;
+        i++;
+    }
+}
+
+void Ram::printSemaphore() {
+    ramSem.print_value();
+    ramSem.print_queue();
 }

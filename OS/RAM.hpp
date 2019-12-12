@@ -1,5 +1,11 @@
 #pragma once
-#include "Headers.h"
+#include <array>
+#include <vector>
+#include <cmath>
+
+#include "Virtual_Mem.hpp"
+#include "PCB.hpp"
+#include "Sync_Mech.hpp"
 
 class Ram{
     private:
@@ -11,19 +17,23 @@ class Ram{
     Ram();
     ~Ram();
 
-    Semaphore ramSem;
+    Semaphore ramSem(1);
 
-    void saveInRam(PCB* pcb, int segment, char ch, int logAddr);
+    bool saveInRam(PCB* pcb, int segment, char ch, int logAddr);
     bool loadToRam(PCB* pcb,  std::string bytes, int segment);
     char readFromRam(PCB* pcb, int segment, int logAddr);
-    void deleteFromRam(PCB* pcb);
+    bool deleteFromRam(PCB* pcb);
     std::string readMessage(int ramAddr);
-    void printRam();
+
+    void printAllRam();
+    void printRam(int start, int stop);
     void printProcess(PCB* pcb);
     void printSegment(PCB* pcb, int segment);
+    void printMessage(int ramAddr);
+    void printSemaphore();
 
     private:
-    bool buddy(PCB* pcb, std::string bytes, int segment, int divisionLvl);
+    bool buddy(PCB* pcb, int segment, std::string bytes, int divisionLvl);
     int physAddr(PCB* pcb, int segment, int logAddr);
     bool isInRam(PCB* pcb, int segment);
-} RAM;
+}RAM;
