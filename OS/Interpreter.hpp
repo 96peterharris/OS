@@ -1,10 +1,14 @@
 #pragma once
 //Seba
 
+#include <regex>
 
-//#include "interpreter_functions\Interpreter_syntax.hpp"
-
-#include "Headers.h"
+#include "interpreter_functions\arythmetics.hpp"
+#include "interpreter_functions\jumps.hpp"
+#include "PCB.hpp"
+#include "RAM.hpp"
+#include "Interprocess_Com.hpp"
+#include "Files_And_Directory_Management.hpp"
 
 /**
  * Reads arguments from RAM and increases takenBytes
@@ -24,7 +28,7 @@ std::vector<std::string> getArgs(PCB *pcb, int argNum, int &takenBytes){
         std::string str="";
         do
         {
-            read = readFromRam(pcb, 0, takenBytes);
+            read = RAM.readFromRam(pcb, 0, takenBytes);
             str.append(1,read);
             takenBytes++;
         } while (read != ' ');
@@ -38,8 +42,8 @@ std::vector<std::string> getArgs(PCB *pcb, int argNum, int &takenBytes){
 bool interprate(PCB *pcb){
     std::string command = "";
     bool ret;
-    command.append(1, readFromRam(pcb, 0, pcb->getCommandCounter()));
-    command.append(1, readFromRam(pcb, 0, pcb->getCommandCounter()+1));
+    command.append(1, RAM.readFromRam(pcb, 0, pcb->getCommandCounter()));
+    command.append(1, RAM.readFromRam(pcb, 0, pcb->getCommandCounter()+1));
 
     int takenBytes = 0;
     if (command.size() == 2){
@@ -98,16 +102,60 @@ bool interprate(PCB *pcb){
         pcb->setCommandCounter(pcb->getCommandCounter()+2);
         ret = haltProcess(pcb->getPid());
     }
-    else if (command == "SM") //FIXME: skad brac argumenty jak PID?
+
+    // KOMUNIKACJA PROCESOW
+
+    else if (command == "SM") //FIXME: WOJTEK! Lista argumentow
+    {
+        args = getArgs(pcb, 2, takenBytes);
+        ret = sendMessage(args[0], args[1]);
+    }
+    else if (command == "RM") 
+    {
+        ret = receiveMessage();
+    }
+
+    // FILE SYSTEM
+
+    else if (command == "CF")
+    {
+        args = getArgs(pcb, 1, takenBytes);
+        ret = fs.createFile(args[0]);
+    }
+    else if (command == "CL")
+    {
+        args = getArgs(pcb, 2, takenBytes);
+        ret = fs.closeFile(args[0], args[1]);
+    }
+    else if (command == "DF")
+    {
+        args = getArgs(pcb, 2, takenBytes);
+        ret = fs.deleteFile(args[0], args[1]);
+    }
+    else if (command == "OP")
+    {
+        args = getArgs(pcb, 2, takenBytes);
+        ret = fs.openFile(args[0], args[1]);
+    }
+    else if (command == "OW")
     {
         args = getArgs(pcb, 3, takenBytes);
-        ret = sendMessage(args[0], args[1], args[2]);
+        ret = fs.overwriteFile(args[0], args[1], args[2]);
     }
-    else if (command == "RM") //FIXME: skad brac argumenty jak PID?
+    else if (command == "NF")
     {
         args = getArgs(pcb, 3, takenBytes);
-        ret = receiveMessage(args[0], args[1], args[2]);
+        ret = fs.renameFile(args[0], args[1], args[2]);
     }
+    else if (command == "WF")
+    {
+        args = getArgs(pcb, 3, takenBytes);
+        ret = fs.writeToFile(args[0], args[1], args[2]);
+    }
+    
+    
+    
+    
     
 
     pcb->setCommandCounter(pcb->getCommandCounter()+takenBytes);

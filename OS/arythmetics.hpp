@@ -1,7 +1,9 @@
 #pragma once
 
-//#include "Interpreter_syntax.hpp"
-#include "Headers.h"
+#include <regex>
+
+#include "..\PCB.hpp"
+#include "..\RAM.hpp"
 
 /**
  * Adds value to a given register or RAM memory cell
@@ -40,7 +42,7 @@ bool ADD(PCB *pcb, std::string dest, std::string arg){
     else if (std::regex_match(arg, m, memory))
     {
         // b = std::stoi(readRamNum(pcb, std::stoi(m[1])));
-        b = readFromRam(pcb, 1, std::stoi(m[1]));
+        b = RAM.readFromRam(pcb, 1, std::stoi(m[1]));
 
     }
     else if (arg.size() == 1)
@@ -96,11 +98,11 @@ bool ADD(PCB *pcb, std::string dest, std::string arg){
     }
     else if(std::regex_match(dest, m, memory))
     {
-        a = readFromRam(pcb, 1, std::stoi(m[1]));
+        a = RAM.readFromRam(pcb, 1, std::stoi(m[1]));
         if (a+b>255){
-            loadToRam(pcb, 1, 255, std::stoi(m[1]));
+            RAM.saveInRam(pcb, 1, 255, std::stoi(m[1]));
         } else{
-            loadToRam(pcb, 1, a+b, std::stoi(m[1]));
+            RAM.saveInRam(pcb, 1, a+b, std::stoi(m[1]));
         }
     }
     else
@@ -148,7 +150,7 @@ bool SUB(PCB *pcb, std::string dest, std::string arg){
     else if (std::regex_match(arg, m, memory))
     {
         // b = std::stoi(readRamNum(pcb, std::stoi(m[1])));
-        b = readFromRam(pcb, 1, std::stoi(m[1]));
+        b = RAM.readFromRam(pcb, 1, std::stoi(m[1]));
 
     }
     else if (arg.size() == 1)
@@ -204,11 +206,11 @@ bool SUB(PCB *pcb, std::string dest, std::string arg){
     }
     else if(std::regex_match(dest, m, memory))
     {
-        a = readFromRam(pcb, 1, std::stoi(m[1]));
+        a = RAM.readFromRam(pcb, 1, std::stoi(m[1]));
         if (a < b){
-            loadToRam(pcb, 1, 0, std::stoi(m[1]));
+            RAM.saveInRam(pcb, 1, 0, std::stoi(m[1]));
         } else{
-            loadToRam(pcb, 1, a-b, std::stoi(m[1]));
+            RAM.saveInRam(pcb, 1, a-b, std::stoi(m[1]));
         }
     }
     else
@@ -256,7 +258,7 @@ bool MUL(PCB *pcb, std::string dest, std::string arg){
     else if (std::regex_match(arg, m, memory))
     {
         // b = std::stoi(readRamNum(pcb, std::stoi(m[1])));
-        b = readFromRam(pcb, 1, std::stoi(m[1]));
+        b = RAM.readFromRam(pcb, 1, std::stoi(m[1]));
 
     }
     else if (arg.size() == 1)
@@ -312,11 +314,11 @@ bool MUL(PCB *pcb, std::string dest, std::string arg){
     }
     else if(std::regex_match(dest, m, memory))
     {
-        a = readFromRam(pcb, 1, std::stoi(m[1]));
+        a = RAM.readFromRam(pcb, 1, std::stoi(m[1]));
         if (a*b>255){
-            loadToRam(pcb, 1, 255, std::stoi(m[1]));
+            RAM.saveInRam(pcb, 1, 255, std::stoi(m[1]));
         } else{
-            loadToRam(pcb, 1, a*b, std::stoi(m[1]));
+            RAM.saveInRam(pcb, 1, a*b, std::stoi(m[1]));
         }
     }
     else
@@ -364,7 +366,7 @@ bool MOV(PCB *pcb, std::string dest, std::string arg){
     }
     else if (std::regex_match(arg, m, memory))
     {
-        b = readFromRam(pcb, 1, std::stoi(m[1]));
+        b = RAM.readFromRam(pcb, 1, std::stoi(m[1]));
     }
     else if (arg.size() == 1)
     {
@@ -397,7 +399,7 @@ bool MOV(PCB *pcb, std::string dest, std::string arg){
     }
     else if(std::regex_match(dest, m, memory))
     {
-        loadToRam(pcb, 1, b, std::stoi(m[1]));
+        RAM.saveInRam(pcb, 1, b, std::stoi(m[1]));
     }
     else
     {
