@@ -17,5 +17,5 @@ public:
 	static Virtual_Mem VM;
 	static CPU_Scheduling CPU;
 	static Filesystem FS;
-	System() {}
+	System();
 };
