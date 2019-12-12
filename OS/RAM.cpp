@@ -218,7 +218,7 @@ bool Ram::deleteFromRam(PCB* pcb) {
                 bytes.push_back(i*8+j);
             }
         }
-        loadToVM(pcb, bytes); //will it work?
+        VM.loadToVM(pcb, bytes);
     }
 
     //segment 1
@@ -263,11 +263,18 @@ bool Ram::isInRam(PCB* pcb, int segment) {
     return pcb->segTab[segment]->vi;
 }
 
-void Ram::printRam() {
+void Ram::printAllRam() {
     std::cout << "RAM" << std::endl;
     for (int i = 0; i < 512; i++) {
         std::cout << i << "   " << ram[i] << std::endl;
     }
+}
+
+void Ram::printRam(int start, int stop) {
+   std::cout << "RAM from " << start << " to " << stop << std::endl;
+    for (int i = start; i < stop+1; i++) {
+        std::cout << i << "   " << ram[i] << std::endl;
+    } 
 }
 
 void Ram::printProcess(PCB* pcb) {
@@ -289,6 +296,18 @@ void Ram::printSegment(PCB* pcb, int segment) {
     else if (segment == 1) std::cout << "Segment data" << std::endl;
     for (int i = pcb->segTab[segment]->baseRAM; i < pcb->segTab[segment]->baseRAM + pcb->segTab[segment]->limit; i++) {
         std::cout << i << "   " << ram[i] << std::endl;
+    }
+}
+
+void Ram::printMessage(int ramAddr) {
+    int space = 0;
+    int i = ramAddr;
+
+    while (space != 2) {
+        if (ram[i] == ' ') space++;
+        if(space==2) return;
+        std::cout << i << "   " << ram[i] << std::endl;
+        i++;
     }
 }
 

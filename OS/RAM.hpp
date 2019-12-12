@@ -25,9 +25,11 @@ class Ram{
     bool deleteFromRam(PCB* pcb);
     std::string readMessage(int ramAddr);
 
-    void printRam();
+    void printAllRam();
+    void printRam(int start, int stop);
     void printProcess(PCB* pcb);
     void printSegment(PCB* pcb, int segment);
+    void printMessage(int ramAddr);
     void printSemaphore();
 
     private:
