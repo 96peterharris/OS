@@ -1,7 +1,14 @@
 #pragma once
 //Seba
+#include "arythmetics.hpp"
+#include "jumps.hpp"
+#include "PCB.hpp"
+#include "RAM.hpp"
+#include "Interprocess_Com.hpp"
+#include "Files_And_Directory_Management.hpp"
 
-#include "Headers.h"
+class Ram;
+class PCB;
 
 /**
  * Reads arguments from RAM and increases takenBytes
@@ -93,7 +100,7 @@ bool interprate(PCB *pcb){
     else if (command == "WT") //set process as waiting
     {
         pcb->setCommandCounter(pcb->getCommandCounter()+2);
-        ret = haltProcess(pcb->getPid());
+        ret = PCB::haltProcess(pcb->getPid());
     }
 
     // KOMUNIKACJA PROCESOW
@@ -101,11 +108,11 @@ bool interprate(PCB *pcb){
     else if (command == "SM") //FIXME: WOJTEK! Lista argumentow
     {
         args = getArgs(pcb, 2, takenBytes);
-        ret = sendMessage(args[0], args[1]);
+        ret = pcb->sendMessage(args[0], args[1]);
     }
     else if (command == "RM") 
     {
-        ret = receiveMessage();
+        ret = pcb->receiveMessage();
     }
 
     // FILE SYSTEM

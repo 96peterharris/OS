@@ -1,5 +1,11 @@
 #pragma once
-#include "Headers.h"
+#include <array>
+#include <vector>
+#include <iostream>
+#include "PCB.hpp"
+
+class PCB;
+class Ram;
 
 class SegmentPCB {
 public:

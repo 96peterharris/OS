@@ -18,7 +18,7 @@ Virtual_Mem::~Virtual_Mem()
 */
 int Virtual_Mem::findFreeSpace(int limit)
 {
-	int size = pfSegTab.size();
+	size_t size = pfSegTab.size();
 	if (size == 0) return 0;
 	for (int i = 0; i < size; i++) { //check whole segment table
 		if (i == 0 && pfSegTab.at(i).base >= limit) { //if 1st segment and it's base starts further than new limit, then new segments fits at(0)
@@ -49,7 +49,8 @@ bool Virtual_Mem::createProg(PCB *pcb, std::string data)
 {
 	std::vector<SegmentPCB*>* segTab = pcb->PCB::getSegTab();
 	std::string ramString;
-	int segTabSize = 0, sLength;
+	int segTabSize = 0;
+	size_t sLength;
 	size_t textBegin = data.find(".text"); //.text,.data = 5 signs
 	size_t dataBegin = data.find(".data");
 	if (textBegin != -1) {// != -1  means that segment exists
@@ -61,7 +62,7 @@ bool Virtual_Mem::createProg(PCB *pcb, std::string data)
 
 	int k = 0;
 	for (int i = 0; i < segTabSize; i++) { //for every segment in program
-		int freeSpace = findFreeSpace(data.length());
+		size_t freeSpace = size_t(findFreeSpace(data.length()));
 		k += 6;
 		std::string snumber;
 		int number = 0;
@@ -150,7 +151,7 @@ bool Virtual_Mem::deleteProg(PCB *pcb)
 {
 	//deleteFromRam(&pcb);
 	auto segTab = pcb->getSegTab();
-	int size = segTab->size();
+	size_t size = segTab->size();
 	for (int i = 0; i < size; i++) { //for every segment (.text, .data)
 		SegmentVM segment = pfSegTab.at(i);
 		for (int k = 0; k < pfSegTab.size(); k++) {
