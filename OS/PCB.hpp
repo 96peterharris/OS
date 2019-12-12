@@ -12,6 +12,7 @@
 #include "State.hpp"
 #include "Register.hpp"
 
+class SegmentPCB;
 
 class PCB
 {
@@ -30,8 +31,9 @@ protected:
 
 	static std::map<std::string, PCB*> processesMap;
 	static std::vector<PCB*> readyQueue;
-	//memoryPointer 
 public:
+	//memoryPointer 
+	std::vector<SegmentPCB*> segTab;
 
 	PCB() : priority_default(1) {}
 	PCB(std::string pid, int processAddress, short priority, State state);
@@ -69,6 +71,9 @@ public:
 	static std::vector<PCB*>* getReadyQueuePointer();
 	//if there is need to update queue
 	static bool NEW_PROCESS;
+
+	//Segment table getter
+	std::vector<SegmentPCB*>* getSegTab() { return &segTab; }	
 
 	//re did into pcb::function() as static ones
 	static bool createProcess(std::string pid, int processAddress, short priority);
