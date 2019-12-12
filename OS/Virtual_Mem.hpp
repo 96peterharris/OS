@@ -4,6 +4,7 @@
 #include <regex>
 #include <locale>
 #include "PCB.hpp"
+#include "RAM.hpp"
 
 
 class SegmentPCB {

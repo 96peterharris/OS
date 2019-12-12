@@ -1,12 +1,6 @@
 //Pioter
 #pragma once
-#include "PCB.hpp"
-#include <iostream>
-#include <queue>
-#include <vector>
-#include <string>
-#include <algorithm>
-#include "Virtual_Mem.hpp"
+#include "Headers.h"
 
 class CPU_Scheduling
 {

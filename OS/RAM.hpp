@@ -17,7 +17,7 @@ class Ram{
     Ram();
     ~Ram();
 
-    Semaphore ramSem(1);
+    Semaphore ramSem;
 
     void saveInRam(PCB* pcb, int segment, char ch, int logAddr);
     bool loadToRam(PCB* pcb,  std::string bytes, int segment);

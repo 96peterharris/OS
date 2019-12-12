@@ -143,6 +143,7 @@
     <ClInclude Include="Drive.hpp" />
     <ClInclude Include="Files_And_Directory_Management.hpp" />
     <ClInclude Include="GUI.hpp" />
+    <ClInclude Include="Headers.h" />
     <ClInclude Include="Interpreter.hpp" />
     <ClInclude Include="Interprocess_Com.hpp" />
     <ClInclude Include="PCB.hpp" />

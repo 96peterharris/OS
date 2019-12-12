@@ -1,6 +1,6 @@
 #include "ram.hpp"
 
-Ram::Ram(){
+Ram::Ram() : ramSem(1) {
     ram.fill(' ');
     blocks.fill(0);
 }
