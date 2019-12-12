@@ -42,6 +42,7 @@ int Semaphore::value_sem() {
 
 bool Semaphore::print_value() {
 	std::cout << "Semaphore value is " << value << std::endl;
+	return true;
 }
 
 bool Semaphore::print_queue() {
@@ -49,4 +50,5 @@ bool Semaphore::print_queue() {
 	for (int i = 0; i < queue.size(); i++) {
 		std::cout << queue.at(i) << std::endl;
 	}
+	return true;
 }
