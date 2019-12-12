@@ -62,13 +62,15 @@ bool Ram::loadToRam(PCB* pcb, std::string bytes, int segment) {
  */
 bool Ram::buddy(PCB* pcb, int segment, std::string bytes, int divisionLvl) {
     int fileSize = 0;
-    if (fileSize>512) return 0;
     if (segment == 2) fileSize = bytes.size();
     else fileSize = pcb->segTab[segment]->limit;
+	if (fileSize > 512) return 0;
     int blockSize = std::pow(2, 9 - divisionLvl);
     int nextBlockSize;
-    if (fileSize > 7) nextBlockSize = blockSize/2;
-    else nextBlockSize = 0;
+	if (divisionLvl != maxDivision) {
+		nextBlockSize = blockSize / 2;
+	}
+	else nextBlockSize = 0;
     int numOfBlocks = std::pow(2, divisionLvl);
     int jump = blockSize/8;
     bool ok = false;
