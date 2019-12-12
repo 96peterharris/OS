@@ -48,9 +48,10 @@ int Virtual_Mem::findFreeSpace(int limit)
 bool Virtual_Mem::createProg(PCB *pcb, std::string data)
 {
 	std::vector<SegmentPCB*>* segTab = pcb->PCB::getSegTab();
+	std::string ramString;
 	int segTabSize = 0, sLength;
-	int textBegin = data.find(".text"); //.text,.data = 5 signs
-	int dataBegin = data.find(".data");
+	size_t textBegin = data.find(".text"); //.text,.data = 5 signs
+	size_t dataBegin = data.find(".data");
 	if (textBegin != -1) {// != -1  means that segment exists
 		segTabSize++;
 	}
@@ -83,6 +84,7 @@ bool Virtual_Mem::createProg(PCB *pcb, std::string data)
 						number = std::stoi(snumber);
 						snumber.clear(); //clear string as preparation for next number
 						pagefile.at(freeSpace + pos) = number; //fill pagefile byte with converted number
+						ramString += number;
 						k += numLength;
 						correction += numLength;
 						pos++;
@@ -92,6 +94,7 @@ bool Virtual_Mem::createProg(PCB *pcb, std::string data)
 			}
 			else { //if byte is not a number, just copy it to pagefile (using correction counted earlier)
 				pagefile.at(freeSpace + pos) = data.at(k);
+				ramString += data.at(k);
 				pos++;
 			}
 			k++;
@@ -112,7 +115,8 @@ bool Virtual_Mem::createProg(PCB *pcb, std::string data)
 		segmentPCB->vi = 0;
 		segTab->push_back(segmentPCB);
 
-		RAM.loadToRAM(&pcb, data, i);
+		RAM.loadToRam(pcb, ramString, i);
+		ramString.clear();
 	}
 	std::sort(pfSegTab.begin(), pfSegTab.end());
 	return 1;
@@ -128,7 +132,7 @@ bool Virtual_Mem::loadProg(PCB * pcb)
 		for (int k = 0; k < segTab->at(i)->limit; k++) {
 			data += pagefile.at(k);
 		}
-		RAM.loadToRAM(&pcb, data, i);
+		RAM.loadToRam(pcb, data, i);
 	}
 	std::sort(pfSegTab.begin(), pfSegTab.end());
 	return 1;
@@ -217,7 +221,6 @@ void Virtual_Mem::printPCBSegments(PCB * pcb)
 		else if (segTab->at(i)->baseVM > 9)  std::cout << "    ";
 		else								  std::cout << "     ";
 		std::cout << segTab->at(i)->baseVM << " | ";
-
 
 		if (segTab->at(i)->baseRAM > 99)	  std::cout << "    ";
 		else if (segTab->at(i)->baseRAM > 9) std::cout << "     ";
