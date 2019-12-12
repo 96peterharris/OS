@@ -60,7 +60,7 @@ bool Ram::loadToRam(PCB* pcb, std::string bytes, int segment) {
  * @return true for success or false for failure.
  */
 bool Ram::buddy(PCB* pcb, int segment, std::string bytes, int divisionLvl) {
-    int fileSize;
+    size_t fileSize;
     if (fileSize>512) return 0;
     if (segment == 2) fileSize = bytes.size();
     else fileSize = pcb->segTab[segment]->limit;
@@ -70,7 +70,7 @@ bool Ram::buddy(PCB* pcb, int segment, std::string bytes, int divisionLvl) {
     else nextBlockSize = 0;
     int numOfBlocks = std::pow(2, divisionLvl);
     int jump = blockSize/8;
-    bool ok;
+    bool ok = false;
     int startAddr;
     int startAddrBlocks;
 
@@ -150,7 +150,7 @@ char Ram::readFromRam(PCB* pcb, int segment, int logAddr) {
  */
 std::string Ram::readMessage(int ramAddr) {
     int space = 0;
-    std::string msg;
+    std::string msg = "";
     int i = ramAddr;
 
     while (space != 2) {
@@ -160,7 +160,7 @@ std::string Ram::readMessage(int ramAddr) {
     }
     msg.pop_back();
 
-    int size = msg.size();
+    size_t size = msg.size();
     int numOfBlocks;
     int num1 = size/8;
     int num2 = size%8;

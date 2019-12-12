@@ -1,5 +1,8 @@
 #pragma once
+#include <iostream>
 #include <array> //std::array
+#include <vector>
+#include <string>
 #include <cmath> //std::pow
 
 #include "Virtual_Mem.hpp"
