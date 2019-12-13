@@ -161,7 +161,8 @@ bool interprate(PCB *pcb) {
  * @see Interpreter JP command
 */
 bool jump(PCB *pcb, std::string logAddr) {
-	pcb->setCommandCounter(std::stoi(logAddr));
+	//pcb->setCommandCounter(std::stoi(logAddr));
+	pcb->setCommandCounter((int)logAddr.at(0));
 	return 1;
 }
 

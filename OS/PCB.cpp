@@ -9,6 +9,8 @@ std::vector<PCB*> PCB::readyQueue;
 
 //Constructor 
 PCB::PCB(std::string pid, short priority, State state) : priority_default(priority), priority(priority), pSem(1) {
+	this->state = NEW;
+	this->commandCounter = 0;
 	if (state == NEW) {
 		this->state = READY;
 		this->pid = pid;
@@ -94,7 +96,7 @@ bool PCB::removeProcess(std::string pid) {
 bool PCB::createDummy() {
 	PCB* pcb = new PCB("DM", 0, NEW);
 
-	if (!System::VM.createProg(pcb, ".text JP 0 .data")) {
+	if (!System::VM.createProg(pcb, ".text JP 0")) {
 		std::cout << " PCB:002 - Cant load program to memory " << std::endl;
 		return false;
 	}
