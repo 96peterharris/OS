@@ -130,33 +130,33 @@ bool interprate(PCB *pcb) {
 	}
 	else if (command == "CL")
 	{
-		args = getArgs(pcb, 2, takenBytes);
-		ret = System::FS.closeFile(args[0], args[1]);
+		args = getArgs(pcb, 1, takenBytes);
+		ret = System::FS.closeFile(args[0]);
 	}
 	else if (command == "DF")
 	{
-		args = getArgs(pcb, 2, takenBytes);
-		ret = System::FS.deleteFile(args[0], args[1]);
+		args = getArgs(pcb, 1, takenBytes);
+		ret = System::FS.deleteFile(args[0]);
 	}
 	else if (command == "OP")
 	{
-		args = getArgs(pcb, 2, takenBytes);
-		ret = System::FS.openFile(args[0], args[1]);
+		args = getArgs(pcb, 1, takenBytes);
+		ret = System::FS.openFile(args[0]);
 	}
 	else if (command == "OW")
 	{
-		args = getArgs(pcb, 3, takenBytes);
-		ret = System::FS.overwriteFile(args[0], args[1], args[2]);
+		args = getArgs(pcb, 2, takenBytes);
+		ret = System::FS.overwriteFile(args[0], args[1]);
 	}
 	else if (command == "NF")
 	{
-		args = getArgs(pcb, 3, takenBytes);
-		ret = System::FS.renameFile(args[0], args[1], args[2]);
+		args = getArgs(pcb, 2, takenBytes);
+		ret = System::FS.renameFile(args[0], args[1]);
 	}
 	else if (command == "WF")
 	{
-		args = getArgs(pcb, 3, takenBytes);
-		ret = System::FS.writeToFile(args[0], args[1], args[2]);
+		args = getArgs(pcb, 2, takenBytes);
+		ret = System::FS.writeToFile(args[0], args[1]);
 	}
 
 
