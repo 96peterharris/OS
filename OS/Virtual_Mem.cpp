@@ -153,7 +153,7 @@ bool Virtual_Mem::loadProg(PCB * pcb)
 */
 bool Virtual_Mem::deleteProg(PCB *pcb)
 {
-	//deleteFromRam(&pcb);
+	System::RAM.deleteFromRam(pcb);
 	auto segTab = pcb->getSegTab();
 	size_t size = segTab->size();
 	for (int i = 0; i < size; i++) { //for every segment (.text, .data)
