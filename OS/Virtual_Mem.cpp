@@ -70,12 +70,11 @@ bool Virtual_Mem::createProg(PCB *pcb, std::string data)
 		std::string snumber;
 		int number = 0;
 		int correction = 6; //6 is length of".text " or ".data "
-		if (i == 0) {
+		if (i == 0 && segTabSize == 2) {
 			sLength = dataBegin - 1;
 		}
 		else {
 			sLength = data.length();
-			k++;
 		}
 		int pos = 0;
 		while (k < sLength) {

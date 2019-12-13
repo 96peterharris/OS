@@ -94,7 +94,7 @@ bool PCB::removeProcess(std::string pid) {
 bool PCB::createDummy() {
 	PCB* pcb = new PCB("DM", 0, NEW);
 
-	if (!System::VM.createProg(pcb, ".text JP 0 .data")) {
+	if (!System::VM.createProg(pcb, ".text JP 0")) {
 		std::cout << " PCB:002 - Cant load program to memory " << std::endl;
 		return false;
 	}
