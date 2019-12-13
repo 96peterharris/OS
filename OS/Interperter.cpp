@@ -34,7 +34,7 @@ std::vector<std::string> getArgs(PCB *pcb, int argNum, int &takenBytes) {
 
 bool interprate(PCB *pcb) {
 	std::string command = "";
-	bool ret;
+	bool ret = true;
 	command.append(1, System::RAM.readFromRam(pcb, 0, pcb->getCommandCounter()));
 	command.append(1, System::RAM.readFromRam(pcb, 0, pcb->getCommandCounter() + 1));
 

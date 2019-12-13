@@ -85,13 +85,24 @@ void CPU_Scheduling::nexStep()
 			increasePriority();
 		}
 	}
-	else
+	else if ((commandCounter < 5) && (PCB::NEW_PROCESS == true))
 	{
 		cpu_sch();
+		if (interprate(running) == true)
+		{
+			std::cout << "\n interpreter true";
+			commandCounter++;
+			PCB::NEW_PROCESS = false;
+		}
+
+	}
+	else
+	{
 		running->setReady();
 		int tmp = running->getCommandCounter();
 		tmp += commandCounter;
 		running->setCommandCounter(tmp);
+		cpu_sch();
 		commandCounter = 0;
 		PCB::NEW_PROCESS = false;
 		increasePriority();
