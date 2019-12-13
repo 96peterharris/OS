@@ -1,4 +1,5 @@
 #include "RAM.hpp"
+#include "Headers.h"
 
 Ram::Ram() : ramSem(1){
     ram.fill(' ');
@@ -21,7 +22,7 @@ Ram::~Ram(){}
  */
 bool Ram::saveInRam(PCB* pcb, int segment, char ch, int logAddr) {
     if(!isInRam(pcb,segment)){
-        std::string text = VM.getSegment(pcb, segment);
+        std::string text = System::VM.getSegment(pcb, segment);
         loadToRam(pcb, text, segment);
     }
     int pAddr = physAddr(pcb, segment, logAddr);
@@ -60,7 +61,7 @@ bool Ram::loadToRam(PCB* pcb, std::string bytes, int segment) {
  * @return true for success or false for failure.
  */
 bool Ram::buddy(PCB* pcb, int segment, std::string bytes, int divisionLvl) {
-    int fileSize;
+    int fileSize = 0;
     if (fileSize>512) return 0;
     if (segment == 2) fileSize = bytes.size();
     else fileSize = pcb->segTab[segment]->limit;
@@ -102,7 +103,7 @@ bool Ram::buddy(PCB* pcb, int segment, std::string bytes, int divisionLvl) {
                 blocks[startAddrBlocks+i] = 1;
             }
             if(segment == 2) {
-                pcb->messages.at(pcb->messages.size()).RAMadrress =  startAddr;
+                (*pcb->messages.at(pcb->messages.size())).RAMadrress =  startAddr;
             }
             else {
                 pcb->segTab[segment]->baseRAM = startAddr;
@@ -130,7 +131,7 @@ bool Ram::buddy(PCB* pcb, int segment, std::string bytes, int divisionLvl) {
  */
 char Ram::readFromRam(PCB* pcb, int segment, int logAddr) {
     if(!isInRam(pcb, segment)){
-        std::string text = VM.getSegment(pcb, segment);
+        std::string text = System::VM.getSegment(pcb, segment);
         loadToRam(pcb, text, segment);
     }
     int pAddr = physAddr(pcb, segment, logAddr);
@@ -219,7 +220,7 @@ bool Ram::deleteFromRam(PCB* pcb) {
                 bytes.push_back(i*8+j);
             }
         }
-        VM.loadToVM(pcb, bytes);
+		System::VM.loadToVM(pcb, bytes);
     }
 
     //segment 1

@@ -159,12 +159,17 @@
     <ClCompile Include="CPU_Scheduling.cpp" />
     <ClCompile Include="Files_And_Directory_Management.cpp" />
     <ClCompile Include="GUI.cpp" />
+    <ClCompile Include="Headers.cpp" />
+    <ClCompile Include="Interperter.cpp" />
     <ClCompile Include="Interprocess_Com.cpp" />
     <ClCompile Include="PCB.cpp" />
     <ClCompile Include="RAM.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Sync_Mech.cpp" />
     <ClCompile Include="Virtual_Mem.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="si" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

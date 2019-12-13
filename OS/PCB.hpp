@@ -12,10 +12,10 @@
 
 #include "State.hpp"
 #include "Register.hpp"
-
-class Message;
+#include "Sync_Mech.hpp"
 
 class SegmentPCB;
+class Message;
 
 class PCB
 {
@@ -38,10 +38,12 @@ public:
 	//memoryPointer 
 	std::vector<SegmentPCB*> segTab;
 
-	PCB() : priority_default(1) {}
-	PCB(std::string pid, int processAddress, short priority, State state);
+	//PCB() : priority_default(1) {}
+	PCB(std::string pid, short priority, State state);
 	~PCB();
 
+	Semaphore pSem;
+	
 	//Changing state inner function
 	//todo calling running
 	void setTerminated() { if (state == RUNNING) this->state = TERMINATED; }
@@ -79,7 +81,7 @@ public:
 	std::vector<SegmentPCB*>* getSegTab() { return &segTab; }	
 
 	//re did into pcb::function() as static ones
-	static bool createProcess(std::string pid, int processAddress, short priority);
+	static bool createProcess(std::string pid, std::string file, short priority);
 	//Terminates and deletes
 	static bool removeProcess(std::string pid);
 	//Changes state to READY
@@ -90,6 +92,8 @@ public:
 	static PCB* getPCB(std::string pid);
 	//Update a Ready Process Queue
 	static bool update();
+	//Create dummy procees
+	static bool createDummy();
 
 	//File read and removing the spaces
 	static bool readFile(std::string name, std::string &text);
@@ -101,7 +105,7 @@ public:
 
 	//To IPC work
 
-	std::vector<Message> messages;
+	std::vector<Message*> messages;
 
 	bool sendMessage(std::string pid_receiver, std::string content);
 	bool receiveMessage();

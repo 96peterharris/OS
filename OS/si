@@ -1,0 +1,10 @@
+.text
+MV CX [3]
+MV AX 1
+MU AX CX
+SB CX 1
+JN CX 18
+MV [3] CX
+HT
+.data
+[3] 5

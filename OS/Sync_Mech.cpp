@@ -1,4 +1,5 @@
 #include"Sync_Mech.hpp"
+#include "PCB.hpp"
 
 /**
 * Rises the semaphore value and if possible removes the longest waiting process from queue and changes its state to ready.

@@ -5,8 +5,9 @@
 #include <vector>
 #include <string>
 #include <algorithm>
-#include "Virtual_Mem.hpp"
+
 #include "PCB.hpp"
+#include "Virtual_Mem.hpp"
 #include "Interpreter.hpp"
 
 class CPU_Scheduling
@@ -46,5 +47,4 @@ public:
 
 
 };
-CPU_Scheduling cpu;
 

@@ -2,6 +2,7 @@
 #include "Files_And_Directory_Management.hpp"
 #include "CPU_Scheduling.hpp"
 
+#include "Headers.h"
 int Filesystem::findFreeBlock(std::bitset<Drive::blocks> &bt)
 {
 	for (int i = 0; i < bt.size(); i++)
@@ -96,7 +97,7 @@ void Filesystem::stats()
 //DODAJE PLIK DO TABLICY OTWARTYCH PLIKÓW
 bool Filesystem::openFile(const string &filename)
 {
-	return openFile(filename, cpu.getRunningPID());
+	return openFile(filename, System::CPU.getRunningPID());
 }
 bool Filesystem::openFile(const string &filename, const string &pid)
 {
@@ -154,7 +155,7 @@ bool Filesystem::openFile(const string &filename, const string &pid)
 //USUWA PLIK Z TABLICY OTWARTYCH PLIKÓW
 bool Filesystem::closeFile(const string &filename)
 {
-	return closeFile(filename, cpu.getRunningPID());
+	return closeFile(filename, System::CPU.getRunningPID());
 }
 bool Filesystem::closeFile(const string &filename, const string &pid)
 {
@@ -215,7 +216,7 @@ bool Filesystem::closeFile(const string &filename, const string &pid)
 }
 bool Filesystem::renameFile(const string &filename, const string &newfilename)
 {
-	return renameFile(filename, newfilename, cpu.getRunningPID());
+	return renameFile(filename, newfilename, System::CPU.getRunningPID());
 }
 bool Filesystem::renameFile(const string &filename, const string &newfilename, const string &pid)
 {
@@ -251,7 +252,7 @@ bool Filesystem::renameFile(const string &filename, const string &newfilename, c
 }
 bool Filesystem::overwriteFile(const string &filename, const string &content)
 {
-	return overwriteFile(filename, content, cpu.getRunningPID());
+	return overwriteFile(filename, content, System::CPU.getRunningPID());
 }
 bool Filesystem::overwriteFile(const string &filename, const string &content, const string &pid)
 {
@@ -383,7 +384,7 @@ bool Filesystem::overwriteFile(const string &filename, const string &content, co
 }
 bool Filesystem::writeToFile(const string &filename, const string &content)
 {
-	return writeToFile(filename, content, cpu.getRunningPID());
+	return writeToFile(filename, content, System::CPU.getRunningPID());
 }
 bool Filesystem::writeToFile(const string &filename, const string &content, const string &pid)
 {
@@ -498,7 +499,7 @@ bool Filesystem::writeToFile(const string &filename, const string &content, cons
 }
 bool Filesystem::readFile(const string &filename, int length, string &content)
 {
-	return readFile(filename, cpu.getRunningPID(), length, content);
+	return readFile(filename, System::CPU.getRunningPID(), length, content);
 }
 bool Filesystem::readFile(const string &filename, const string &pid, int length, string &content)//LEPIEJ CHYBA PRZEZ REFERENCJE 
 {
@@ -577,7 +578,7 @@ bool Filesystem::readFile(const string &filename, const string &pid, int length,
 }
 bool Filesystem::deleteFile(const string &filename)
 {
-	return deleteFile(filename, cpu.getRunningPID());
+	return deleteFile(filename, System::CPU.getRunningPID());
 }
 bool Filesystem::deleteFile(const string &filename, const string &pid)
 {

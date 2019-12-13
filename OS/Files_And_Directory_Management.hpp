@@ -5,6 +5,7 @@
 #include <set>
 #include <bitset>
 #include <map>
+
 #include "Drive.hpp"
 #include "Sync_Mech.hpp"
 
@@ -85,4 +86,4 @@ private:
 	std::map <string, string>  openfiletable;
 
 	std::vector<File> maincatalogue;
-}fs;
+};

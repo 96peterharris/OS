@@ -1,4 +1,7 @@
+
 #include "Virtual_Mem.hpp"
+#include "RAM.hpp"
+#include "Headers.h"
 
 Virtual_Mem::Virtual_Mem()
 {
@@ -53,10 +56,10 @@ bool Virtual_Mem::createProg(PCB *pcb, std::string data)
 	size_t sLength;
 	size_t textBegin = data.find(".text"); //.text,.data = 5 signs
 	size_t dataBegin = data.find(".data");
-	if (textBegin != -1) {// != -1  means that segment exists
+	if (textBegin != std::string::npos) {// != -1  means that segment exists
 		segTabSize++;
 	}
-	if (dataBegin != -1) {
+	if (dataBegin != std::string::npos) {
 		segTabSize++;
 	}
 
@@ -116,7 +119,7 @@ bool Virtual_Mem::createProg(PCB *pcb, std::string data)
 		segmentPCB->vi = 0;
 		segTab->push_back(segmentPCB);
 
-		RAM.loadToRam(pcb, ramString, i);
+		System::RAM.loadToRam(pcb, ramString, i);
 		ramString.clear();
 	}
 	std::sort(pfSegTab.begin(), pfSegTab.end());
@@ -133,7 +136,7 @@ bool Virtual_Mem::loadProg(PCB * pcb)
 		for (int k = 0; k < segTab->at(i)->limit; k++) {
 			data += pagefile.at(k);
 		}
-		RAM.loadToRam(pcb, data, i);
+		System::RAM.loadToRam(pcb, data, i);
 	}
 	std::sort(pfSegTab.begin(), pfSegTab.end());
 	return 1;
