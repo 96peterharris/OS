@@ -34,7 +34,7 @@ bool Filesystem::createFile(const string &filename)
 
 	if (fileExists(filename))
 	{
-		std::cout << "E001:Plik o podanej nazwie juz istnieje";
+		std::cout << "E001:Plik o podanej nazwie juz istnieje" << std::endl;;
 		return false;
 	}
 	else
@@ -43,7 +43,7 @@ bool Filesystem::createFile(const string &filename)
 		//Jeœli mamy 0 lub 1 wolny blok to odrzuca operacjê gdy¿ przy tworzeniu pliku potrzebujemy przynajmniej 2 wolne bloki 
 		if (countFreeBlocks(blockTable) < 2)
 		{
-			std::cout << "E002:Za malo miejsca na dysku";
+			std::cout << "E002:Za malo miejsca na dysku" << std::endl;;
 			return false;
 		}
 		else
@@ -108,49 +108,22 @@ bool Filesystem::openFile(const string &filename, const string &pid)
 		{
 			if (maincatalogue[i].name == filename)
 			{
-				maincatalogue[i].sem.wait_sem(pid);
 
+				maincatalogue[i].sem.wait_sem(pid);
+				maincatalogue[i].isOpen = true;
 				openfiletable.insert(std::pair <string, string>(filename, pid));
-				break;
+				return true;
 			}
 		}
 
 	}
-
-
-	//WAIT NA SEMAFORZE;
-	/*
-
-	//JEŒLI PLIK JU¯ ZNAJDUJE SIÊ W TABLICY OTWARTYCH PLIKÓW:
-	if (openfiletable.count(filename) >= 1)
-	{
-		//JE¯ELI PLIK JEST OTWARTY PRZEZ TEN PROCES
-		if (openfiletable[filename] == pid)
-		{
-			std::cout << "Plik jest juz otwarty przez ten proces" << std::endl;
-		//	return false;
-		}
-		//JE¯ELI PLIK JEST OTWARTY PRZEZ INNY PROCES
-		if (openfiletable[filename] != pid)
-		{
-			std::cout << "Plik jest juz otwarty przez inny proces" << std::endl;
-			//return false;
-		}
-	}
-	else//JEŒLI PLIKU NIE MA TO TWORZYMY PLIK
-	{
-		std::cout << "PLIK OTWARTY" << std::endl;
-
-		openfiletable.insert(std::pair<string, string> (filename, pid));
-	//	return true;
-	}*/
-
 	else
 	{
-		std::cout << "Plik nie istnieje" << std::endl;
+		std::cout << "E006:Plik o podanej nazwie nie istnieje" << std::endl;
+		return false;
 	}
 
-	return false;
+	
 }
 //USUWA PLIK Z TABLICY OTWARTYCH PLIKÓW
 bool Filesystem::closeFile(const string &filename)
@@ -162,57 +135,34 @@ bool Filesystem::closeFile(const string &filename, const string &pid)
 	//SPRAWDZANIE CZY PLIK ISTNIEJE
 	if (fileExists(filename))
 	{
-
 		for (int i = 0; i < maincatalogue.size(); i++)
 		{
 			if (maincatalogue[i].name == filename)
 			{
-				openfiletable.erase(filename);
-				maincatalogue[i].sem.signal_sem();
+				if (maincatalogue[i].isOpen == true)
+				{
+					maincatalogue[i].sem.signal_sem();
+					openfiletable.erase(filename);
+					maincatalogue[i].isOpen = false;
+					return true;
+				}
+				else
+				{
+					std::cout << "E009:Plik nie jest otwarty" << std::endl;
+					return false;
+				}
+
 
 
 			}
 		}
 
-	}/*
-		//CZY PLIK ZNAJDUJE SIÊ W TABLICY OTWARTYCH PLIKÓW
-		if (openfiletable.count(filename) >= 1)
-		{
-			//JE¯ELI PLIK JEST OTWARTY PRZEZ TEN PROCES
-			if (openfiletable[filename] == pid)
-			{
-				//TO MOGÊ GO ZAMKN¥Æ
-				openfiletable.erase(filename);
-				std::cout << "Zamykam plik" << std::endl;
-				return true;
-			}
-			//JE¯ELI PLIK JEST OTWARTY PRZEZ INNY PROCES
-			if (openfiletable[filename] != pid)
-			{
-				//TO NIE MO  GO ZAMKN¥Æ
-				std::cout << "Brak dostepu do pliku" << std::endl;
-				return false;
-			}*/
-
-
-			//Sprawdzanie czy plik jest w tablicy otwartych plików
-			//JEŒLI PLIK  ZNAJDUJE SIÊ W TABLICY OTWARTYCH PLIKÓW:
-
-			//JE¯ELI PLIK JEST OTWARTY PRZEZ INNY PROCES TO NIE MO¯ESZ GO ZAMKN¥Æ
-			//JE¯ELI PLIK JEST OTWARTY PRZEZ TEN PROCES TO MO¯ESZ GO ZAMKN¥Æ
-		//JEŒLI PLIKU NIE MA TO NIE MA CZEGO ZAMYKAÆ
-
-
+	}
 	else
 	{
 		std::cout << "Plik nie istnieje" << std::endl;
 		return false;
 	}
-
-
-
-
-	return false;
 }
 bool Filesystem::renameFile(const string &filename, const string &newfilename)
 {
@@ -234,11 +184,11 @@ bool Filesystem::renameFile(const string &filename, const string &newfilename, c
 			{
 				if (maincatalogue[i].name == filename)
 				{
-					int adres = maincatalogue[i].adres;
-					int towrite = maincatalogue[i].towrite;
+
+					File tempfile = maincatalogue[i];
+					tempfile.name = newfilename;
 					maincatalogue.erase(maincatalogue.begin() + (i));
-					File tempfile(newfilename, adres);
-					tempfile.towrite = towrite;
+
 					maincatalogue.push_back(tempfile);
 				}
 			}
@@ -321,7 +271,7 @@ bool Filesystem::overwriteFile(const string &filename, const string &content, co
 
 		std::vector<int> blockvector;
 		int rozmiar = content.size();
-		for (int i = 0; i < ((rozmiar + 1) / 32); i++)//Rezerwacja bloków danych i przypisanie do bloku indeksowego 
+		for (int i = 0; i < ((rozmiar + 1) / 32)+1; i++)//Rezerwacja bloków danych i przypisanie do bloku indeksowego 
 		{
 			int f = hireFreeBlock(blockTable);
 			if (f != -1)
@@ -356,6 +306,7 @@ bool Filesystem::overwriteFile(const string &filename, const string &content, co
 				j++;
 				if (j >= blockvector.size())
 				{
+					j = j - 1;
 					break;
 				}
 			}
@@ -371,7 +322,7 @@ bool Filesystem::overwriteFile(const string &filename, const string &content, co
 		}
 		//std::cout << "JESTEM:" << j << " A rozmiar to:" << blockvector.size();
 
-		ij = blockvector[j - 1]; //TU NIE DZIA£A
+		ij = blockvector[j]; //TU NIE DZIA£A
 
 		maincatalogue[at].towrite = ij + a + 1;
 		//ZAPIS DANYCH DO BLOKÓW
@@ -633,7 +584,7 @@ bool Filesystem::deleteFile(const string &filename, const string &pid)
 		blockTable[tempfile.adres] = false;//ZWOLNIENIE BLOKU DYSKOWEGO
 		maincatalogue[at].sem.delete_sem();//ZWALNIAM KOLEJKÊ
 		maincatalogue.erase(maincatalogue.begin() + at);
-
+		openfiletable.erase(filename);
 	}
 
 	return true;
@@ -643,10 +594,30 @@ bool Filesystem::verify(const string &filename)
 {
 	if (!fileExists(filename))
 	{
-		std::cout << "E006:Plik o podanej nazwie nie istnieje";
+		std::cout << "E006:Plik o podanej nazwie nie istnieje" << std::endl;
 		return false;
 	}
-	return true;
+	else
+	{
+		for (int i = 0; i < maincatalogue.size(); i++)
+		{
+			if (maincatalogue[i].name == filename)
+			{
+				if (maincatalogue[i].isOpen == true)
+				{
+
+					return true;
+				}
+				else
+				{
+					std::cout << "E010:Plik jest zamkniety" << std::endl;
+					return false;
+				}
+			}
+
+		}
+
+	}
 }
 
 void Filesystem::displaydrivecontent()

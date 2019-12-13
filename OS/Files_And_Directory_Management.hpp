@@ -22,12 +22,14 @@ class Filesystem
 		Semaphore sem;
 		string name;
 		int adres, towrite, toread;
+		bool isOpen;
 		File(string name, int adres) :sem(1)
 		{
 			this->name = name;
 			this->adres = adres;
 			towrite = 0;
 			toread = 0;
+			isOpen = false;
 
 		}
 		File() :sem(1)
