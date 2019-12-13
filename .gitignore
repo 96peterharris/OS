@@ -342,6 +342,3 @@ healthchecksdb
 # SEBA - VSCode
 .vscode/
 Interpreter.exe
-Interpreter_syntax.hpp
-Interpreter.cpp
-readRamNum.hpp
