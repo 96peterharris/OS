@@ -48,12 +48,7 @@ bool interprate(PCB *pcb) {
 
 	std::vector<std::string> args;
 
-	if (command == "HT") //koniec programu
-	{
-		pcb->setCommandCounter(pcb->getCommandCounter() + takenBytes);
-		return 0;
-	}
-	else if (command == "AD") //add
+	if (command == "AD") //add
 	{
 		args = getArgs(pcb, 2, takenBytes);
 		ret = ADD(pcb, args[0], args[1]);
@@ -90,11 +85,27 @@ bool interprate(PCB *pcb) {
 	}
 
 	// ------- NIE SEBOWE FUNKCJE ---------
+	// PROCESY
 
 	else if (command == "WT") //set process as waiting
 	{
-		pcb->setCommandCounter(pcb->getCommandCounter() + 2);
-		ret = PCB::haltProcess(pcb->getPid());
+		pcb->setCommandCounter(pcb->getCommandCounter() + 2);//FIXME
+		return PCB::haltProcess(pcb->getPid());
+	}
+	else if (command == "CP")
+	{
+		args = getArgs(pcb, 3, takenBytes);
+		ret = pcb->createProcess(args[0], args[1], args[2].at(0));
+	}
+	else if (command == "RP")
+	{
+		args = getArgs(pcb, 1, takenBytes);
+		ret = pcb->removeProcess(args[0]);
+	}
+	else if (command == "HT") //koniec programu
+	{
+		pcb->setCommandCounter(pcb->getCommandCounter() + takenBytes);
+		return 0;
 	}
 
 	// KOMUNIKACJA PROCESOW
