@@ -89,8 +89,9 @@ bool interprate(PCB *pcb) {
 
 	else if (command == "WT") //set process as waiting
 	{
-		pcb->setCommandCounter(pcb->getCommandCounter() + 2);//FIXME
-		return PCB::haltProcess(pcb->getPid());
+		args = getArgs(pcb, 1, takenBytes);
+		pcb->setCommandCounter(pcb->getCommandCounter() + takenBytes); //FIXME
+		return PCB::haltProcess(args[0]);
 	}
 	else if (command == "CP")
 	{
