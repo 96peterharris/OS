@@ -201,7 +201,8 @@ bool jumpIfN0(PCB *pcb, std::string registerName, std::string logAddr) {
 		(registerName == "CX" && pcb->getRegisterPointer()->getC() != 0) ||
 		(registerName == "DX" && pcb->getRegisterPointer()->getD() != 0)
 		) {
-		pcb->setCommandCounter(std::stoi(logAddr));
+	//	pcb->setCommandCounter(std::stoi(logAddr));
+		pcb->setCommandCounter((int)logAddr.at(0));
 	}
 	return 1;
 }

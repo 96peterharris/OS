@@ -130,13 +130,14 @@ bool Virtual_Mem::loadProg(PCB * pcb)
 {
 	std::vector<SegmentPCB*>* segTab = new std::vector<SegmentPCB*>;
 	segTab = pcb->getSegTab();
-	int segTabSize = 0;
 	for (int i = 0; i < segTab->size(); i++) {
-		std::string data;
-		for (int k = 0; k < segTab->at(i)->limit; k++) {
-			data += pagefile.at(k);
+		if (segTab->at(i)->vi == 0) {
+			std::string data;
+			for (int k = 0; k < segTab->at(i)->limit; k++) {
+				data += pagefile.at(k);
+			}
+			System::RAM.loadToRam(pcb, data, i);
 		}
-		System::RAM.loadToRam(pcb, data, i);
 	}
 	std::sort(pfSegTab.begin(), pfSegTab.end());
 	return 1;
