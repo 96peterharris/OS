@@ -56,10 +56,10 @@ bool Virtual_Mem::createProg(PCB *pcb, std::string data)
 	size_t sLength;
 	size_t textBegin = data.find(".text"); //.text,.data = 5 signs
 	size_t dataBegin = data.find(".data");
-	if (textBegin != -1) {// != -1  means that segment exists
+	if (textBegin != std::string::npos) {// != -1  means that segment exists
 		segTabSize++;
 	}
-	if (dataBegin != -1) {
+	if (dataBegin != std::string::npos) {
 		segTabSize++;
 	}
 
