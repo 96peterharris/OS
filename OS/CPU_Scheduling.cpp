@@ -39,11 +39,25 @@ void CPU_Scheduling::cpu_sch()
 	}
 	else
 	{
-		PCB::update();							//Updating process queue
-		running = recivedQueue->at(0);
-		running->setRunning(); //Attention!!!
-		commandCounter = 0;
-		System::VM.loadProg(running); //robbert musi utworzyæ
+		if (PCB::update() == false) {
+			running = recivedQueue->at(0);
+			running->setRunning();
+			commandCounter = 0;
+			System::VM.loadProg(running);
+		}
+		else {
+			if (running->getState() == TERMINATED) {							//Updating process queue
+				running = recivedQueue->at(0);
+				//running->setRunning(); //Attention!!!
+				commandCounter = 0;
+				//System::VM.loadProg(running); //robbert musi utworzyæ
+			}
+			else
+			{
+				running->setRunning();
+				commandCounter = 0;
+			}
+		}
 	}
 		
 	
