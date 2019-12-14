@@ -34,7 +34,7 @@ std::vector<std::string> getArgs(PCB *pcb, int argNum, int &takenBytes) {
 
 bool interprate(PCB *pcb) {
 	std::string command = "";
-	bool ret;
+	bool ret = true;
 	command.append(1, System::RAM.readFromRam(pcb, 0, pcb->getCommandCounter()));
 	command.append(1, System::RAM.readFromRam(pcb, 0, pcb->getCommandCounter() + 1));
 
@@ -173,7 +173,8 @@ bool interprate(PCB *pcb) {
  * @see Interpreter JP command
 */
 bool jump(PCB *pcb, std::string logAddr) {
-	pcb->setCommandCounter(std::stoi(logAddr));
+	//pcb->setCommandCounter(std::stoi(logAddr));
+	pcb->setCommandCounter((int)logAddr.at(0));
 	return 1;
 }
 
@@ -212,7 +213,8 @@ bool jumpIfN0(PCB *pcb, std::string registerName, std::string logAddr) {
 		(registerName == "CX" && pcb->getRegisterPointer()->getC() != 0) ||
 		(registerName == "DX" && pcb->getRegisterPointer()->getD() != 0)
 		) {
-		pcb->setCommandCounter(std::stoi(logAddr));
+	//	pcb->setCommandCounter(std::stoi(logAddr));
+		pcb->setCommandCounter((int)logAddr.at(0));
 	}
 	return 1;
 }

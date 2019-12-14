@@ -70,12 +70,12 @@ bool Virtual_Mem::createProg(PCB *pcb, std::string data)
 		std::string snumber;
 		int number = 0;
 		int correction = 6; //6 is length of".text " or ".data "
-		if (i == 0) {
+		if (i == 0 && segTabSize == 2) {
 			sLength = dataBegin - 1;
 		}
 		else {
 			sLength = data.length();
-			k++;
+			//k++;
 		}
 		int pos = 0;
 		while (k < sLength) {
@@ -130,13 +130,14 @@ bool Virtual_Mem::loadProg(PCB * pcb)
 {
 	std::vector<SegmentPCB*>* segTab = new std::vector<SegmentPCB*>;
 	segTab = pcb->getSegTab();
-	int segTabSize = 0;
 	for (int i = 0; i < segTab->size(); i++) {
-		std::string data;
-		for (int k = 0; k < segTab->at(i)->limit; k++) {
-			data += pagefile.at(k);
+		if (segTab->at(i)->vi == 0) {
+			std::string data;
+			for (int k = 0; k < segTab->at(i)->limit; k++) {
+				data += pagefile.at(k);
+			}
+			System::RAM.loadToRam(pcb, data, i);
 		}
-		System::RAM.loadToRam(pcb, data, i);
 	}
 	std::sort(pfSegTab.begin(), pfSegTab.end());
 	return 1;
@@ -152,7 +153,7 @@ bool Virtual_Mem::loadProg(PCB * pcb)
 */
 bool Virtual_Mem::deleteProg(PCB *pcb)
 {
-	//deleteFromRam(&pcb);
+	System::RAM.deleteFromRam(pcb);
 	auto segTab = pcb->getSegTab();
 	size_t size = segTab->size();
 	for (int i = 0; i < size; i++) { //for every segment (.text, .data)
