@@ -9,7 +9,12 @@ int main() {
 
 	//for (int i = 0; i < 50; i++)
 	//{
+	for (int i = 0; i < 25; i++) {
 		System::CPU.nexStep();
+		PCB::printMap();
+		std::cout << std::endl;
+
+		}
 		std::cout << "==============================" << std::endl;
 		System::CPU.displayRunning();
 		//System::RAM.printProcess(PCB::getPCB("p1"));

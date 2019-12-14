@@ -99,9 +99,6 @@ void CPU_Scheduling::nexStep()
 	else
 	{
 		running->setReady();
-		int tmp = running->getCommandCounter();
-		tmp += commandCounter;
-		running->setCommandCounter(tmp);
 		cpu_sch();
 		commandCounter = 0;
 		PCB::NEW_PROCESS = false;

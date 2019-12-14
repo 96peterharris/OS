@@ -34,7 +34,8 @@ std::vector<std::string> getArgs(PCB *pcb, int argNum, int &takenBytes) {
 
 bool interprate(PCB *pcb) {
 	std::string command = "";
-	bool ret = true;
+	bool ret = false;
+	bool IC = false;
 	command.append(1, System::RAM.readFromRam(pcb, 0, pcb->getCommandCounter()));
 	command.append(1, System::RAM.readFromRam(pcb, 0, pcb->getCommandCounter() + 1));
 
@@ -66,17 +67,22 @@ bool interprate(PCB *pcb) {
 	else if (command == "JP") //unconditional jump
 	{
 		args = getArgs(pcb, 1, takenBytes);
-		return jump(pcb, args[0]);
+		ret = jump(pcb, args[0]);
+		IC = true;
 	}
 	else if (command == "JZ") //jump if register == 0
 	{
 		args = getArgs(pcb, 2, takenBytes);
-		return jumpIf0(pcb, args[0], args[1]);
+		ret = jumpIf0(pcb, args[0], args[1]);
+		IC = true;
+
 	}
 	else if (command == "JN") //jump if register != 0
 	{
 		args = getArgs(pcb, 2, takenBytes);
-		return jumpIfN0(pcb, args[0], args[1]);
+		ret = jumpIfN0(pcb, args[0], args[1]);
+		IC = true;
+
 	}
 	else if (command == "MV") //copy value to dest
 	{
@@ -159,8 +165,8 @@ bool interprate(PCB *pcb) {
 		ret = System::FS.writeToFile(args[0], args[1]);
 	}
 
-
-	pcb->setCommandCounter(pcb->getCommandCounter() + takenBytes);
+	if (IC)
+		pcb->setCommandCounter(pcb->getCommandCounter() + takenBytes);
 	return ret;
 }
 

@@ -1,9 +1,9 @@
 .text
-MV CX [3]
+MV CX 5
 MV AX 1
 MU AX CX
 SB CX 1
-JN CX 18
+JN CX 16
 MV [3] CX
 HT
 .data
