@@ -34,7 +34,7 @@ std::vector<std::string> getArgs(PCB *pcb, int argNum, int &takenBytes) {
 
 bool interprate(PCB *pcb) {
 	std::string command = "";
-	bool ret = true;
+	bool ret = false, IC = false;
 	command.append(1, System::RAM.readFromRam(pcb, 0, pcb->getCommandCounter()));
 	command.append(1, System::RAM.readFromRam(pcb, 0, pcb->getCommandCounter() + 1));
 
@@ -48,12 +48,7 @@ bool interprate(PCB *pcb) {
 
 	std::vector<std::string> args;
 
-	if (command == "HT") //koniec programu
-	{
-		pcb->setCommandCounter(pcb->getCommandCounter() + takenBytes);
-		return 0;
-	}
-	else if (command == "AD") //add
+	if (command == "AD") //add
 	{
 		args = getArgs(pcb, 2, takenBytes);
 		ret = ADD(pcb, args[0], args[1]);
@@ -71,17 +66,17 @@ bool interprate(PCB *pcb) {
 	else if (command == "JP") //unconditional jump
 	{
 		args = getArgs(pcb, 1, takenBytes);
-		return jump(pcb, args[0]);
+		ret = jump(pcb, IC, args[0]);
 	}
 	else if (command == "JZ") //jump if register == 0
 	{
 		args = getArgs(pcb, 2, takenBytes);
-		return jumpIf0(pcb, args[0], args[1]);
+		ret = jumpIf0(pcb, IC, args[0], args[1]);
 	}
 	else if (command == "JN") //jump if register != 0
 	{
 		args = getArgs(pcb, 2, takenBytes);
-		return jumpIfN0(pcb, args[0], args[1]);
+		ret = jumpIfN0(pcb, IC, args[0], args[1]); 
 	}
 	else if (command == "MV") //copy value to dest
 	{
@@ -90,11 +85,28 @@ bool interprate(PCB *pcb) {
 	}
 
 	// ------- NIE SEBOWE FUNKCJE ---------
+	// PROCESY
 
 	else if (command == "WT") //set process as waiting
 	{
-		pcb->setCommandCounter(pcb->getCommandCounter() + 2);
-		ret = PCB::haltProcess(pcb->getPid());
+		args = getArgs(pcb, 1, takenBytes);
+		pcb->setCommandCounter(pcb->getCommandCounter() + takenBytes); //FIXME
+		return PCB::haltProcess(args[0]);
+	}
+	else if (command == "CP")
+	{
+		args = getArgs(pcb, 3, takenBytes);
+		ret = pcb->createProcess(args[0], args[1], args[2].at(0));
+	}
+	else if (command == "RP")
+	{
+		args = getArgs(pcb, 1, takenBytes);
+		ret = pcb->removeProcess(args[0]);
+	}
+	else if (command == "HT") //koniec programu
+	{
+		pcb->setCommandCounter(pcb->getCommandCounter() + takenBytes);
+		return 0;
 	}
 
 	// KOMUNIKACJA PROCESOW
@@ -118,37 +130,37 @@ bool interprate(PCB *pcb) {
 	}
 	else if (command == "CL")
 	{
-		args = getArgs(pcb, 2, takenBytes);
-		ret = System::FS.closeFile(args[0], args[1]);
+		args = getArgs(pcb, 1, takenBytes);
+		ret = System::FS.closeFile(args[0]);
 	}
 	else if (command == "DF")
 	{
-		args = getArgs(pcb, 2, takenBytes);
-		ret = System::FS.deleteFile(args[0], args[1]);
+		args = getArgs(pcb, 1, takenBytes);
+		ret = System::FS.deleteFile(args[0]);
 	}
 	else if (command == "OP")
 	{
-		args = getArgs(pcb, 2, takenBytes);
-		ret = System::FS.openFile(args[0], args[1]);
+		args = getArgs(pcb, 1, takenBytes);
+		ret = System::FS.openFile(args[0]);
 	}
 	else if (command == "OW")
 	{
-		args = getArgs(pcb, 3, takenBytes);
-		ret = System::FS.overwriteFile(args[0], args[1], args[2]);
+		args = getArgs(pcb, 2, takenBytes);
+		ret = System::FS.overwriteFile(args[0], args[1]);
 	}
 	else if (command == "NF")
 	{
-		args = getArgs(pcb, 3, takenBytes);
-		ret = System::FS.renameFile(args[0], args[1], args[2]);
+		args = getArgs(pcb, 2, takenBytes);
+		ret = System::FS.renameFile(args[0], args[1]);
 	}
 	else if (command == "WF")
 	{
-		args = getArgs(pcb, 3, takenBytes);
-		ret = System::FS.writeToFile(args[0], args[1], args[2]);
+		args = getArgs(pcb, 2, takenBytes);
+		ret = System::FS.writeToFile(args[0], args[1]);
 	}
 
-
-	pcb->setCommandCounter(pcb->getCommandCounter() + takenBytes);
+	if (!IC)
+		pcb->setCommandCounter(pcb->getCommandCounter() + takenBytes);
 	return ret;
 }
 
@@ -160,10 +172,13 @@ bool interprate(PCB *pcb) {
  * @return true XD
  * @see Interpreter JP command
 */
-bool jump(PCB *pcb, std::string logAddr) {
+bool jump(PCB *pcb, bool &ICcheck, std::string logAddr) {
 	//pcb->setCommandCounter(std::stoi(logAddr));
-	pcb->setCommandCounter((int)logAddr.at(0));
-	return 1;
+	if (logAddr.size() == 1) {
+		pcb->setCommandCounter((int)logAddr.at(0));
+		ICcheck = true;
+		return 1;
+	}
 }
 
 /**
@@ -174,16 +189,26 @@ bool jump(PCB *pcb, std::string logAddr) {
  * @return true XD
  * @see Interpreter JZ command
 */
-bool jumpIf0(PCB *pcb, std::string registerName, std::string logAddr) {
-	if (
-		(registerName == "AX" && pcb->getRegisterPointer()->getA() == 0) ||
-		(registerName == "BX" && pcb->getRegisterPointer()->getB() == 0) ||
-		(registerName == "CX" && pcb->getRegisterPointer()->getC() == 0) ||
-		(registerName == "DX" && pcb->getRegisterPointer()->getD() == 0)
+bool jumpIf0(PCB *pcb, bool &ICcheck, std::string registerName, std::string logAddr) {
+	if (registerName == "AX" ||
+		registerName == "BX" ||
+		registerName == "CX" ||
+		registerName == "DX"
 		) {
-		pcb->setCommandCounter(std::stoi(logAddr));
+		if (
+			(registerName == "AX" && pcb->getRegisterPointer()->getA() == 0) ||
+			(registerName == "BX" && pcb->getRegisterPointer()->getB() == 0) ||
+			(registerName == "CX" && pcb->getRegisterPointer()->getC() == 0) ||
+			(registerName == "DX" && pcb->getRegisterPointer()->getD() == 0)
+			) {
+			pcb->setCommandCounter((int)logAddr.at(0));
+			ICcheck = true;
+		}
+		return 1;
 	}
-	return 1;
+	else {
+		return 0;
+	}
 }
 
 /**
@@ -194,17 +219,26 @@ bool jumpIf0(PCB *pcb, std::string registerName, std::string logAddr) {
  * @return true XD
  * @see Interpreter JN command
 */
-bool jumpIfN0(PCB *pcb, std::string registerName, std::string logAddr) {
-	if (
-		(registerName == "AX" && pcb->getRegisterPointer()->getA() != 0) ||
-		(registerName == "BX" && pcb->getRegisterPointer()->getB() != 0) ||
-		(registerName == "CX" && pcb->getRegisterPointer()->getC() != 0) ||
-		(registerName == "DX" && pcb->getRegisterPointer()->getD() != 0)
-		) {
-	//	pcb->setCommandCounter(std::stoi(logAddr));
-		pcb->setCommandCounter((int)logAddr.at(0));
+bool jumpIfN0(PCB *pcb, bool &ICcheck, std::string registerName, std::string logAddr) {
+	if ((registerName == "AX" ||
+		registerName == "BX" ||
+		registerName == "CX" ||
+		registerName == "DX"
+		) && logAddr.size() == 1) {
+		if (
+			(registerName == "AX" && pcb->getRegisterPointer()->getA() != 0) ||
+			(registerName == "BX" && pcb->getRegisterPointer()->getB() != 0) ||
+			(registerName == "CX" && pcb->getRegisterPointer()->getC() != 0) ||
+			(registerName == "DX" && pcb->getRegisterPointer()->getD() != 0)
+			) {
+			pcb->setCommandCounter((int)logAddr.at(0));
+			ICcheck = true;
+		}
+		return 1;
 	}
-	return 1;
+	else {
+		return 0;
+	}
 }
 
 /**
