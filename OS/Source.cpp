@@ -13,6 +13,7 @@ int main() {
 	std::cout << "=============================="<< std::endl;
 	System::CPU.displayRunning();
 	System::CPU.nexStep();
+	PCB::printMap();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 	System::CPU.nexStep();
@@ -27,5 +28,5 @@ int main() {
 	System::CPU.nexStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
-
+	std::cin.ignore();
 }
