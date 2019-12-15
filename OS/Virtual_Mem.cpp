@@ -66,6 +66,7 @@ bool Virtual_Mem::createProg(PCB *pcb, std::string data)
 	int k = 0;
 	for (int i = 0; i < segTabSize; i++) { //for every segment in program
 		size_t freeSpace = size_t(findFreeSpace(data.length()));
+		int maxPos = 0;
 		k += 6;
 		std::string snumber;
 		int number = 0;
@@ -78,28 +79,73 @@ bool Virtual_Mem::createProg(PCB *pcb, std::string data)
 		}
 		int pos = 0;
 		while (k < sLength) {
-			if (data.at(k - 1) == ' ' && isdigit(data.at(k))) {
-				int numLength = -1;//20-22
-				for (int i = 0; i < 3; i++) {
-					numLength++; //count how many digits were found to correct index in pagefile later
-					snumber += data.at(k + i);
-					if (data.length() == (k + i + 1) || data.at(k + i + 1) == ' ') { //if next byte is not digit, it means we found whole number, convert it to int
-						number = std::stoi(snumber);
-						snumber.clear(); //clear string as preparation for next number
-						pagefile.at(freeSpace + pos) = number; //fill pagefile byte with converted number
-						ramString += number;
-						k += numLength;
-						correction += numLength;
-						pos++;
-						break;
+			if (i == 0) {
+				if (data.at(k - 1) == ' ' && isdigit(data.at(k))) {
+					int numLength = -1;//20-22
+					for (int i = 0; i < 3; i++) {
+						numLength++; //count how many digits were found to correct index in pagefile later
+						snumber += data.at(k + i);
+						if (data.length() == (k + i + 1) || data.at(k + i + 1) == ' ') { //if next byte is not digit, it means we found whole number, convert it to int
+							number = std::stoi(snumber);
+							snumber.clear(); //clear string as preparation for next number
+							pagefile.at(freeSpace + pos) = number; //fill pagefile byte with converted number
+							ramString += number;
+							k += numLength;
+							correction += numLength;
+							pos++;
+							break;
+						}
 					}
 				}
+				else { //if byte is not a number, just copy it to pagefile (using correction counted earlier)
+					pagefile.at(freeSpace + pos) = data.at(k);
+					ramString += data.at(k);
+					pos++;
+				}
 			}
-			else { //if byte is not a number, just copy it to pagefile (using correction counted earlier)
-				pagefile.at(freeSpace + pos) = data.at(k);
-				ramString += data.at(k);
-				pos++;
+			else {
+				int index = 0;
+				if (data.at(k - 1) == '[' && isdigit(data.at(k))) {
+					int numLength = -1;//20-22
+					for (int i = 0; i < 3; i++) {
+						numLength++; //count how many digits were found to correct index in pagefile later
+						snumber += data.at(k + i);
+						if (data.length() == (k + i + 1) || data.at(k + i + 1) == ']') { //if next byte is not digit, it means we found whole number, convert it to int
+							index = std::stoi(snumber);
+							snumber.clear(); //clear string as preparation for next number
+							k += numLength;
+							correction += numLength;
+							pos++;
+							if (index > maxPos) maxPos = index;
+							break;
+						}
+					}
+				}
+				else if (data.at(k - 1) == ' ' && isdigit(data.at(k))) {
+					int numLength = -1;//20-22
+					for (int i = 0; i < 3; i++) {
+						numLength++; //count how many digits were found to correct index in pagefile later
+						snumber += data.at(k + i);
+						if (data.length() == (k + i + 1) || data.at(k + i + 1) == ' ') { //if next byte is not digit, it means we found whole number, convert it to int
+							number = std::stoi(snumber);
+							snumber.clear(); //clear string as preparation for next number
+							pagefile.at(freeSpace + index) = number; //fill pagefile byte with converted number
+							ramString += number;
+							k += numLength;
+							correction += numLength;
+							pos++;
+							break;
+						}
+					}
+				}
+				else {
+					pagefile.at(freeSpace + pos) = 0;
+					ramString += '\0';
+					pos++;
+					if (pos > maxPos) maxPos = pos;
+				}
 			}
+			
 			k++;
 		}
 		SegmentVM segment;
@@ -108,7 +154,7 @@ bool Virtual_Mem::createProg(PCB *pcb, std::string data)
 			segment.limit = pos;
 		}
 		else { //data segment
-			segment.limit = pos;
+			segment.limit = maxPos;
 		}
 		pfSegTab.push_back(segment);
 
