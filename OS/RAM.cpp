@@ -281,8 +281,9 @@ void Ram::printRam(int start, int stop) {
     } 
 }
 
-void Ram::printProcess(PCB* pcb) {
-    std::cout << pcb->getPid() << std::endl;
+void Ram::printProcess(std::string pid) {
+    PCB* pcb = PCB::getPCB(pid);
+    std::cout << pid << std::endl;
     std::cout << "Segment text" << std::endl;
     for (int i = pcb->segTab[0]->baseRAM; i < pcb->segTab[0]->baseRAM + pcb->segTab[0]->limit; i++) {
         std::cout << i << "   " << ram[i] << std::endl;
@@ -294,8 +295,9 @@ void Ram::printProcess(PCB* pcb) {
     }
 }
 
-void Ram::printSegment(PCB* pcb, int segment) {
-    std::cout << pcb->getPid() << std::endl;
+void Ram::printSegment(std::string pid, int segment) {
+    PCB* pcb = PCB::getPCB(pid);
+    std::cout << pid << std::endl;
     if (segment == 0) std::cout << "Segment text" << std::endl;
     else if (segment == 1) std::cout << "Segment data" << std::endl;
     for (int i = pcb->segTab[segment]->baseRAM; i < pcb->segTab[segment]->baseRAM + pcb->segTab[segment]->limit; i++) {

@@ -31,8 +31,8 @@ public:
 
     void printAllRam();
     void printRam(int start, int stop);
-    void printProcess(PCB* pcb);
-    void printSegment(PCB* pcb, int segment);
+    void printProcess(std::string pid);
+    void printSegment(std::string pid, int segment);
     void printMessage(int ramAddr);
     void printSemaphore();
 
