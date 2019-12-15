@@ -169,6 +169,7 @@
     <ClCompile Include="Virtual_Mem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="pr2" />
     <Text Include="si" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

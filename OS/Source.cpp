@@ -6,12 +6,9 @@ int main() {
 	PCB::printMap();
 	PCB::update();
 	PCB::printReadyQueue();
-<<<<<<< HEAD
-	//System::VM.printVM(PCB::getPCB("p1"));
-	System::RAM.printAllRam();
-=======
-
->>>>>>> VM
+	System::VM.printVM(PCB::getPCB("p1"));
+	std::cout << std::endl;
+	System::RAM.printProcess(PCB::getPCB("p1"));
 	for (int i = 0; i < 50; i++)
 	{
 		System::CPU.nexStep();
@@ -19,6 +16,7 @@ int main() {
 		System::CPU.displayRunning();
 		//System::RAM.printProcess(PCB::getPCB("p1"));
 		//System::RAM.printAllRam();
+
 	}
 	
 		/*System::FS.createFile("hi");

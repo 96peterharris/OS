@@ -82,6 +82,8 @@ bool interprate(PCB *pcb) {
 	{
 		args = getArgs(pcb, 2, takenBytes);
 		ret = MOV(pcb, args[0], args[1]);
+		//System::RAM.printProcess(pcb);
+		//std::cout << std::endl << pcb->commandCounter << std::endl;
 	}
 
 	// ------- NIE SEBOWE FUNKCJE ---------

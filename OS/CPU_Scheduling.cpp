@@ -92,9 +92,6 @@ void CPU_Scheduling::nexStep()
 			cpu_sch();
 			running->setTerminated(); //eryk zmieni³ funkcje
 			//haltProcess(running->getPid());
-			int tmp = running->getCommandCounter();
-			tmp += commandCounter;
-			running->setCommandCounter(tmp); //attention!!!!
 			commandCounter = 0;
 			increasePriority();
 		}
