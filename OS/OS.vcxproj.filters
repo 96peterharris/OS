@@ -109,7 +109,13 @@
     <Text Include="si">
       <Filter>Pliki zasobów</Filter>
     </Text>
+    <Text Include="SM_AB">
+      <Filter>Pliki zasobów</Filter>
+    </Text>
     <Text Include="pr2">
+      <Filter>Pliki zasobów</Filter>
+    </Text>
+    <Text Include="fe">
       <Filter>Pliki zasobów</Filter>
     </Text>
   </ItemGroup>

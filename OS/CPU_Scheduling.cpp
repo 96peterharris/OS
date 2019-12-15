@@ -84,7 +84,7 @@ void CPU_Scheduling::nexStep()
 	{
 		if (interprate(running) == true)
 		{
-			std::cout << "\n interpreter true";
+			//std::cout << "\n interpreter true";
 			commandCounter++;
 		}
 		else
@@ -101,7 +101,7 @@ void CPU_Scheduling::nexStep()
 		cpu_sch();
 		if (interprate(running) == true)
 		{
-			std::cout << "\n interpreter true";
+			//std::cout << "\n interpreter true";
 			commandCounter++;
 			PCB::NEW_PROCESS = false;
 		}

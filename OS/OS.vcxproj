@@ -169,8 +169,10 @@
     <ClCompile Include="Virtual_Mem.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="pr2" />
+    <Text Include="fe" />
+    <Text Include="SM_AB" />
     <Text Include="si" />
+    <Text Include="pr2" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

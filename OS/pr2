@@ -1,0 +1,11 @@
+.text
+CP ms SM_AB 4
+CP p1 si 3
+RM
+CF fil
+CP f1 fe 2
+CP f2 fe 5
+SM f1 go
+SM f2 go
+HT
+.data
