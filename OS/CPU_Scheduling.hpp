@@ -9,14 +9,17 @@
 #include "PCB.hpp"
 #include "Virtual_Mem.hpp"
 #include "Interpreter.hpp"
+#include <iomanip>
 
 class CPU_Scheduling
 {
 private:
 	//Vector of recived processes
 	std::vector<PCB*>* recivedQueue; 
+	
 	//Command counter (0-5) inside this class
 	int commandCounter;
+	
 	//Current running process
 	PCB* running;
 
@@ -33,15 +36,17 @@ public:
 
 	//This method is responsible for cpu scheduling and it use another methods in this class
 	void cpu_sch();
+	
 	//This method is responsible for make nex step (for example increase commandCounter) and it use another methods in this class
 	void nexStep();
+	
 	//This function return PID of current running PCB
 	std::string getRunningPID();
-	//THis function display content of PCB queue
+	
+	//This function display content of PCB queue
 	void displayPCBqueue();
+	
 	//THis function print infromation of PCB which is running
 	void displayRunning();
-
-
 };
 
