@@ -1,10 +1,10 @@
 .text
-MV CX 5
+MV CX [3]
 MV AX 1
 MU AX CX
 SB CX 1
-JN CX 16
+JN CX 18
 MV [3] CX
 HT
 .data
-[3] 5
+[8] 10
