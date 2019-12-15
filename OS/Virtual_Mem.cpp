@@ -182,7 +182,6 @@ bool Virtual_Mem::loadProg(PCB * pcb)
 {
 	std::vector<SegmentPCB*>* segTab = new std::vector<SegmentPCB*>;
 	segTab = pcb->getSegTab();
-	int segTabSize = 0;
 	for (int i = 0; i < segTab->size(); i++) {
 		if (segTab->at(i)->vi == 0) {
 			std::string data;
@@ -206,7 +205,7 @@ bool Virtual_Mem::loadProg(PCB * pcb)
 */
 bool Virtual_Mem::deleteProg(PCB *pcb)
 {
-	//deleteFromRam(&pcb);
+	System::RAM.deleteFromRam(pcb);
 	auto segTab = pcb->getSegTab();
 	size_t size = segTab->size();
 	for (int i = 0; i < size; i++) { //for every segment (.text, .data)

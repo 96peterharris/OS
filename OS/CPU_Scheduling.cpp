@@ -39,11 +39,25 @@ void CPU_Scheduling::cpu_sch()
 	}
 	else
 	{
-		PCB::update();							//Updating process queue
-		running = recivedQueue->at(0);
-		running->setRunning(); //Attention!!!
-		commandCounter = 0;
-		System::VM.loadProg(running); //robbert musi utworzyæ
+		if (PCB::update() == false) {
+			running = recivedQueue->at(0);
+			running->setRunning();
+			commandCounter = 0;
+			System::VM.loadProg(running);
+		}
+		else {
+			if (running->getState() == TERMINATED) {							//Updating process queue
+				running = recivedQueue->at(0);
+				//running->setRunning(); //Attention!!!
+				commandCounter = 0;
+				//System::VM.loadProg(running); //robbert musi utworzyæ
+			}
+			else
+			{
+				running->setRunning();
+				commandCounter = 0;
+			}
+		}
 	}
 		
 	
@@ -85,13 +99,21 @@ void CPU_Scheduling::nexStep()
 			increasePriority();
 		}
 	}
-	else
+	else if ((commandCounter < 5) && (PCB::NEW_PROCESS == true))
 	{
 		cpu_sch();
+		if (interprate(running) == true)
+		{
+			std::cout << "\n interpreter true";
+			commandCounter++;
+			PCB::NEW_PROCESS = false;
+		}
+
+	}
+	else
+	{
 		running->setReady();
-		int tmp = running->getCommandCounter();
-		tmp += commandCounter;
-		running->setCommandCounter(tmp);
+		cpu_sch();
 		commandCounter = 0;
 		PCB::NEW_PROCESS = false;
 		increasePriority();
