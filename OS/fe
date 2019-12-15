@@ -1,8 +1,10 @@
 .text
 OP fil
 WF fil lol
-RM
-OW fil nope
-WF fil _yup
+OW fil ow
+WF fil _1
+WF fil _2
+WF fil _3
+WF fil _4
 CL fil
-.data
+HT

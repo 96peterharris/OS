@@ -282,27 +282,37 @@ void Ram::printRam(int start, int stop) {
 }
 
 void Ram::printProcess(std::string pid) {
-    PCB* pcb = PCB::getPCB(pid);
-    std::cout << pid << std::endl;
-    std::cout << "Segment text" << std::endl;
-    for (int i = pcb->segTab[0]->baseRAM; i < pcb->segTab[0]->baseRAM + pcb->segTab[0]->limit; i++) {
-        std::cout << i << "   " << ram[i] << std::endl;
-    }
-    std::cout << std::endl;
-    std::cout << "Segment data" << std::endl;
-    for (int i = pcb->segTab[1]->baseRAM; i < pcb->segTab[1]->baseRAM + pcb->segTab[1]->limit; i++) {
-        std::cout << i << "   " << ram[i] << std::endl;
-    }
+	PCB* pcb = PCB::getPCB(pid);
+	std::cout << pid << std::endl;
+	if (isInRam(pcb, 0)) {
+		std::cout << "Segment text" << std::endl;
+		for (int i = pcb->segTab[0]->baseRAM; i < pcb->segTab[0]->baseRAM + pcb->segTab[0]->limit; i++) {
+			std::cout << i << "   " << ram[i] << std::endl;
+		}
+		std::cout << std::endl;
+	}
+	if (pcb->segTab.size() == 2) {
+		if (isInRam(pcb, 1)) {
+			std::cout << "Segment data" << std::endl;
+			for (int i = pcb->segTab[1]->baseRAM; i < pcb->segTab[1]->baseRAM + pcb->segTab[1]->limit; i++) {
+				std::cout << i << "   " << ram[i] << std::endl;
+			}
+		}
+	}
 }
 
 void Ram::printSegment(std::string pid, int segment) {
-    PCB* pcb = PCB::getPCB(pid);
-    std::cout << pid << std::endl;
-    if (segment == 0) std::cout << "Segment text" << std::endl;
-    else if (segment == 1) std::cout << "Segment data" << std::endl;
-    for (int i = pcb->segTab[segment]->baseRAM; i < pcb->segTab[segment]->baseRAM + pcb->segTab[segment]->limit; i++) {
-        std::cout << i << "   " << ram[i] << std::endl;
-    }
+	PCB* pcb = PCB::getPCB(pid);
+	if (segment == 1 && pcb->segTab.size() == 2) {
+		if (isInRam(pcb, segment)) {
+			std::cout << pid << std::endl;
+			if (segment == 0) std::cout << "Segment text" << std::endl;
+			else if (segment == 1) std::cout << "Segment data" << std::endl;
+			for (int i = pcb->segTab[segment]->baseRAM; i < pcb->segTab[segment]->baseRAM + pcb->segTab[segment]->limit; i++) {
+				std::cout << i << "   " << ram[i] << std::endl;
+			}
+		}
+	}
 }
 
 void Ram::printMessage(int ramAddr) {

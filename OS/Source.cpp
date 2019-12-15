@@ -2,20 +2,17 @@
 
 int main() {
 	PCB::createDummy();
-	PCB::createProcess("p","si",5);
+	PCB::createProcess("pr", "pr2", 2);
 	PCB::printMap();
 	PCB::update();
-	PCB::printReadyQueue();
-	//System::VM.printVM(PCB::getPCB("p2"));
 	std::cout << std::endl;
-	//System::RAM.printProcess("p2");
 	for (int i = 0; i < 50; i++)
 	{
 		System::CPU.nexStep();
 		std::cout << "==============================" << std::endl << "Running: ";
 		System::CPU.displayRunning();
-		//std::cout << "Procesess: " << std::endl;
-		//PCB::printMap();
+		std::cout << "Procesess: " << std::endl;
+		PCB::printMap();
 		//System::RAM.printProcess(PCB::getPCB("p1"));
 		//System::RAM.printAllRam();
 
