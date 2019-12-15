@@ -130,13 +130,13 @@ bool Virtual_Mem::createProg(PCB *pcb, std::string data)
 							snumber.clear(); //clear string as preparation for next number
 							pagefile.at(freeSpace + index) = number; //fill pagefile byte with converted number
 							for (int j = 0; j <= index; j++) {
-								if (ramString.size() == j){
-									if (j == index) {
+								if (ramString.size() == j) {
+									if (j == index)
 										ramString += number;
-									}
-									else {
-										ramString += '\0';
-									}
+									else ramString += '\0';
+								}
+								else if (j == index) {
+									ramString.at(index) = number;
 								}
 							}
 							k += numLength;
