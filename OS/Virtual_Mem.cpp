@@ -66,6 +66,7 @@ bool Virtual_Mem::createProg(PCB *pcb, std::string data)
 	int k = 0;
 	for (int i = 0; i < segTabSize; i++) { //for every segment in program
 		size_t freeSpace = size_t(findFreeSpace(data.length()));
+		int maxPos = 0, index = 0;
 		k += 6;
 		std::string snumber;
 		int number = 0;
@@ -78,37 +79,89 @@ bool Virtual_Mem::createProg(PCB *pcb, std::string data)
 		}
 		int pos = 0;
 		while (k < sLength) {
-			if (data.at(k - 1) == ' ' && isdigit(data.at(k))) {
-				int numLength = -1;//20-22
-				for (int i = 0; i < 3; i++) {
-					numLength++; //count how many digits were found to correct index in pagefile later
-					snumber += data.at(k + i);
-					if (data.length() == (k + i + 1) || data.at(k + i + 1) == ' ') { //if next byte is not digit, it means we found whole number, convert it to int
-						number = std::stoi(snumber);
-						snumber.clear(); //clear string as preparation for next number
-						pagefile.at(freeSpace + pos) = number; //fill pagefile byte with converted number
-						ramString += number;
-						k += numLength;
-						correction += numLength;
-						pos++;
-						break;
+			if (i == 0) {
+				if (data.at(k - 1) == ' ' && isdigit(data.at(k))) {
+					int numLength = -1;//20-22
+					for (int i = 0; i < 3; i++) {
+						numLength++; //count how many digits were found to correct index in pagefile later
+						snumber += data.at(k + i);
+						if (data.length() == (k + i + 1) || data.at(k + i + 1) == ' ') { //if next byte is not digit, it means we found whole number, convert it to int
+							number = std::stoi(snumber);
+							snumber.clear(); //clear string as preparation for next number
+							pagefile.at(freeSpace + pos) = number; //fill pagefile byte with converted number
+							ramString += number;
+							k += numLength;
+							correction += numLength;
+							pos++;
+							break;
+						}
 					}
 				}
+				else { //if byte is not a number, just copy it to pagefile (using correction counted earlier)
+					pagefile.at(freeSpace + pos) = data.at(k);
+					ramString += data.at(k);
+					pos++;
+				}
 			}
-			else { //if byte is not a number, just copy it to pagefile (using correction counted earlier)
-				pagefile.at(freeSpace + pos) = data.at(k);
-				ramString += data.at(k);
-				pos++;
+			else {
+				if (data.at(k - 1) == '[' && isdigit(data.at(k))) {
+					int numLength = -1;//20-22
+					for (int i = 0; i < 3; i++) {
+						numLength++; //count how many digits were found to correct index in pagefile later
+						snumber += data.at(k + i);
+						if (data.length() == (k + i + 1) || data.at(k + i + 1) == ']') { //if next byte is not digit, it means we found whole number, convert it to int
+							index = std::stoi(snumber);
+							snumber.clear(); //clear string as preparation for next number
+							k += numLength;
+							correction += numLength;
+							//pos++;
+							if (index > maxPos) maxPos = index;
+							break;
+						}
+					}
+				}
+				else if (data.at(k - 1) == ' ' && isdigit(data.at(k))) {
+					int numLength = -1;//20-22
+					for (int i = 0; i < 3; i++) {
+						numLength++; //count how many digits were found to correct index in pagefile later
+						snumber += data.at(k + i);
+						if (data.length() == (k + i + 1) || data.at(k + i + 1) == ' ') { //if next byte is not digit, it means we found whole number, convert it to int
+							number = std::stoi(snumber);
+							snumber.clear(); //clear string as preparation for next number
+							pagefile.at(freeSpace + index) = number; //fill pagefile byte with converted number
+							for (int j = 0; j <= index; j++) {
+								if (ramString.size() == j) {
+									if (j == index)
+										ramString += number;
+									else ramString += '\0';
+								}
+								else if (j == index) {
+									ramString.at(index) = number;
+								}
+							}
+							k += numLength;
+							correction += numLength;
+							pos++;
+							break;
+						}
+					}
+				}
+				else {
+					pagefile.at(freeSpace + pos) = 0;
+					ramString += '\0';
+					if (pos > maxPos) maxPos = pos;
+				}
 			}
 			k++;
 		}
+		if(i == 1 && maxPos < ramString.size()) ramString.pop_back();
 		SegmentVM segment;
 		segment.base = freeSpace;
 		if (i == 0) { //text segment
 			segment.limit = pos;
 		}
 		else { //data segment
-			segment.limit = pos;
+			segment.limit = maxPos + 1;
 		}
 		pfSegTab.push_back(segment);
 
@@ -129,13 +182,14 @@ bool Virtual_Mem::loadProg(PCB * pcb)
 {
 	std::vector<SegmentPCB*>* segTab = new std::vector<SegmentPCB*>;
 	segTab = pcb->getSegTab();
-	int segTabSize = 0;
 	for (int i = 0; i < segTab->size(); i++) {
-		std::string data;
-		for (int k = 0; k < segTab->at(i)->limit; k++) {
-			data += pagefile.at(k);
+		if (segTab->at(i)->vi == 0) {
+			std::string data;
+			for (int k = 0; k < segTab->at(i)->limit; k++) {
+				data += pagefile.at(k);
+			}
+			System::RAM.loadToRam(pcb, data, i);
 		}
-		System::RAM.loadToRam(pcb, data, i);
 	}
 	std::sort(pfSegTab.begin(), pfSegTab.end());
 	return 1;
@@ -151,7 +205,7 @@ bool Virtual_Mem::loadProg(PCB * pcb)
 */
 bool Virtual_Mem::deleteProg(PCB *pcb)
 {
-	//deleteFromRam(&pcb);
+	System::RAM.deleteFromRam(pcb);
 	auto segTab = pcb->getSegTab();
 	size_t size = segTab->size();
 	for (int i = 0; i < size; i++) { //for every segment (.text, .data)

@@ -34,7 +34,7 @@ std::vector<std::string> getArgs(PCB *pcb, int argNum, int &takenBytes) {
 
 bool interprate(PCB *pcb) {
 	std::string command = "";
-	bool ret;
+	bool ret = false, IC = false;
 	command.append(1, System::RAM.readFromRam(pcb, 0, pcb->getCommandCounter()));
 	command.append(1, System::RAM.readFromRam(pcb, 0, pcb->getCommandCounter() + 1));
 
@@ -66,17 +66,17 @@ bool interprate(PCB *pcb) {
 	else if (command == "JP") //unconditional jump
 	{
 		args = getArgs(pcb, 1, takenBytes);
-		return jump(pcb, args[0]);
+		ret = jump(pcb, IC, args[0]);
 	}
 	else if (command == "JZ") //jump if register == 0
 	{
 		args = getArgs(pcb, 2, takenBytes);
-		return jumpIf0(pcb, args[0], args[1]);
+		ret = jumpIf0(pcb, IC, args[0], args[1]);
 	}
 	else if (command == "JN") //jump if register != 0
 	{
 		args = getArgs(pcb, 2, takenBytes);
-		return jumpIfN0(pcb, args[0], args[1]);
+		ret = jumpIfN0(pcb, IC, args[0], args[1]); 
 	}
 	else if (command == "MV") //copy value to dest
 	{
@@ -159,8 +159,8 @@ bool interprate(PCB *pcb) {
 		ret = System::FS.writeToFile(args[0], args[1]);
 	}
 
-
-	pcb->setCommandCounter(pcb->getCommandCounter() + takenBytes);
+	if (!IC)
+		pcb->setCommandCounter(pcb->getCommandCounter() + takenBytes);
 	return ret;
 }
 
@@ -172,9 +172,13 @@ bool interprate(PCB *pcb) {
  * @return true XD
  * @see Interpreter JP command
 */
-bool jump(PCB *pcb, std::string logAddr) {
-	pcb->setCommandCounter(std::stoi(logAddr));
-	return 1;
+bool jump(PCB *pcb, bool &ICcheck, std::string logAddr) {
+	//pcb->setCommandCounter(std::stoi(logAddr));
+	if (logAddr.size() == 1) {
+		pcb->setCommandCounter((int)logAddr.at(0));
+		ICcheck = true;
+		return 1;
+	}
 }
 
 /**
@@ -185,16 +189,26 @@ bool jump(PCB *pcb, std::string logAddr) {
  * @return true XD
  * @see Interpreter JZ command
 */
-bool jumpIf0(PCB *pcb, std::string registerName, std::string logAddr) {
-	if (
-		(registerName == "AX" && pcb->getRegisterPointer()->getA() == 0) ||
-		(registerName == "BX" && pcb->getRegisterPointer()->getB() == 0) ||
-		(registerName == "CX" && pcb->getRegisterPointer()->getC() == 0) ||
-		(registerName == "DX" && pcb->getRegisterPointer()->getD() == 0)
+bool jumpIf0(PCB *pcb, bool &ICcheck, std::string registerName, std::string logAddr) {
+	if (registerName == "AX" ||
+		registerName == "BX" ||
+		registerName == "CX" ||
+		registerName == "DX"
 		) {
-		pcb->setCommandCounter(std::stoi(logAddr));
+		if (
+			(registerName == "AX" && pcb->getRegisterPointer()->getA() == 0) ||
+			(registerName == "BX" && pcb->getRegisterPointer()->getB() == 0) ||
+			(registerName == "CX" && pcb->getRegisterPointer()->getC() == 0) ||
+			(registerName == "DX" && pcb->getRegisterPointer()->getD() == 0)
+			) {
+			pcb->setCommandCounter((int)logAddr.at(0));
+			ICcheck = true;
+		}
+		return 1;
 	}
-	return 1;
+	else {
+		return 0;
+	}
 }
 
 /**
@@ -205,16 +219,26 @@ bool jumpIf0(PCB *pcb, std::string registerName, std::string logAddr) {
  * @return true XD
  * @see Interpreter JN command
 */
-bool jumpIfN0(PCB *pcb, std::string registerName, std::string logAddr) {
-	if (
-		(registerName == "AX" && pcb->getRegisterPointer()->getA() != 0) ||
-		(registerName == "BX" && pcb->getRegisterPointer()->getB() != 0) ||
-		(registerName == "CX" && pcb->getRegisterPointer()->getC() != 0) ||
-		(registerName == "DX" && pcb->getRegisterPointer()->getD() != 0)
-		) {
-		pcb->setCommandCounter(std::stoi(logAddr));
+bool jumpIfN0(PCB *pcb, bool &ICcheck, std::string registerName, std::string logAddr) {
+	if ((registerName == "AX" ||
+		registerName == "BX" ||
+		registerName == "CX" ||
+		registerName == "DX"
+		) && logAddr.size() == 1) {
+		if (
+			(registerName == "AX" && pcb->getRegisterPointer()->getA() != 0) ||
+			(registerName == "BX" && pcb->getRegisterPointer()->getB() != 0) ||
+			(registerName == "CX" && pcb->getRegisterPointer()->getC() != 0) ||
+			(registerName == "DX" && pcb->getRegisterPointer()->getD() != 0)
+			) {
+			pcb->setCommandCounter((int)logAddr.at(0));
+			ICcheck = true;
+		}
+		return 1;
 	}
-	return 1;
+	else {
+		return 0;
+	}
 }
 
 /**

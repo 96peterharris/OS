@@ -1,89 +1,122 @@
-#include "CPU_Scheduling.hpp"
+Ôªø#include "CPU_Scheduling.hpp"
 
 #include "Headers.h"
 
-CPU_Scheduling::CPU_Scheduling() 
+CPU_Scheduling::CPU_Scheduling()
 {
 	this->commandCounter = 0;
-	this->running = NULL;
+	this->running = nullptr;
 }
 void CPU_Scheduling::increasePriority()
 {
-	for (int i = 0; i < recivedQueue->size()-1; i++)
+	for (int i = 0; i < recivedQueue->size() - 1; i++)
 	{
-		if (recivedQueue->at(i)->getPriority() < 12)
+		if (recivedQueue->at(i)->getPriority() < 12 && recivedQueue->at(i)->getPid() != "DM")
 		{
 			int tmp = recivedQueue->at(i)->getPriority();
 			tmp += 3;
 			recivedQueue->at(i)->setPriority(tmp);
 		}
-		else 
+		else if (recivedQueue->at(i)->getPriority() > 12 && recivedQueue->at(i)->getPid() != "DM")
 		{
 			recivedQueue->at(i)->setPriority(15);
 		}
 	}
 }
-void CPU_Scheduling::addToTerminatedVec(PCB* pcb) {
-	this->addToTerminatedVec(pcb);
-}
 void CPU_Scheduling::getProcesses() {
 
 	this->recivedQueue = PCB::getReadyQueuePointer();
 }
-void CPU_Scheduling::cpu_sch() 
+void CPU_Scheduling::cpu_sch()
 {
-	if (recivedQueue->size() > 1) 
+	if (recivedQueue == nullptr)
 	{
-		PCB::update();							//Updating process queue
+		getProcesses();						//Updating process queue
 		running = recivedQueue->at(0);
 		running->setRunning(); //Attention!!!
 		commandCounter = 0;
-		System::VM.loadProg(running); //robbert musi utworzyÊ
+		System::VM.loadProg(running); //robbert musi utworzy√¶
 	}
-	else 
+	else
 	{
-		recivedQueue = PCB::getReadyQueuePointer();
-		
-		/*if (recivedQueue->size() > 1)
-		{
+		if (PCB::update() == false) {
 			running = recivedQueue->at(0);
+			running->setRunning();
+			commandCounter = 0;
+			System::VM.loadProg(running);
 		}
-		else
-		{
-			running = recivedQueue->at(0);
-		}*/
-
-		running = recivedQueue->at(0);
-		running->setTerminated();
-		commandCounter = 0;
-		System::VM.loadProg(running); //robbert musi utworzyÊ
+		else {
+			if (running->getState() == TERMINATED) {							//Updating process queue
+				running = recivedQueue->at(0);
+				//running->setRunning(); //Attention!!!
+				commandCounter = 0;
+				//System::VM.loadProg(running); //robbert musi utworzy√¶
+			}
+			else
+			{
+				running->setRunning();
+				commandCounter = 0;
+			}
+		}
 	}
+		
+	
+	/*else if()
+	{
+		getProcesses();
+		running = recivedQueue->at(0);
+		commandCounter = 0;
+		running->setRunning();
+		System::VM.loadProg(running); //robbert musi utworzy√¶
+
+	}*/
 }
 void CPU_Scheduling::nexStep()
 {
-	if ((commandCounter < 5) && (PCB::NEW_PROCESS = false)) 
+	/*if (recivedQueue == nullptr)
+	{
+		//cpu_sch();
+		getProcesses();
+
+	}*/
+	
+	if ((commandCounter < 5) && (PCB::NEW_PROCESS == false))
 	{
 		if (interprate(running) == true)
-		{	
+		{
+			std::cout << "\n interpreter true";
 			commandCounter++;
 		}
 		else
 		{
-			running->setTerminated(); //eryk zmieni≥ funkcje
+			cpu_sch();
+			running->setTerminated(); //eryk zmieni¬≥ funkcje
 			//haltProcess(running->getPid());
-			running->setCommandCounter(+commandCounter); //attention!!!!
+			int tmp = running->getCommandCounter();
+			tmp += commandCounter;
+			running->setCommandCounter(tmp); //attention!!!!
 			commandCounter = 0;
 			increasePriority();
-			cpu_sch();
 		}
+	}
+	else if ((commandCounter < 5) && (PCB::NEW_PROCESS == true))
+	{
+		cpu_sch();
+		if (interprate(running) == true)
+		{
+			std::cout << "\n interpreter true";
+			commandCounter++;
+			PCB::NEW_PROCESS = false;
+		}
+
 	}
 	else
 	{
-		running->setTerminated();
-		running->setCommandCounter(+commandCounter);
-		commandCounter = 0;
-		increasePriority();
+		running->setReady();
 		cpu_sch();
+		commandCounter = 0;
+		PCB::NEW_PROCESS = false;
+		increasePriority();
 	}
 }
 std::string CPU_Scheduling::getRunningPID() {
@@ -93,7 +126,7 @@ void CPU_Scheduling::displayPCBqueue()
 {
 	std::cout << "PID\t PRIORITY \tSTATE" << std::endl;
 
-	for(int i = 0; i < recivedQueue->size(); i++)
+	for (int i = 0; i < recivedQueue->size(); i++)
 	{
 		std::cout << recivedQueue->at(i)->getPid() << "\t " << recivedQueue->at(i)->getPriority() << "\t" << recivedQueue->at(i)->getState() << std::endl;
 	}
