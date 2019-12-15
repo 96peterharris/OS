@@ -6,8 +6,12 @@ int main() {
 	PCB::printMap();
 	PCB::update();
 	PCB::printReadyQueue();
+<<<<<<< HEAD
 	//System::VM.printVM(PCB::getPCB("p1"));
 	System::RAM.printAllRam();
+=======
+
+>>>>>>> VM
 	for (int i = 0; i < 50; i++)
 	{
 		System::CPU.nexStep();

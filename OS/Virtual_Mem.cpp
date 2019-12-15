@@ -66,7 +66,7 @@ bool Virtual_Mem::createProg(PCB *pcb, std::string data)
 	int k = 0;
 	for (int i = 0; i < segTabSize; i++) { //for every segment in program
 		size_t freeSpace = size_t(findFreeSpace(data.length()));
-		int maxPos = 0;
+		int maxPos = 0, index = 0;
 		k += 6;
 		std::string snumber;
 		int number = 0;
@@ -104,7 +104,6 @@ bool Virtual_Mem::createProg(PCB *pcb, std::string data)
 				}
 			}
 			else {
-				int index = 0;
 				if (data.at(k - 1) == '[' && isdigit(data.at(k))) {
 					int numLength = -1;//20-22
 					for (int i = 0; i < 3; i++) {
@@ -115,7 +114,7 @@ bool Virtual_Mem::createProg(PCB *pcb, std::string data)
 							snumber.clear(); //clear string as preparation for next number
 							k += numLength;
 							correction += numLength;
-							pos++;
+							//pos++;
 							if (index > maxPos) maxPos = index;
 							break;
 						}
@@ -130,7 +129,16 @@ bool Virtual_Mem::createProg(PCB *pcb, std::string data)
 							number = std::stoi(snumber);
 							snumber.clear(); //clear string as preparation for next number
 							pagefile.at(freeSpace + index) = number; //fill pagefile byte with converted number
-							ramString += number;
+							for (int j = 0; j <= index; j++) {
+								if (ramString.size() == j){
+									if (j == index) {
+										ramString += number;
+									}
+									else {
+										ramString += '\0';
+									}
+								}
+							}
 							k += numLength;
 							correction += numLength;
 							pos++;
@@ -141,20 +149,19 @@ bool Virtual_Mem::createProg(PCB *pcb, std::string data)
 				else {
 					pagefile.at(freeSpace + pos) = 0;
 					ramString += '\0';
-					pos++;
 					if (pos > maxPos) maxPos = pos;
 				}
 			}
-			
 			k++;
 		}
+		if(i == 1 && maxPos < ramString.size()) ramString.pop_back();
 		SegmentVM segment;
 		segment.base = freeSpace;
 		if (i == 0) { //text segment
 			segment.limit = pos;
 		}
 		else { //data segment
-			segment.limit = maxPos;
+			segment.limit = maxPos + 1;
 		}
 		pfSegTab.push_back(segment);
 
