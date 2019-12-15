@@ -34,6 +34,7 @@ protected:
 
 	static std::map<std::string, PCB*> processesMap;
 	static std::vector<PCB*> readyQueue;
+
 public:
 	//memoryPointer 
 	std::vector<SegmentPCB*> segTab;
