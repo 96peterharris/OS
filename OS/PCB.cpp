@@ -130,10 +130,18 @@ bool PCB::haltProcess(std::string pid) {
 
 void PCB::printPCB(std::string pid) {
 	PCB* tPCB = getPCB(pid);
-	std::cout << tPCB->pid << " "
-		<< tPCB->getDefaultPriority() << " " << tPCB->getPriority() << " " << tPCB->getState() << " "
-		<< (int)tPCB->getRegisterPointer()->getA() << " " << (int)tPCB->getRegisterPointer()->getB() << " " << (int)tPCB->getRegisterPointer()->getC() << " " << (int)tPCB->getRegisterPointer()->getD() << " "
-		<< std::endl;
+	std::cout << "\n===========================================================================================\n";
+	std::cout << "||||||||||||||||||||||||||||||||||||| RUNNIG PROCESS ||||||||||||||||||||||||||||||||||||||";
+	std::cout << "\n===========================================================================================\n";
+	std::cout << std::left << std::setw(6) << "|PID|" << std::right << std::setw(6) << " |Default Pri.|" << std::right << std::setw(10) << " |Dynamic Pri.|";
+	std::cout << std::right << std::setw(6) << " |State|" << std::right << std::setw(6) << " |Reg A|" << std::right << std::setw(6) << " |Reg B|" << std::right << std::setw(6) << " |Reg C|";
+	std::cout << std::right << std::setw(6) << " |Reg D|" << std::right << std::setw(6) << " |Com. Counter|\n";
+	std::cout << " " << std::left << std::setw(5) << tPCB->pid << " "
+		<< std::right << std::setw(7) << tPCB->getDefaultPriority() << " " << std::right << std::setw(14) << tPCB->getPriority() << " " << std::right << std::setw(14) << stateToString(tPCB->getState()) << " "
+		<< std::right << std::setw(4) << (int)tPCB->getRegisterPointer()->getA() << " " << std::right << std::setw(7) << (int)tPCB->getRegisterPointer()->getB() << " "
+		<< std::right << std::setw(7) << (int)tPCB->getRegisterPointer()->getC() << " " << std::right << std::setw(7) << (int)tPCB->getRegisterPointer()->getD() << " "
+		<< std::setw(11) << (int)tPCB->getCommandCounter();
+	std::cout << "\n===========================================================================================\n";
 }
 
 void PCB::printReadyQueue() {
@@ -141,6 +149,18 @@ void PCB::printReadyQueue() {
 	for (auto x : readyQueue) {
 		std::cout << x->pid << "\t " << x->priority << std::endl;
 	}
+
+	std::cout << "\n================================\n";
+	std::cout << "||||||| CONTENT OF QUEUE |||||||";
+	std::cout << "\n================================\n";
+	std::cout << "|PID|\t |PRIORITY| \t|STATE|" << std::endl;
+
+	for (auto x : readyQueue)
+	{
+		std::cout << " " << std::left << std::setw(6) << x->getPid() << std::right << std::setw(8) << x->getPriority() << "\t\t"
+			<< std::right << std::setw(4) << stateToString(x->getState()) << std::endl;
+	}
+	std::cout << "================================\n";
 }
 
 void PCB::printMap() {

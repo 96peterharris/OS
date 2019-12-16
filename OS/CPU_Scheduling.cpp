@@ -182,7 +182,7 @@ void CPU_Scheduling::displayPCBqueue()
 	for (int i = 0; i < recivedQueue->size(); i++)
 	{
 		std::cout << " " << std::left << std::setw(6) << recivedQueue->at(i)->getPid() << std::right << std::setw(8) << recivedQueue->at(i)->getPriority() << "\t\t"
-			<< std::right << std::setw(4) << recivedQueue->at(i)->getState() << std::endl;
+			<< std::right << std::setw(4) << stateToString(recivedQueue->at(i)->getState()) << std::endl;
 	}
 	std::cout << "================================\n";
 }
@@ -194,16 +194,16 @@ void CPU_Scheduling::displayPCBqueue()
 */
 void CPU_Scheduling::displayRunning()
 {
-	std::cout << "\n=============================================================================\n";
-	std::cout << "|||||||||||||||||||||||||||||| RUNNIG PROCESS |||||||||||||||||||||||||||||||";
-	std::cout << "\n=============================================================================\n";
+	std::cout << "\n===========================================================================================\n";
+	std::cout << "||||||||||||||||||||||||||||||||||||| RUNNIG PROCESS ||||||||||||||||||||||||||||||||||||||";
+	std::cout << "\n===========================================================================================\n";
 	std::cout << std::left << std::setw(6) << "|PID|" << std::right << std::setw(6) << " |Default Pri.|" << std::right << std::setw(10) << " |Dynamic Pri.|";
 	std::cout << std::right << std::setw(6) << " |State|" << std::right << std::setw(6) << " |Reg A|" << std::right << std::setw(6) << " |Reg B|" << std::right << std::setw(6) << " |Reg C|";
 	std::cout << std::right << std::setw(6) << " |Reg D|" << std::right << std::setw(6) << " |Com. Counter|\n";
 	std::cout << " " << std::left << std::setw(5) << running->pid << " "
-		<< std::right << std::setw(7) << running->getDefaultPriority() << " " << std::right << std::setw(14) << running->getPriority() << " " << std::right << std::setw(11) << running->getState() << " "
-		<< std::right << std::setw(7) << (int)running->getRegisterPointer()->getA() << " " << std::right << std::setw(7) << (int)running->getRegisterPointer()->getB() << " "
+		<< std::right << std::setw(7) << running->getDefaultPriority() << " " << std::right << std::setw(14) << running->getPriority() << " " << std::right << std::setw(14) << stateToString(running->getState()) << " "
+		<< std::right << std::setw(4) << (int)running->getRegisterPointer()->getA() << " " << std::right << std::setw(7) << (int)running->getRegisterPointer()->getB() << " "
 		<< std::right << std::setw(7) << (int)running->getRegisterPointer()->getC() << " " 	<< std::right << std::setw(7) << (int)running->getRegisterPointer()->getD() << " "
 		<< std::setw(11) << (int)running->getCommandCounter();
-	std::cout << "\n=============================================================================\n";
+	std::cout << "\n===========================================================================================\n";
 }
