@@ -11,8 +11,11 @@ int main() {
 		System::CPU.nexStep();
 		std::cout << "==============================" << std::endl << "Running: ";
 		System::CPU.displayRunning();
-		std::cout << "Procesess: " << std::endl;
+		std::cout << "Command: " << i << std::endl << "Procesess: " << std::endl;
 		PCB::printMap();
+		if (i > 4) {
+			System::FS.displaydrivecontent();
+		}
 		//System::RAM.printProcess(PCB::getPCB("p1"));
 		//System::RAM.printAllRam();
 
