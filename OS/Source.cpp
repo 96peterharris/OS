@@ -2,7 +2,7 @@
 
 int main() {
 	PCB::createDummy();
-	PCB::createProcess("pr", "pr2", 2);
+	PCB::createProcess("pr", "si", 2);
 	//PCB::printMap();
 	//PCB::update();
 	std::cout << std::endl;
@@ -49,6 +49,8 @@ int main() {
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
+	PCB::createProcess("p3", "si", 4);
+
 	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
@@ -56,6 +58,11 @@ int main() {
 	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
+	System::CPU.displayPCBqueue();
+	
+	PCB* pointer2 = PCB::getPCB("pr");
+	PCB* pointer = PCB::getPCB("p3");
+	pointer->setWaiting();
 	System::CPU.displayPCBqueue();
 
 	System::CPU.nextStep();

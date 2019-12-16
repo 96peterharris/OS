@@ -73,12 +73,26 @@ void CPU_Scheduling::cpu_sch()
 		else if (PCB::NEW_PROCESS == true)
 		{
 			//std::sort(recivedQueue->begin(), recivedQueue->end(), [](PCB* a, PCB* b) { return a->getPriority() > b->getPriority(); });
-			running->setReady();
-			getProcesses();
-			running = recivedQueue->at(0);
-			commandCounter = 0;
-			running->setRunning();
-			System::VM.loadProg(running);
+
+			if (running->getState() == WAITING)
+			{
+				commandCounter = 0;
+				PCB::update();
+				commandCounter = 0;
+				running = recivedQueue->at(0);
+				running->setRunning();
+				System::VM.loadProg(running);
+
+			}
+			else
+			{
+				running->setReady();
+				PCB::update();
+				running = recivedQueue->at(0);
+				commandCounter = 0;
+				running->setRunning();
+				System::VM.loadProg(running);
+			}
 		}
 		else
 		{
@@ -112,8 +126,16 @@ void CPU_Scheduling::nextStep()
 	{
 		if (interprate(running) == true)
 		{
-			//std::cout << "\n interpreter true";
-			commandCounter++;
+			if (PCB::NEW_PROCESS == true)
+			{
+				cpu_sch();
+				commandCounter = 0;
+			}
+			else
+			{
+				commandCounter++;
+				PCB::NEW_PROCESS = false;
+			}
 		}
 		else//When interprate return false
 		{
@@ -129,9 +151,18 @@ void CPU_Scheduling::nextStep()
 		cpu_sch();
 		if (interprate(running) == true)
 		{
+			if (PCB::NEW_PROCESS == true)
+			{
+				cpu_sch();
+				commandCounter = 0;
+			}
+			else
+			{
+				commandCounter++;
+				PCB::NEW_PROCESS = false;
+			}
 			//std::cout << "\n interpreter true";
-			commandCounter++;
-			PCB::NEW_PROCESS = false;
+			
 		}
 		else 
 		{
