@@ -1,9 +1,10 @@
 .text
 MV CX [12]
 MV AX 1
+RM
 MU AX CX
 SB CX 1
-JN CX 19
+JN CX 22
 MV [12] AX
 AD [12] 21
 MV BX [12]
