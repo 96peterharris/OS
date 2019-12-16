@@ -38,10 +38,10 @@ public:
 	std::string getSegment(PCB *pcb, const int segment);
 	bool loadToVM(PCB *pcb, const std::string data);
 
-	void printPCBSegments(PCB *pcb);
-	void printVMSegTab();
-	void printVM(PCB *pcb);
-	void printPCBSegTab();
+	void printPCBsegTab(std::string pid);
+	void printVMsegTab();
+	void printPCBsegments(std::string pid);
+	void printVM();
 
 private:
 	int findFreeSpace(const int limit);
