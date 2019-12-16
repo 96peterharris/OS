@@ -8,8 +8,7 @@ int main() {
 	std::cout << std::endl;
 	for (int i = 0; i < 50; i++)
 	{
-		System::CPU.nexStep();
-		std::cout << "==============================" << std::endl << "Running: ";
+		System::CPU.nextStep();
 		System::CPU.displayRunning();
 		std::cout << "Command: " << i << std::endl << "Procesess: " << std::endl;
 		PCB::printMap();
