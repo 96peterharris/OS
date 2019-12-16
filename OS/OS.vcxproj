@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CPU_Scheduling.hpp" />
+    <ClInclude Include="Drive.hpp" />
     <ClInclude Include="Files_And_Directory_Management.hpp" />
     <ClInclude Include="GUI.hpp" />
     <ClInclude Include="Interpreter.hpp" />
