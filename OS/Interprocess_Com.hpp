@@ -5,9 +5,7 @@
 
 #include <algorithm>
 #include <exception>
-
-#include "RAM.hpp"
-#include "PCB.hpp"
+#include <string>
 
 struct messageNotFound : public std::exception
 {
@@ -43,3 +41,5 @@ public:
 	bool printMessage();
 
 };
+
+bool operator==(Message& m1, Message& m2);

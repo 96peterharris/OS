@@ -105,7 +105,7 @@ bool Ram::buddy(PCB* pcb, int segment, std::string bytes, int divisionLvl) {
                 blocks[startAddrBlocks+i] = 1;
             }
             if(segment == 2) {
-                (*pcb->messages.at(pcb->messages.size())).RAMadrress =  startAddr;
+                (pcb->messages.at(pcb->messages.size())).RAMadrress =  startAddr;
             }
             else {
                 pcb->segTab[segment]->baseRAM = startAddr;
