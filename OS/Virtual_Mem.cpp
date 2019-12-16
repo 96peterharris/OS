@@ -265,10 +265,11 @@ bool Virtual_Mem::loadToVM(PCB * pcb, const std::string data)
 	return 1;
 }
 
-void Virtual_Mem::printPCBSegments(PCB * pcb)
+void Virtual_Mem::printPCBsegTab(std::string pid)
 {
+	PCB* pcb = PCB::getPCB(pid);
 	std::vector<SegmentPCB*>* segTab = pcb->getSegTab();
-	std::cout << "PCB segment table:\n";
+	std::cout << "Process " << pid << " segment table:\n";
 	std::cout << " ----------------------------------\n";
 	std::cout << " | BaseVM | BaseRAM | Limit | v/i |\n";
 	for (int i = 0; i < segTab->size(); i++) {
@@ -294,7 +295,7 @@ void Virtual_Mem::printPCBSegments(PCB * pcb)
 	std::cout << " ----------------------------------\n";
 }
 
-void Virtual_Mem::printVMSegTab()
+void Virtual_Mem::printVMsegTab()
 {
 	std::cout << "Pagefile segment table:\n";
 	std::cout << " ----------------\n";
@@ -316,21 +317,94 @@ void Virtual_Mem::printVMSegTab()
 	std::cout << " ----------------\n";
 }
 
-void Virtual_Mem::printVM(PCB * pcb)
+void Virtual_Mem::printPCBsegments(std::string pid)
 {
-	int last = pfSegTab.at(pfSegTab.size() - 1).base + pfSegTab.at(pfSegTab.size() - 1).base - 1;
-
-	std::cout << "Pagefile bytes:\n";
-	std::cout << "{ ";
-	for (int i = 0; i < last + 10; i++) {
-		std::cout << pagefile.at(i) << ", ";
-		if (i % 30 == 29) std::cout << "\n";
-		if (i % 30 == 0) std::cout << " ";
+	PCB* pcb = PCB::getPCB(pid);
+	auto segTab = pcb->getSegTab();
+	std::cout << "Process " << pid << " segments content:\n";
+	for (int k = 0; k < segTab->size(); k++) {
+		if (k == 0) {
+			std::cout << "Segment .text:\n";
+			for (int i = 0; i < 60; i++) {
+				if (i == 0) std::cout << " ";
+				else std::cout << "-";
+			}
+			std::cout << "\n| 0  ";
+			for (int i = 1; i < 20; i++) {
+				std::cout << i << " ";
+				if (i < 9) std::cout << " ";
+			}
+			std::cout << "|\n ";
+			for (int i = 0; i < 59; i++) {
+				std::cout << "-";
+			}
+			std::cout << " ";
+			int last = segTab->at(0)->limit;
+			for (int i = 0; i < last; i++) {
+				if (i == 0) std::cout << "\n| " << pagefile.at(segTab->at(0)->baseVM + i) << "  ";
+				else if (i % 20 == 0) std::cout << "|\n| " << pagefile.at(segTab->at(0)->baseVM + i) << "  ";
+				else if (i % 20 == 19) std::cout << pagefile.at(segTab->at(0)->baseVM + i) << " ";
+				else std::cout << pagefile.at(segTab->at(0)->baseVM + i) << "  ";
+			}
+			std::cout << ">END<";
+			std::cout << " \n\n";
+		}
+		else {
+			std::cout << "Segment .data:\n";
+			for (int i = 0; i < 31; i++) {
+				if (i == 0) std::cout << " ";
+				else std::cout << "-";
+			}
+			std::cout << "\n| 0  ";
+			for (int i = 1; i < 10; i++) {
+				std::cout << i << " ";
+				if (i < 9) std::cout << " ";
+			}
+			std::cout << "|\n ";
+			for (int i = 0; i < 30; i++) {
+				std::cout << "-";
+			}
+			std::cout << " ";
+			int last = segTab->at(1)->limit;
+			for (int i = 0; i < last; i++) {
+				if (i == 0) std::cout << "\n| " << pagefile.at(segTab->at(1)->baseVM + i) << "  ";
+				else if (i % 10 == 0) std::cout << "|\n| " << pagefile.at(segTab->at(1)->baseVM + i) << "  ";
+				else if (i % 10 == 9) std::cout << pagefile.at(segTab->at(1)->baseVM + i) << " ";
+				else std::cout << pagefile.at(segTab->at(1)->baseVM + i) << "  ";
+			}
+			std::cout << ">END<";
+			std::cout << " \n\n";
+		}
 	}
 }
 
-void Virtual_Mem::printPCBSegTab()
+
+void Virtual_Mem::printVM()
 {
+	int last = pfSegTab.at(pfSegTab.size() - 1).base + pfSegTab.at(pfSegTab.size() - 1).limit - 1;
+
+	std::cout << "Pagefile bytes:\n";
+	for (int i = 0; i < 90; i++) {
+		if (i == 0) std::cout << " ";
+		else std::cout << "-";
+	}
+	std::cout << "\n| 0  ";
+	for (int i = 1; i < 30; i++) {
+		std::cout << i << " ";
+		if (i < 9) std::cout << " ";
+	}
+	std::cout << "|\n ";
+	for (int i = 0; i < 89; i++) {
+		std::cout << "-";
+	}
+	std::cout << " ";
+	for (int i = 0; i < last; i++) {
+		if (i == 0) std::cout << "\n| " << pagefile.at(i) << "  ";
+		else if (i % 30 == 0) std::cout << "|\n| " << pagefile.at(i) << "  ";
+		else if (i % 30 == 29) std::cout << pagefile.at(i) << " ";
+		else std::cout << pagefile.at(i) << "  ";
+	}
+	std::cout << " \n\n";
 }
 
 bool SegmentVM::operator<(const SegmentVM & segVM) const
