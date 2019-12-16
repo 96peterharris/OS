@@ -18,7 +18,6 @@ private:
     std::array<char,512> ram;
     std::array<bool, 64> blocks;
     const int maxDivision = 6;
-    Semaphore ramSem;
 
 public:
     Ram();
@@ -37,7 +36,6 @@ public:
     void printProcess(std::string pid);
     void printSegment(std::string pid, int segment);
     void printMessage(int ramAddr);
-    void printSemaphore();
 
 private:
     bool buddy(PCB* pcb, int segment, std::string bytes, int divisionLvl);

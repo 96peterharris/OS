@@ -1,7 +1,7 @@
 #include "RAM.hpp"
 #include "Headers.h"
 
-Ram::Ram() : ramSem(1){
+Ram::Ram() {
     ram.fill(' ');
     blocks.fill(0);
     
@@ -101,7 +101,6 @@ bool Ram::buddy(PCB* pcb, int segment, std::string bytes, int divisionLvl) {
             if (ok) break;
         }
         if (!ok){
-            if(ramSem.wait_sem(pcb->getPid()));
             clearRam();
 
             return 0;
@@ -244,9 +243,7 @@ bool Ram::deleteFromRam(PCB* pcb) {
             ram[i*8+j] = ' ';
         }
     }
-    if(ramSem.value_sem() <= 0){
-        if(ramSem.signal_sem());
-    }
+
     pcb->segTab[0]->vi = 1;
     pcb->segTab[1]->vi = 1;
     return 1;
@@ -408,14 +405,4 @@ void Ram::printMessage(int ramAddr) {
         std::cout << i << "   " << ram[i] << std::endl;
         i++;
     }
-}
-
-/**
- * Prints RAM's semaphore.
- * 
- * Prints value of RAM's semaphore and semaphore's queue.
- */
-void Ram::printSemaphore() {
-    ramSem.print_value();
-    ramSem.print_queue();
 }
