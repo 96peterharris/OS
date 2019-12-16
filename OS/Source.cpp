@@ -30,43 +30,43 @@ int main() {
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
-	System::CPU.nexStep();
+	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
-	System::CPU.nexStep();
+	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
-	System::CPU.nexStep();
+	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
-	System::CPU.nexStep();
+	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
-	System::CPU.nexStep();
+	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
-	System::CPU.nexStep();
+	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
-	System::CPU.nexStep();
+	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
-	System::CPU.nexStep();
+	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
-	System::CPU.nexStep();
+	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
-	System::CPU.nexStep();
+	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
