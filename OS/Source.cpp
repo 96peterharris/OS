@@ -27,8 +27,7 @@ int main() {
 		System::FS.displaydrivecontent();
 		System::FS.displayoft();*/
 
-
-	/*System::CPU.nexStep();
+/* 	System::CPU.nexStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
@@ -38,6 +37,41 @@ int main() {
 
 	System::CPU.nexStep();
 	std::cout << "==============================" << std::endl;
-	System::CPU.displayRunning();*/
+	System::CPU.displayRunning();
+
+	System::CPU.nexStep();
+	std::cout << "==============================" << std::endl;
+	System::CPU.displayRunning();
+
+	System::CPU.nexStep();
+	std::cout << "==============================" << std::endl;
+	System::CPU.displayRunning();
+
+	System::CPU.nexStep();
+	std::cout << "==============================" << std::endl;
+	System::CPU.displayRunning();
+
+	System::CPU.nexStep();
+	std::cout << "==============================" << std::endl;
+	System::CPU.displayRunning();
+
+	System::CPU.nexStep();
+	std::cout << "==============================" << std::endl;
+	System::CPU.displayRunning();
+
+	System::CPU.nexStep();
+	std::cout << "==============================" << std::endl;
+	System::CPU.displayRunning();
+
+	System::CPU.nexStep();
+	std::cout << "==============================" << std::endl;
+	System::CPU.displayRunning();
+
+	System::CPU.nexStep();
+	std::cout << "==============================" << std::endl;
+	System::CPU.displayRunning();
+
+
+	System::CPU.displayPCBqueue(); */
 
 }
