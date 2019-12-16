@@ -110,5 +110,5 @@ public:
 
 	bool sendMessage(std::string pid_receiver, std::string content);
 	bool receiveMessage();
-
+	bool deleteMessageRAM();
 };
