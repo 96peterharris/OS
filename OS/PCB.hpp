@@ -1,5 +1,6 @@
 //Enrique
 #pragma once
+#pragma once
 #include <iostream>
 #include <string>
 #include <map>
@@ -11,11 +12,15 @@
 
 #include "State.hpp"
 #include "Register.hpp"
+#include "Sync_Mech.hpp"
+#include "Interprocess_Com.hpp"
 
+class SegmentPCB;
 
 class PCB
 {
 protected:
+public:
 	std::string pid;
 
 	int processAddress;
@@ -30,13 +35,16 @@ protected:
 
 	static std::map<std::string, PCB*> processesMap;
 	static std::vector<PCB*> readyQueue;
-	//memoryPointer 
-public:
 
-	PCB() : priority_default(1) {}
-	PCB(std::string pid, int processAddress, short priority, State state);
+	//memoryPointer 
+	std::vector<SegmentPCB*> segTab;
+
+	//PCB() : priority_default(1) {}
+	PCB(std::string pid, short priority, State state);
 	~PCB();
 
+	Semaphore pSem;
+	
 	//Changing state inner function
 	//todo calling running
 	void setTerminated() { if (state == RUNNING) this->state = TERMINATED; }
@@ -70,8 +78,11 @@ public:
 	//if there is need to update queue
 	static bool NEW_PROCESS;
 
+	//Segment table getter
+	std::vector<SegmentPCB*>* getSegTab() { return &segTab; }	
+
 	//re did into pcb::function() as static ones
-	static bool createProcess(std::string pid, int processAddress, short priority);
+	static bool createProcess(std::string pid, std::string file, short priority);
 	//Terminates and deletes
 	static bool removeProcess(std::string pid);
 	//Changes state to READY
@@ -82,6 +93,8 @@ public:
 	static PCB* getPCB(std::string pid);
 	//Update a Ready Process Queue
 	static bool update();
+	//Create dummy procees
+	static bool createDummy();
 
 	//File read and removing the spaces
 	static bool readFile(std::string name, std::string &text);

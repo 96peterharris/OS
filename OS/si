@@ -1,0 +1,15 @@
+.text
+MV CX [12]
+MV AX 1
+MU AX CX
+SB CX 1
+JN CX 19
+MV [12] AX
+AD [12] 21
+MV BX [12]
+MV [10] [7]
+MV DX [10]
+HT
+.data
+[12] 4
+[7] 43

@@ -23,7 +23,7 @@
     <ProjectGuid>{91E242CC-8C25-4316-8B9F-E0DD1E05A1DA}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>OS</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -139,11 +139,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="arythmetics.hpp" />
     <ClInclude Include="CPU_Scheduling.hpp" />
+    <ClInclude Include="Drive.hpp" />
     <ClInclude Include="Files_And_Directory_Management.hpp" />
     <ClInclude Include="GUI.hpp" />
+    <ClInclude Include="Headers.h" />
     <ClInclude Include="Interpreter.hpp" />
     <ClInclude Include="Interprocess_Com.hpp" />
+    <ClInclude Include="jumps.hpp" />
     <ClInclude Include="PCB.hpp" />
     <ClInclude Include="RAM.hpp" />
     <ClInclude Include="Register.hpp" />
@@ -155,13 +159,20 @@
     <ClCompile Include="CPU_Scheduling.cpp" />
     <ClCompile Include="Files_And_Directory_Management.cpp" />
     <ClCompile Include="GUI.cpp" />
-    <ClCompile Include="Interpreter.cpp" />
+    <ClCompile Include="Headers.cpp" />
+    <ClCompile Include="Interperter.cpp" />
     <ClCompile Include="Interprocess_Com.cpp" />
     <ClCompile Include="PCB.cpp" />
     <ClCompile Include="RAM.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Sync_Mech.cpp" />
     <ClCompile Include="Virtual_Mem.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="fe" />
+    <Text Include="SM_AB" />
+    <Text Include="si" />
+    <Text Include="pr2" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
