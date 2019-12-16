@@ -2,7 +2,7 @@
 
 int main() {
 	PCB::createDummy();
-	PCB::createProcess("pr", "pr2", 2);
+	PCB::createProcess("pr", "pr2", 4);
 	//PCB::printMap();
 	//PCB::update();
 	std::cout << std::endl;
@@ -15,10 +15,10 @@ int main() {
 		if (i > 6) {
 			//System::FS.displaydrivecontent();
 			//System::FS.displaycatalogue();
-			System::RAM.printAllRam();
-			System::VM.printPCBsegTab("p1");
-			System::VM.printPCBsegTab("f1");
-			System::VM.printPCBsegTab("DM");
+			//System::RAM.printAllRam();
+			//System::VM.printPCBsegTab("p1");
+			//System::VM.printPCBsegTab("f1");
+			//System::VM.printPCBsegTab("DM");
 		}
 		//System::RAM.printProcess(PCB::getPCB("p1"));
 		//System::RAM.printAllRam();

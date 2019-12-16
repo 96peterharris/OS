@@ -1,6 +1,8 @@
 .text
 CP p1 si 4
+CP ss SM_AB 3
 CF fil
+RM
 CF bil
 CF dil
 CP f1 fe 3

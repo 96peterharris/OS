@@ -8,7 +8,7 @@ std::map<std::string, PCB*> PCB::processesMap;
 std::vector<PCB*> PCB::readyQueue;
 
 //Constructor 
-PCB::PCB(std::string pid, short priority, State state) : priority_default(priority), priority(priority), pSem(1) {
+PCB::PCB(std::string pid, short priority, State state) : priority_default(priority), priority(priority), pSem(0) {
 	this->state = NEW;
 	this->commandCounter = 0;
 	if (state == NEW) {

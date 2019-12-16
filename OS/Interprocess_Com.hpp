@@ -5,11 +5,9 @@
 
 #include <algorithm>
 #include <exception>
+#include <string>
 
-#include "RAM.hpp"
-#include "PCB.hpp"
-
-
+class PCB;
 
 struct messageNotFound : public std::exception
 {
@@ -58,7 +56,4 @@ public:
 bool showMessages(PCB* pcb);
 std::string prepareMessage(Message mess);
 
-bool operator==(Message& m1, Message& m2) {
-	if (m1.pid_sender == m2.pid_sender && m1.content == m2.content && m1.RAMadrress == m2.RAMadrress) return true;
-	return false;
-}
+bool operator==(Message& m1, Message& m2);
