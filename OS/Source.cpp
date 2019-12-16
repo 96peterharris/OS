@@ -2,34 +2,63 @@
 
 int main() {
 	PCB::createDummy();
-	PCB::createProcess("pr", "si", 2);
+	PCB::createProcess("p1", "si", 2);
+	PCB::createProcess("p2", "si", 1);
+	PCB::createProcess("p4", "si", 3);
+	//PCB::createProcess("p4", "si", 6);
 	//PCB::printMap();
 	//PCB::update();
 	std::cout << std::endl;
+	
 	/*for (int i = 0; i < 50; i++)
 	{
 		System::CPU.nextStep();
+		std::cout << "==============================" << std::endl;
 		System::CPU.displayRunning();
-		std::cout << "Command: " << i << std::endl << "Procesess: " << std::endl;
-		PCB::printMap();
-		if (i > 4) {
-			System::FS.displaydrivecontent();
-			System::FS.displaycatalogue();
-		}
-		//System::RAM.printProcess(PCB::getPCB("p1"));
-		//System::RAM.printAllRam();
-		std::cout << std::endl;
 	}*/
+
+	System::CPU.nextStep();
+	std::cout << "==============================" << std::endl;
+	System::CPU.displayRunning();
+
+	System::CPU.displayPCBqueue();
+
+	System::CPU.nextStep();
+	std::cout << "==============================" << std::endl;
+	System::CPU.displayRunning();
+
+	System::CPU.nextStep();
+	std::cout << "==============================" << std::endl;
+	System::CPU.displayRunning();
+
+
+	PCB* ptr = PCB::getPCB("p4");
+	ptr->setWaiting();
+	System::CPU.displayRunning();
+	System::CPU.displayPCBqueue();
+
+	System::CPU.nextStep();
+	std::cout << "==============================" << std::endl;
+	System::CPU.displayRunning();
+
+	System::CPU.nextStep();
+	std::cout << "==============================" << std::endl;
+	System::CPU.displayRunning();
+
+
+
+	System::CPU.nextStep();
+	std::cout << "==============================" << std::endl;
+	System::CPU.displayRunning();
 	
-		/*System::FS.createFile("hi");
-		System::FS.openFile("hi");
-		System::FS.writeToFile("hi", "abcdefg");
-		System::FS.displaydrivecontent();
-		System::FS.displayoft();*/
+	System::CPU.displayPCBqueue();
 
- 	System::CPU.nextStep();
+
+
+ 	/*System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
+
 	System::CPU.displayPCBqueue();
 
 	System::CPU.nextStep();
@@ -43,27 +72,25 @@ int main() {
 	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
-	System::CPU.displayPCBqueue();
 
 	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
 	PCB::createProcess("p3", "si", 4);
-
-	System::CPU.nextStep();
-	std::cout << "==============================" << std::endl;
-	System::CPU.displayRunning();
-
-	System::CPU.nextStep();
-	std::cout << "==============================" << std::endl;
-	System::CPU.displayRunning();
-	System::CPU.displayPCBqueue();
-	
-	PCB* pointer2 = PCB::getPCB("pr");
 	PCB* pointer = PCB::getPCB("p3");
-	pointer->setWaiting();
+
+	System::CPU.nextStep();
+	std::cout << "==============================" << std::endl;
+	System::CPU.displayRunning();
 	System::CPU.displayPCBqueue();
+
+	System::CPU.nextStep();
+	std::cout << "==============================" << std::endl;
+	System::CPU.displayRunning();
+
+
+	pointer->setWaiting();
 
 	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
@@ -83,5 +110,12 @@ int main() {
 
 
 	System::CPU.displayPCBqueue(); 
+
+	System::CPU.nextStep();
+	std::cout << "==============================" << std::endl;
+	System::CPU.displayRunning();
+
+	*/
+	
 
 }
