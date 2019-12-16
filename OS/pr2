@@ -1,10 +1,8 @@
 .text
-CP ba SM_AB 2
 CP p1 si 3
-RM
 CF fil
 CF bil
 CF dil
 CP f1 fe 3
-CP f2 fe 8
+CP f2 fe 33
 HT

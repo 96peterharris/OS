@@ -201,54 +201,54 @@ std::string Ram::readMessage(int ramAddr) {
  * @return true for success or false for failure.
  */
 bool Ram::deleteFromRam(PCB* pcb) {
-    //if (!pcb->segTab[0]->vi && !pcb->segTab[1]->vi) return 0;
-    //segment 0
-	System::VM.printPCBsegments(pcb->getPid());
+	//if (!pcb->segTab[0]->vi && !pcb->segTab[1]->vi) return 0;
+	//segment 0
+	int numOfBlocks;
+	int num1 = pcb->segTab[0]->limit / 8;
+	int num2 = pcb->segTab[0]->limit % 8;
+	if (num2 == 0) numOfBlocks = num1;
+	else numOfBlocks = num1 + 1;
 
-    int numOfBlocks;
-    int num1 = pcb->segTab[0]->limit/8;
-    int num2 = pcb->segTab[0]->limit%8;
-    if (num2==0) numOfBlocks = num1;
-    else numOfBlocks = num1+1;
+	int firstBlock = pcb->segTab[0]->baseRAM / 8;
 
-    int firstBlock = pcb->segTab[0]->baseRAM/8;
+	for (int i = firstBlock; i < numOfBlocks + firstBlock; i++) {
+		blocks[i] = 0;
+		for (int j = 0; j < 8; j++) {
+			ram[i * 8 + j] = ' ';
+		}
+	}
+	//segment 1
+	if (pcb->segTab.size() == 2) {
+		num1 = pcb->segTab[1]->limit / 8;
+		num2 = pcb->segTab[1]->limit % 8;
+		if (num2 == 0) numOfBlocks = num1;
+		else numOfBlocks = num1 + 1;
 
-    for (int i = firstBlock; i < numOfBlocks+firstBlock; i++) {
-        blocks[i] = 0;
-        for (int j = 0; j < 8; j++) {
-            ram[i*8+j] = ' ';
-        }
-    }
-    //segment 1
-    num1 = pcb->segTab[1]->limit/8;
-    num2 = pcb->segTab[1]->limit%8;
-    if (num2==0) numOfBlocks = num1;
-    else numOfBlocks = num1+1;
+		firstBlock = pcb->segTab[1]->baseRAM / 8;
 
-    firstBlock = pcb->segTab[1]->baseRAM/8;
+		//update
+		if (pcb->getState() == WAITING) {
+			std::string bytes;
+			for (int i = firstBlock; i < numOfBlocks + firstBlock; i++) {
+				for (int j = 0; j < 8; j++) {
+					bytes.push_back(i * 8 + j);
+				}
+			}
+			System::VM.loadToVM(pcb, bytes);
+		}
 
-    //update
-    if (pcb->getState() == WAITING) {
-        std::string bytes;
-        for (int i = firstBlock; i < numOfBlocks+firstBlock; i++) {
-            for (int j = 0; j < 8; j++) {
-                bytes.push_back(i*8+j);
-            }
-        }
-		System::VM.loadToVM(pcb, bytes);
-    }
+		//segment 1
+		for (int i = firstBlock; i < numOfBlocks + firstBlock; i++) {
+			blocks[i] = 0;
+			for (int j = 0; j < 8; j++) {
+				ram[i * 8 + j] = ' ';
+			}
+		}
+		pcb->segTab[1]->vi = 0;
+	}
 
-    //segment 1
-    for (int i = firstBlock; i < numOfBlocks+firstBlock; i++) {
-        blocks[i] = 0;
-        for (int j = 0; j < 8; j++) {
-            ram[i*8+j] = ' ';
-        }
-    }
-
-    pcb->segTab[0]->vi = 1;
-    pcb->segTab[1]->vi = 1;
-    return 1;
+	pcb->segTab[0]->vi = 0;
+	return 1;
 }
 
 bool Ram::clearRam() {

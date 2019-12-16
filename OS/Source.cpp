@@ -12,14 +12,15 @@ int main() {
 		System::CPU.displayRunning();
 		std::cout << "Command: " << i << std::endl;
 		PCB::printMap();
-		if (i > 4) {
+		if (i > 5) {
 			//System::FS.displaydrivecontent();
 			//System::FS.displaycatalogue();
-			//System::RAM.printAllRam();
-			//System::VM.printPCBsegTab("p1");
 			//System::VM.printVM();
-			//System::VM.printPCBsegTab("f1");
-			//System::VM.printPCBsegTab("DM");
+			System::VM.printPCBsegTab("p1");
+			System::VM.printPCBsegTab("f1");
+			System::VM.printPCBsegTab("DM");
+
+			System::RAM.printAllRam();
 		}
 		//System::RAM.printProcess(PCB::getPCB("p1"));
 		//System::RAM.printAllRam();
