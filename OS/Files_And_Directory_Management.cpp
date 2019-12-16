@@ -652,20 +652,28 @@ void Filesystem::displayvector()
 }
 void Filesystem::displayblock(int block)
 {
-	std::cout << "|" << block << "|";
-	for (int i = block * 32; i < (block + 1) * 32; i++)
+	if (block < 32)
 	{
-		if (maindrive.drivespace[i] < 32 && maindrive.drivespace[i] != 0)
+		std::cout << "|" << block << "|";
+		for (int i = block * 32; i < (block + 1) * 32; i++)
 		{
-			int f = maindrive.drivespace[i];
-			std::cout << f << " ";
+			if (maindrive.drivespace[i] < 32 && maindrive.drivespace[i] != 0)
+			{
+				int f = maindrive.drivespace[i];
+				std::cout << f << " ";
+			}
+			else
+			{
+				std::cout << maindrive.drivespace[i] << " ";
+			}
 		}
-		else
-		{
-			std::cout << maindrive.drivespace[i] << " ";
-		}
+		std::cout << std::endl;
 	}
-	std::cout << std::endl;
+	else
+	{
+		std::cout << "E011:Blok o podanym numerze nie istnieje";
+	}
+
 }
 void Filesystem::printqueue(string &filename)
 {
