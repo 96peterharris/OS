@@ -42,7 +42,16 @@ bool Ram::saveInRam(PCB* pcb, int segment, char ch, int logAddr) {
  * @return buddy function's value, true for success or false for failure.
  */
 bool Ram::loadToRam(PCB* pcb, std::string bytes, int segment) {
-    return buddy(pcb, segment, bytes, 0);
+    int ok = 0;
+    bool buddyOk = buddy(pcb, segment, bytes, 0);
+    if (!buddyOk) {
+        ok++;
+        buddyOk = buddy(pcb, segment, bytes, 0);
+        if (!buddyOk)
+            return false;
+        else return true;
+    }
+    return true;
 }
 
 /**
@@ -93,8 +102,9 @@ bool Ram::buddy(PCB* pcb, int segment, std::string bytes, int divisionLvl) {
         }
         if (!ok){
             if(ramSem.wait_sem(pcb->getPid()));
+            clearRam();
 
-            return 1;
+            return 0;
         }
         else {
             for (int i = 0; i < fileSize; i++)
@@ -192,7 +202,7 @@ std::string Ram::readMessage(int ramAddr) {
  * @return true for success or false for failure.
  */
 bool Ram::deleteFromRam(PCB* pcb) {
-    if (!pcb->segTab[0]->vi && !pcb->segTab[1]->vi) return 0;
+    //if (!pcb->segTab[0]->vi && !pcb->segTab[1]->vi) return 0;
     //segment 0
     int numOfBlocks;
     int num1 = pcb->segTab[0]->limit/8;
@@ -239,6 +249,42 @@ bool Ram::deleteFromRam(PCB* pcb) {
     }
     pcb->segTab[0]->vi = 1;
     pcb->segTab[1]->vi = 1;
+    return 1;
+}
+
+bool Ram::clearRam() {
+    std::map<std::string, PCB*>* map = PCB::getProcessMapPointer();
+    for (auto x : *map) {
+        deleteFromRam(x.second);
+    }  
+    return 1;
+}
+
+bool Ram::deleteMessage(int ramAddr) {
+    int space = 0;
+    int size = 0;
+    int i = ramAddr;
+
+    while (space != 2) {
+        if (ram[i] == ' ') space++;
+        size++;
+        i++;
+    }
+
+    int numOfBlocks;
+    int num1 = size/8;
+    int num2 = size%8;
+    if (num2==0) numOfBlocks = num1;
+    else numOfBlocks = num1+1;
+
+    int firstBlock = size/8;
+
+    for (int i = firstBlock; i < numOfBlocks+firstBlock; i++) {
+        blocks[i] = 0;
+        for (int j = 0; j < 8; j++) {
+            ram[i*8+j] = ' ';
+        }
+    }
     return 1;
 }
 
