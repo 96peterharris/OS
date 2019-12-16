@@ -3,10 +3,10 @@
 int main() {
 	PCB::createDummy();
 	PCB::createProcess("pr", "pr2", 2);
-	PCB::printMap();
-	PCB::update();
+	//PCB::printMap();
+	//PCB::update();
 	std::cout << std::endl;
-	for (int i = 0; i < 50; i++)
+	/*for (int i = 0; i < 50; i++)
 	{
 		System::CPU.nextStep();
 		System::CPU.displayRunning();
@@ -20,7 +20,7 @@ int main() {
 		//System::RAM.printProcess(PCB::getPCB("p1"));
 		//System::RAM.printAllRam();
 		std::cout << std::endl;
-	}
+	}*/
 	
 		/*System::FS.createFile("hi");
 		System::FS.openFile("hi");
@@ -28,9 +28,36 @@ int main() {
 		System::FS.displaydrivecontent();
 		System::FS.displayoft();*/
 
-/* 	System::CPU.nexStep();
+ 	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
+	System::CPU.displayPCBqueue();
+
+	System::CPU.nextStep();
+	std::cout << "==============================" << std::endl;
+	System::CPU.displayRunning();
+
+	System::CPU.nextStep();
+	std::cout << "==============================" << std::endl;
+	System::CPU.displayRunning();
+
+	System::CPU.nextStep();
+	std::cout << "==============================" << std::endl;
+	System::CPU.displayRunning();
+	System::CPU.displayPCBqueue();
+
+	System::CPU.nextStep();
+	std::cout << "==============================" << std::endl;
+	System::CPU.displayRunning();
+
+	System::CPU.nextStep();
+	std::cout << "==============================" << std::endl;
+	System::CPU.displayRunning();
+
+	System::CPU.nextStep();
+	std::cout << "==============================" << std::endl;
+	System::CPU.displayRunning();
+	System::CPU.displayPCBqueue();
 
 	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
@@ -48,31 +75,7 @@ int main() {
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
-	System::CPU.nextStep();
-	std::cout << "==============================" << std::endl;
-	System::CPU.displayRunning();
 
-	System::CPU.nextStep();
-	std::cout << "==============================" << std::endl;
-	System::CPU.displayRunning();
-
-	System::CPU.nextStep();
-	std::cout << "==============================" << std::endl;
-	System::CPU.displayRunning();
-
-	System::CPU.nextStep();
-	std::cout << "==============================" << std::endl;
-	System::CPU.displayRunning();
-
-	System::CPU.nextStep();
-	std::cout << "==============================" << std::endl;
-	System::CPU.displayRunning();
-
-	System::CPU.nextStep();
-	std::cout << "==============================" << std::endl;
-	System::CPU.displayRunning();
-
-
-	System::CPU.displayPCBqueue(); */
+	System::CPU.displayPCBqueue(); 
 
 }
