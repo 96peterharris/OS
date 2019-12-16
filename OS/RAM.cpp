@@ -19,6 +19,7 @@ Ram::~Ram(){}
  * @param segment Int specifing VM segment: 1 for data.
  * @param ch Character to load to RAM.
  * @param logAddr Logical address where the character is going to be saved.
+ * @return true for success or false for failure.
  */
 bool Ram::saveInRam(PCB* pcb, int segment, char ch, int logAddr) {
     if(!isInRam(pcb,segment)){
@@ -188,6 +189,7 @@ std::string Ram::readMessage(int ramAddr) {
  * Does the same for segment 1 but before it, updates segment 1 if PCB state is WAITING.
  * 
  * @param pcb Pointer to PCB needed to get data's size, physical address.
+ * @return true for success or false for failure.
  */
 bool Ram::deleteFromRam(PCB* pcb) {
     if (!pcb->segTab[0]->vi && !pcb->segTab[1]->vi) return 0;
@@ -267,6 +269,11 @@ bool Ram::isInRam(PCB* pcb, int segment) {
     return pcb->segTab[segment]->vi;
 }
 
+/**
+ * Prints whole RAM.
+ * 
+ * Prints all content of RAM. Physical address and its content in every line.
+ */
 void Ram::printAllRam() {
     std::cout << "RAM" << std::endl;
     for (int i = 0; i < 512; i++) {
@@ -274,6 +281,14 @@ void Ram::printAllRam() {
     }
 }
 
+/**
+ * Prints precised section of RAM.
+ * 
+ * Prints content of RAM from specified first element to last element. Physical address and its content in every line.
+ * 
+ * @param start Int specifing the first displayed element.
+ * @param stop Int specifing the last displayed element.
+ */
 void Ram::printRam(int start, int stop) {
    std::cout << "RAM from " << start << " to " << stop << std::endl;
     for (int i = start; i < stop+1; i++) {
@@ -281,6 +296,13 @@ void Ram::printRam(int start, int stop) {
     } 
 }
 
+/**
+ * Prints content of process in RAM.
+ * 
+ * Prints segments of process saved in RAM.
+ * 
+ * @param pid String specifing the pid of process to display.
+ */
 void Ram::printProcess(std::string pid) {
 	PCB* pcb = PCB::getPCB(pid);
 	std::cout << pid << std::endl;
@@ -301,6 +323,14 @@ void Ram::printProcess(std::string pid) {
 	}
 }
 
+/**
+ * Prints content of segment in RAM.
+ * 
+ * Prints specified segment of process saved in RAM.
+ * 
+ * @param pid String specifing the pid of process to display.
+ * @param segment Int specifing VM segment to display: 0 for text, 1 for data.
+ */
 void Ram::printSegment(std::string pid, int segment) {
 	PCB* pcb = PCB::getPCB(pid);
 	if (segment == 1 && pcb->segTab.size() == 2) {
@@ -315,6 +345,13 @@ void Ram::printSegment(std::string pid, int segment) {
 	}
 }
 
+/**
+ * Prints message saved in RAM.
+ * 
+ * Prints message which starts at specified physical address.
+ * 
+ * @param ramAddr Int meaning physical address in RAM where the message begins.
+ */
 void Ram::printMessage(int ramAddr) {
     int space = 0;
     int i = ramAddr;
@@ -327,6 +364,11 @@ void Ram::printMessage(int ramAddr) {
     }
 }
 
+/**
+ * Prints RAM's semaphore.
+ * 
+ * Prints value of RAM's semaphore and semaphore's queue.
+ */
 void Ram::printSemaphore() {
     ramSem.print_value();
     ramSem.print_queue();
