@@ -2,7 +2,13 @@
 
 int main() {
 	PCB::createDummy();
+<<<<<<< HEAD
 	PCB::createProcess("pr", "pr2", 2);
+=======
+	PCB::createProcess("p1","si",12);
+	PCB::createProcess("p3", "si", 11);
+ 	//PCB::createProcess("p4", "si", 6);
+>>>>>>> poop
 	PCB::printMap();
 	PCB::update();
 	std::cout << std::endl;
