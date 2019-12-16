@@ -38,7 +38,7 @@ public:
 	void cpu_sch();
 	
 	//This method is responsible for make nex step (for example increase commandCounter) and it use another methods in this class
-	void nexStep();
+	void nextStep();
 	
 	//This function return PID of current running PCB
 	std::string getRunningPID();

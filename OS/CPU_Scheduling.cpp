@@ -74,11 +74,11 @@ void CPU_Scheduling::cpu_sch()
 			{
 				running = recivedQueue->at(0);
 				commandCounter = 0;
+				System::VM.loadProg(running);
 			}
 			else 
 			{
 				running = recivedQueue->at(0);
-				//running->setRunning();
 				commandCounter = 0;
 				System::VM.loadProg(running);
 			}
@@ -92,7 +92,7 @@ void CPU_Scheduling::cpu_sch()
  * Controls the correct execution of the next assembly program command and proper CPU allocation.
  *
 */
-void CPU_Scheduling::nexStep()
+void CPU_Scheduling::nextStep()
 {	
 	if ((commandCounter < 5) && (PCB::NEW_PROCESS == false))//This condition is using in situation when commandCounter is lover than five and when wasn't createed any new processes 
 	{
@@ -110,7 +110,7 @@ void CPU_Scheduling::nexStep()
 			//increasePriority();
 		}
 	}
-	else if ((commandCounter < 5) && (PCB::NEW_PROCESS == true))//This condidition is using on the start 
+	else if ((commandCounter < 5) && (PCB::NEW_PROCESS == true))//This condidition is using when we add dynamically process
 	{
 		cpu_sch();
 		if (interprate(running) == true)
@@ -127,6 +127,11 @@ void CPU_Scheduling::nexStep()
 		cpu_sch();
 		commandCounter = 0;
 		PCB::NEW_PROCESS = false;
+		if (interprate(running) == true)
+		{
+			std::cout << "\n interpreter true";
+			commandCounter++;
+		}
 		//increasePriority();
 	}
 }

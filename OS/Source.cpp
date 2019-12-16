@@ -4,7 +4,7 @@ int main() {
 	PCB::createDummy();
 	PCB::createProcess("p1","si",5);
 	PCB::createProcess("p3", "si", 1);
-//	PCB::createProcess("p4", "si", 6);
+ 	//PCB::createProcess("p4", "si", 6);
 	PCB::printMap();
 	PCB::update();
 	PCB::printReadyQueue();
@@ -45,6 +45,7 @@ int main() {
 	System::CPU.nexStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
+	PCB::createProcess("p4", "si", 6);
 
 	System::CPU.nexStep();
 	std::cout << "==============================" << std::endl;
