@@ -15,7 +15,7 @@ CPU_Scheduling::CPU_Scheduling()
 */
 void CPU_Scheduling::increasePriority()
 {
-	for (int i = 0; i < recivedQueue->size() - 1; i++)
+	for (int i = 1; i < recivedQueue->size() - 1; i++)
 	{
 		if (recivedQueue->at(i)->getPriority() < 12 && recivedQueue->at(i)->getPid() != "DM")
 		{
@@ -28,6 +28,7 @@ void CPU_Scheduling::increasePriority()
 			recivedQueue->at(i)->setPriority(15);
 		}
 	}
+	//std::sort(recivedQueue->begin(), recivedQueue->end(), [](PCB* a, PCB* b) { return a->getPriority() > b->getPriority(); });
 }
 /**
  * Getting readyQueuePointer and store it in recivedQueue.
@@ -69,15 +70,17 @@ void CPU_Scheduling::cpu_sch()
 		}
 		else
 		{
-			if (running->getState == TERMINATED)
+			if (running->getState() == TERMINATED)
 			{
 				running = recivedQueue->at(0);
 				commandCounter = 0;
 			}
 			else 
 			{
-				running->setRunning();
+				running = recivedQueue->at(0);
+				//running->setRunning();
 				commandCounter = 0;
+				System::VM.loadProg(running);
 			}
 		}
 		
@@ -100,10 +103,11 @@ void CPU_Scheduling::nexStep()
 		}
 		else//When interprate return false
 		{
+			increasePriority();
 			cpu_sch();
 			running->setTerminated(); 
 			commandCounter = 0;
-			increasePriority();
+			//increasePriority();
 		}
 	}
 	else if ((commandCounter < 5) && (PCB::NEW_PROCESS == true))//This condidition is using on the start 
@@ -118,11 +122,12 @@ void CPU_Scheduling::nexStep()
 	}
 	else
 	{
+		increasePriority();
 		running->setReady();
 		cpu_sch();
 		commandCounter = 0;
 		PCB::NEW_PROCESS = false;
-		increasePriority();
+		//increasePriority();
 	}
 }
 /**
@@ -143,14 +148,17 @@ std::string CPU_Scheduling::getRunningPID() {
 */
 void CPU_Scheduling::displayPCBqueue()
 {
-	std::cout << "\nPID\t PRIORITY \tSTATE" << std::endl;
+	std::cout << "\n================================\n";
+	std::cout << "||||||| CONTENT OF QUEUE |||||||";
+	std::cout << "\n================================\n";
+	std::cout << "|PID|\t |PRIORITY| \t|STATE|" << std::endl;
 
 	for (int i = 0; i < recivedQueue->size(); i++)
 	{
-		std::cout << recivedQueue->at(i)->getPid() << "\t " << recivedQueue->at(i)->getPriority() << "\t\t" << recivedQueue->at(i)->getState() << std::endl;
+		std::cout << " " << std::left << std::setw(6) << recivedQueue->at(i)->getPid() << std::right << std::setw(8) << recivedQueue->at(i)->getPriority() << "\t\t"
+			<< std::right << std::setw(4) << recivedQueue->at(i)->getState() << std::endl;
 	}
-
-	std::cout << std::endl;
+	std::cout << "================================\n";
 }
 /**
  * This function is display a infromation about current running process.
@@ -160,6 +168,9 @@ void CPU_Scheduling::displayPCBqueue()
 */
 void CPU_Scheduling::displayRunning()
 {
+	std::cout << "\n=============================================================================\n";
+	std::cout << "|||||||||||||||||||||||||||||| RUNNIG PROCESS |||||||||||||||||||||||||||||||";
+	std::cout << "\n=============================================================================\n";
 	std::cout << std::left << std::setw(6) << "|PID|" << std::right << std::setw(6) << " |Default Pri.|" << std::right << std::setw(10) << " |Dynamic Pri.|";
 	std::cout << std::right << std::setw(6) << " |State|" << std::right << std::setw(6) << " |Reg A|" << std::right << std::setw(6) << " |Reg B|" << std::right << std::setw(6) << " |Reg C|";
 	std::cout << std::right << std::setw(6) << " |Reg D|\n";
@@ -168,4 +179,5 @@ void CPU_Scheduling::displayRunning()
 		<< std::right << std::setw(7) << (int)running->getRegisterPointer()->getA() << " " << std::right << std::setw(7) << (int)running->getRegisterPointer()->getB() << " "
 		<< std::right << std::setw(7) << (int)running->getRegisterPointer()->getC() << " " 	<< std::right << std::setw(7) << (int)running->getRegisterPointer()->getD() << " "
 		<< std::endl;
+	std::cout << "=============================================================================\n";
 }
