@@ -133,6 +133,12 @@ void CPU_Scheduling::nextStep()
 			commandCounter++;
 			PCB::NEW_PROCESS = false;
 		}
+		else 
+		{
+			running->setTerminated();
+			cpu_sch();
+			commandCounter = 0;
+		}
 	}
 	else
 	{
