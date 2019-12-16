@@ -31,7 +31,7 @@ bool PCB::sendMessage(std::string pid_receiver, std::string content) {
 	else return false;
 
 	//semaphore action
-	receiver->pSem.signal_sem();
+	if(!receiver->pSem.signal_sem()) return false;
 	
 	return true;
 }
@@ -41,7 +41,7 @@ bool PCB::receiveMessage() {
 	//semaphore action
 	pSem.wait_sem(this->pid);
 
-	Message received;
+	Message received = messages.at(0);
 	std::string RAM_string = System::RAM.readMessage(received.RAMadrress);
 	Message RAM_received;
 	//
