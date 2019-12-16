@@ -25,17 +25,22 @@ bool PCB::sendMessage(std::string pid_receiver, std::string content) {
 	if (receiver != nullptr) {
 		receiver->messages.push_back(temp);
 
-		if (!System::RAM.loadToRam(receiver, content, 2)) return false;
+		if (!System::RAM.loadToRam(receiver, prepareMessage(temp), 2)) return false;
 
 	}
 	else return false;
 
-
-
+	//semaphore action
+	receiver->pSem.signal_sem();
+	
 	return true;
 }
 bool PCB::receiveMessage() {
 	//ReceiveMessage
+
+	//semaphore action
+	pSem.wait_sem(this->pid);
+
 	Message received;
 	std::string RAM_string = System::RAM.readMessage(received.RAMadrress);
 	Message RAM_received;
@@ -62,7 +67,11 @@ bool PCB::receiveMessage() {
 
 		messages.erase(messages.begin());
 	}
-	else return false;
+	else {
+		
+		return false;
+	
+	}
 
 	return true;
 }
@@ -85,6 +94,21 @@ bool Message::printMessage() {
 		"\n ADRES POCZATKU: " << RAMadrress;
 
 	return true;
+}
+
+std::string prepareMessage(Message mess) {
+	std::string chain;
+
+	//pid
+	chain.push_back(mess.pid_sender.at(0));
+	chain.push_back(mess.pid_sender.at(1));
+	chain.push_back(' ');
+	//content
+	for (int i = 0; i < mess.size; i++) {
+		chain.push_back(mess.content.at(i));
+	}
+
+	return chain;
 }
 
 bool operator==(Message& m1, Message& m2) {
