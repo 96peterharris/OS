@@ -97,6 +97,14 @@ bool Message::printMessage() {
 	return true;
 }
 
+bool PCB::deleteMessageRAM() {
+
+	for (auto mess: this->messages) {
+		if (!System::RAM.deleteMessage(mess.RAMadrress)) return false;
+	}
+	return true;
+}
+
 std::string prepareMessage(Message mess) {
 	std::string chain;
 
