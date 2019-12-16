@@ -143,7 +143,7 @@ void CPU_Scheduling::nextStep()
 		PCB::NEW_PROCESS = false;
 		if (interprate(running) == true)
 		{
-			std::cout << "\n interpreter true";
+			//std::cout << "\n interpreter true";
 			commandCounter++;
 		}
 	}

@@ -163,6 +163,12 @@ bool interprate(PCB *pcb) {
 
 	if (!IC)
 		pcb->setCommandCounter(pcb->getCommandCounter() + takenBytes);
+
+	std::cout << "Command: " << command;
+	for (auto v : args) {
+		std::cout << " " << v;
+	}
+
 	return ret;
 }
 

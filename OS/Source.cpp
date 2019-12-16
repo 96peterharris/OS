@@ -17,7 +17,7 @@ int main() {
 		}
 		//System::RAM.printProcess(PCB::getPCB("p1"));
 		//System::RAM.printAllRam();
-
+		std::cout << std::endl;
 	}
 	
 		/*System::FS.createFile("hi");
