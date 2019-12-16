@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <cmath> //std::pow
+#include <map>
 
 #include "Virtual_Mem.hpp"
 #include "PCB.hpp"
@@ -27,6 +28,8 @@ public:
     bool loadToRam(PCB* pcb,  std::string bytes, int segment);
     char readFromRam(PCB* pcb, int segment, int logAddr);
     bool deleteFromRam(PCB* pcb);
+    bool clearRam();
+    bool deleteMessage(int ramAddr);
     std::string readMessage(int ramAddr);
 
     void printAllRam();
