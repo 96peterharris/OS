@@ -31,8 +31,8 @@ bool PCB::sendMessage(std::string pid_receiver, std::string content) {
 	else return false;
 
 	//semaphore action
-	receiver->pSem.signal_sem();
-
+	if(!receiver->pSem.signal_sem()) return false;
+	
 	return true;
 }
 bool PCB::receiveMessage() {
@@ -69,9 +69,9 @@ bool PCB::receiveMessage() {
 		messages.erase(messages.begin());
 	}
 	else {
-
+		
 		return false;
-
+	
 	}
 
 	return true;
