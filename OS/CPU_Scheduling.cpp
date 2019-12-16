@@ -22,10 +22,12 @@ void CPU_Scheduling::increasePriority()
 			int tmp = recivedQueue->at(i)->getPriority();
 			tmp += 3;
 			recivedQueue->at(i)->setPriority(tmp);
+			//std::sort(recivedQueue->begin(), recivedQueue->end(), [](PCB* a, PCB* b) { return a->getPriority() > b->getPriority(); });
 		}
-		else if (recivedQueue->at(i)->getPriority() > 12 && recivedQueue->at(i)->getPid() != "DM")
+		else if (recivedQueue->at(i)->getPriority() >= 12 && recivedQueue->at(i)->getPid() != "DM")
 		{
 			recivedQueue->at(i)->setPriority(15);
+			//std::sort(recivedQueue->begin(), recivedQueue->end(), [](PCB* a, PCB* b) { return a->getPriority() > b->getPriority(); });
 		}
 	}
 	//std::sort(recivedQueue->begin(), recivedQueue->end(), [](PCB* a, PCB* b) { return a->getPriority() > b->getPriority(); });
@@ -66,6 +68,16 @@ void CPU_Scheduling::cpu_sch()
 			running = recivedQueue->at(0);
 			running->setRunning();
 			commandCounter = 0;
+			System::VM.loadProg(running);
+		}
+		else if (PCB::NEW_PROCESS == true)
+		{
+			//std::sort(recivedQueue->begin(), recivedQueue->end(), [](PCB* a, PCB* b) { return a->getPriority() > b->getPriority(); });
+			running->setReady();
+			getProcesses();
+			running = recivedQueue->at(0);
+			commandCounter = 0;
+			running->setRunning();
 			System::VM.loadProg(running);
 		}
 		else
@@ -134,7 +146,6 @@ void CPU_Scheduling::nextStep()
 			std::cout << "\n interpreter true";
 			commandCounter++;
 		}
-		//increasePriority();
 	}
 }
 /**
