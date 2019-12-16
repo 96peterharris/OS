@@ -12,9 +12,10 @@ int main() {
 		System::CPU.displayRunning();
 		std::cout << "Command: " << i << std::endl << "Procesess: " << std::endl;
 		PCB::printMap();
-		if (i > 4) {
-			System::FS.displaydrivecontent();
-			System::FS.displaycatalogue();
+		if (i > 9) {
+			//System::FS.displaydrivecontent();
+			//System::FS.displaycatalogue();
+			System::RAM.printAllRam();
 		}
 		//System::RAM.printProcess(PCB::getPCB("p1"));
 		//System::RAM.printAllRam();
