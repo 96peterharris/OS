@@ -74,12 +74,14 @@ void CPU_Scheduling::cpu_sch()
 			{
 				running = recivedQueue->at(0);
 				commandCounter = 0;
+				running->setRunning();
 				System::VM.loadProg(running);
 			}
 			else 
 			{
 				running = recivedQueue->at(0);
 				commandCounter = 0;
+				running->setRunning();
 				System::VM.loadProg(running);
 			}
 		}

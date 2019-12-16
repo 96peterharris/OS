@@ -11,7 +11,7 @@ int main() {
 
 	/*for (int i = 0; i < 10; i++)
 	{
-		System::CPU.nexStep();
+		System::CPU.nextStep();
 		std::cout << "==============================" << std::endl;
 		System::CPU.displayRunning();
 		//System::RAM.printProcess(PCB::getPCB("p1"));
@@ -22,80 +22,80 @@ int main() {
 
 
 
-	System::CPU.nexStep();
+	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
-	System::CPU.nexStep();
+	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
-	System::CPU.nexStep();
+	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
-	System::CPU.nexStep();
+	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
-	System::CPU.nexStep();
+	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
-	System::CPU.nexStep();
+	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 	PCB::createProcess("p4", "si", 6);
 
-	System::CPU.nexStep();
+	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
-	System::CPU.nexStep();
+	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
-	System::CPU.nexStep();
+	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
-	System::CPU.nexStep();
+	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
-	System::CPU.nexStep();
+	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
-	System::CPU.nexStep();
+	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
-	System::CPU.nexStep();
+	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
-	System::CPU.nexStep();
+	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
-	System::CPU.nexStep();
+	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
-	System::CPU.nexStep();
+	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
-	System::CPU.nexStep();
+	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
-	System::CPU.nexStep();
+	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
-	System::CPU.nexStep();
+	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
