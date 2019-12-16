@@ -47,9 +47,9 @@ public:
 	
 	//Changing state inner function
 	//todo calling running
-	void setTerminated() { if (state == RUNNING) this->state = TERMINATED; }
+	void setTerminated() { if (state == RUNNING) { this->state = TERMINATED; removeProcess(this->pid); } }
 	void setReady() { if (state == WAITING || state == RUNNING) this->state = READY; }
-	void setWaiting() { if (state == RUNNING || state == READY) this->state = WAITING; }
+	void setWaiting() { if (state == RUNNING || state == READY) { this->state = WAITING; NEW_PROCESS = true; } }
 	void setRunning() { if (state == READY) this->state = RUNNING; }
 
 	//PID
