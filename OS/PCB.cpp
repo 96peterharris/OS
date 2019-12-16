@@ -83,9 +83,10 @@ bool PCB::removeProcess(std::string pid) {
 
 		processesMap.erase(pid);
 
+		System::VM.deleteProg(tPCB);
+
 		delete tPCB;
 		//call fbi remove etc
-		System::VM.deleteProg(tPCB);
 
 		return true;
 	}
