@@ -1,13 +1,14 @@
 #pragma once
 //Krzysio
-
 #include <string>
 #include <vector>
 #include <set>
 #include <bitset>
+#include <map>
+
 #include "Drive.hpp"
 #include "Sync_Mech.hpp"
-#include <map>
+
 //SEMAFOR W PLIKU COŒ DZIA£A
 //CZY MOGÊ ZAMIAST ZNAKU ODPOWIADAJ¥CEGO NUMEROWI BLOKU WYŒWIETLAÆ NUMER TEGO BLOKU PRZY WYŒWIETLANIU DYSKU?
 //SKORO MAMY WSKAZYWAÆ NA Nastêpne pole do zapisu, to co wtedy gdy ostatnie zapisane pole bêdzie ostatnim polem bloku?
@@ -21,12 +22,14 @@ class Filesystem
 		Semaphore sem;
 		string name;
 		int adres, towrite, toread;
+		bool isOpen;
 		File(string name, int adres) :sem(1)
 		{
 			this->name = name;
 			this->adres = adres;
 			towrite = 0;
 			toread = 0;
+			isOpen = false;
 
 		}
 		File() :sem(1)

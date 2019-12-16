@@ -19,12 +19,12 @@
     <Filter Include="Pliki źródłowe\Process">
       <UniqueIdentifier>{3025a5dc-8762-4700-9a3c-c898b8ec6631}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Pliki nagłówkowe\Interperter">
+      <UniqueIdentifier>{47897719-9cc7-43b4-b0c7-cc9afac37979}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sync_Mech.hpp">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClInclude>
-    <ClInclude Include="Interpreter.hpp">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
     <ClInclude Include="Virtual_Mem.hpp">
@@ -57,12 +57,21 @@
     <ClInclude Include="Drive.hpp">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
+    <ClInclude Include="Headers.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpreter.hpp">
+      <Filter>Pliki nagłówkowe\Interperter</Filter>
+    </ClInclude>
+    <ClInclude Include="jumps.hpp">
+      <Filter>Pliki nagłówkowe\Interperter</Filter>
+    </ClInclude>
+    <ClInclude Include="arythmetics.hpp">
+      <Filter>Pliki nagłówkowe\Interperter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sync_Mech.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
-    <ClCompile Include="Interpreter.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
     <ClCompile Include="Virtual_Mem.cpp">
@@ -89,5 +98,25 @@
     <ClCompile Include="Source.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
+    <ClCompile Include="Interperter.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="Headers.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="si">
+      <Filter>Pliki zasobów</Filter>
+    </Text>
+    <Text Include="SM_AB">
+      <Filter>Pliki zasobów</Filter>
+    </Text>
+    <Text Include="pr2">
+      <Filter>Pliki zasobów</Filter>
+    </Text>
+    <Text Include="fe">
+      <Filter>Pliki zasobów</Filter>
+    </Text>
   </ItemGroup>
 </Project>

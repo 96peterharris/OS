@@ -139,12 +139,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="arythmetics.hpp" />
     <ClInclude Include="CPU_Scheduling.hpp" />
     <ClInclude Include="Drive.hpp" />
     <ClInclude Include="Files_And_Directory_Management.hpp" />
     <ClInclude Include="GUI.hpp" />
+    <ClInclude Include="Headers.h" />
     <ClInclude Include="Interpreter.hpp" />
     <ClInclude Include="Interprocess_Com.hpp" />
+    <ClInclude Include="jumps.hpp" />
     <ClInclude Include="PCB.hpp" />
     <ClInclude Include="RAM.hpp" />
     <ClInclude Include="Register.hpp" />
@@ -156,13 +159,20 @@
     <ClCompile Include="CPU_Scheduling.cpp" />
     <ClCompile Include="Files_And_Directory_Management.cpp" />
     <ClCompile Include="GUI.cpp" />
-    <ClCompile Include="Interpreter.cpp" />
+    <ClCompile Include="Headers.cpp" />
+    <ClCompile Include="Interperter.cpp" />
     <ClCompile Include="Interprocess_Com.cpp" />
     <ClCompile Include="PCB.cpp" />
     <ClCompile Include="RAM.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Sync_Mech.cpp" />
     <ClCompile Include="Virtual_Mem.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="fe" />
+    <Text Include="SM_AB" />
+    <Text Include="si" />
+    <Text Include="pr2" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

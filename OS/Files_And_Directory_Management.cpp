@@ -1,12 +1,8 @@
 //Krzysio
-//Krzysio
-
-#include "Files_And_Directory_management.hpp"
-#include <iostream>
-#include "Drive.hpp"
+#include "Files_And_Directory_Management.hpp"
 #include "CPU_Scheduling.hpp"
-#include <cmath>
-//Znajdowanie wolnych bloków//DZIA£A
+
+#include "Headers.h"
 int Filesystem::findFreeBlock(std::bitset<Drive::blocks> &bt)
 {
 	for (int i = 0; i < bt.size(); i++)
@@ -15,73 +11,53 @@ int Filesystem::findFreeBlock(std::bitset<Drive::blocks> &bt)
 	}
 	return -1;
 }
-//Czy plik o podanej nazwie istnieje//DZIA£A
 bool Filesystem::fileExists(const string &filename)
 {
-	if (maincatalogue.size() != 0) // Sprawdza czy katalog nie jest pusty
+	if (maincatalogue.size() != 0) 
 	{
 		for (int i = 0; i < maincatalogue.size(); i++)
 		{
-			if (maincatalogue[i].name == filename)
+			if (maincatalogue.at(i).name == filename)
 			{
 				return true;
 			}
 		}
 		return false;
-		/*
-		string foundname;// = maincatalogue.find->first(filename);
-		if (foundname == maincatalogue.cend()->first)//Jeœli wartoœæ jest równa iteratorowi koñca to znaczy, ¿e plik nie istnieje
-		{
-			return false;
-		}
-		if (foundname == filename)// Plik istnieje
-		{
-			return true;
-		}*/
 	}
 	else
 	{
 		return false;
 	}
 }
-//Tworzenie pliku//DZIA£A
 bool Filesystem::createFile(const string &filename)
 {
 
 	if (fileExists(filename))
 	{
-		std::cout << "Plik o podanej nazwie juz istnieje";
+		std::cout << "E001:Plik o podanej nazwie juz istnieje" << std::endl;;
 		return false;
 	}
 	else
 	{
 		//Tworzenie pliku
 		//Jeœli mamy 0 lub 1 wolny blok to odrzuca operacjê gdy¿ przy tworzeniu pliku potrzebujemy przynajmniej 2 wolne bloki 
-		if (countFreeBlocks(blockTable) <= 2)
+		if (countFreeBlocks(blockTable) < 2)
 		{
-			std::cout << "Za malo miejsca na dysku";
+			std::cout << "E002:Za malo miejsca na dysku" << std::endl;;
 			return false;
 		}
 		else
 		{
-
 			//Blok indeksowy
 			int indexblock = hireFreeBlock(blockTable);
 			//1 automatycznie inicjowany blok danych
 			int data = hireFreeBlock(blockTable);
-			//char firstdata = static_cast <char> (data);
-			//std::cout << "Blok pamieci pliku:" << filename << " to :" << data<<std::endl;
 			//Umieszczanie wpisu pliku w katalogu
-
 			File tempfile(filename, indexblock);
 			tempfile.towrite = data * 32;
 			maindrive.drivespace[indexblock * 32] = data;
-
 			data = maindrive.drivespace[indexblock * 32];
-			///	std::cout << "Blok odczytany z pamieci to:" <<data << std::endl;//NUmer bloku indeksowego !=0 to 1 blok danych znajduje siê na pozycji 32*indexblock
 			maincatalogue.push_back(tempfile);
-
-
 		}
 		return true;
 
@@ -101,9 +77,15 @@ int Filesystem::countFreeBlocks(std::bitset<Drive::blocks> &bt)
 int Filesystem::hireFreeBlock(std::bitset<Drive::blocks> &bt) //"ZATRUDNIANIE" WOLNYCH BLOKÓW// DZIA£A
 {
 	int bn = findFreeBlock(bt);
-	bt[bn] = true;
+	if (bn != -1)
+	{
+		bt[bn] = true;
+		return bn;
+	}
+	return -1;
+
 	//std::cout << "Rezerwuje:" << bn << std::endl;
-	return bn;
+
 }
 //WYŒWIETLA STATYSTYKI//DZIA£A
 void Filesystem::stats()
@@ -115,7 +97,7 @@ void Filesystem::stats()
 //DODAJE PLIK DO TABLICY OTWARTYCH PLIKÓW
 bool Filesystem::openFile(const string &filename)
 {
-	return openFile(filename, cpu.getRunningPID());
+	return openFile(filename, System::CPU.getRunningPID());
 }
 bool Filesystem::openFile(const string &filename, const string &pid)
 {
@@ -126,115 +108,65 @@ bool Filesystem::openFile(const string &filename, const string &pid)
 		{
 			if (maincatalogue[i].name == filename)
 			{
-				maincatalogue[i].sem.wait_sem(pid);
 
+				maincatalogue[i].sem.wait_sem(pid);
+				maincatalogue[i].isOpen = true;
 				openfiletable.insert(std::pair <string, string>(filename, pid));
-				break;
+				return true;
 			}
 		}
 
 	}
-
-
-	//WAIT NA SEMAFORZE;
-	/*
-
-	//JEŒLI PLIK JU¯ ZNAJDUJE SIÊ W TABLICY OTWARTYCH PLIKÓW:
-	if (openfiletable.count(filename) >= 1)
-	{
-		//JE¯ELI PLIK JEST OTWARTY PRZEZ TEN PROCES
-		if (openfiletable[filename] == pid)
-		{
-			std::cout << "Plik jest juz otwarty przez ten proces" << std::endl;
-		//	return false;
-		}
-		//JE¯ELI PLIK JEST OTWARTY PRZEZ INNY PROCES
-		if (openfiletable[filename] != pid)
-		{
-			std::cout << "Plik jest juz otwarty przez inny proces" << std::endl;
-			//return false;
-		}
-	}
-	else//JEŒLI PLIKU NIE MA TO TWORZYMY PLIK
-	{
-		std::cout << "PLIK OTWARTY" << std::endl;
-
-		openfiletable.insert(std::pair<string, string> (filename, pid));
-	//	return true;
-	}*/
-
 	else
 	{
-		std::cout << "Plik nie istnieje" << std::endl;
+		std::cout << "E006:Plik o podanej nazwie nie istnieje" << std::endl;
+		return false;
 	}
 
-	return false;
+	
 }
 //USUWA PLIK Z TABLICY OTWARTYCH PLIKÓW
 bool Filesystem::closeFile(const string &filename)
 {
-	return closeFile(filename, cpu.getRunningPID());
+	return closeFile(filename, System::CPU.getRunningPID());
 }
 bool Filesystem::closeFile(const string &filename, const string &pid)
 {
 	//SPRAWDZANIE CZY PLIK ISTNIEJE
 	if (fileExists(filename))
 	{
-
 		for (int i = 0; i < maincatalogue.size(); i++)
 		{
 			if (maincatalogue[i].name == filename)
 			{
-				openfiletable.erase(filename);
-				maincatalogue[i].sem.signal_sem();
+				if (maincatalogue[i].isOpen == true)
+				{
+					maincatalogue[i].sem.signal_sem();
+					openfiletable.erase(filename);
+					maincatalogue[i].isOpen = false;
+					return true;
+				}
+				else
+				{
+					std::cout << "E009:Plik nie jest otwarty" << std::endl;
+					return false;
+				}
+
 
 
 			}
 		}
 
-	}/*
-		//CZY PLIK ZNAJDUJE SIÊ W TABLICY OTWARTYCH PLIKÓW
-		if (openfiletable.count(filename) >= 1)
-		{
-			//JE¯ELI PLIK JEST OTWARTY PRZEZ TEN PROCES
-			if (openfiletable[filename] == pid)
-			{
-				//TO MOGÊ GO ZAMKN¥Æ
-				openfiletable.erase(filename);
-				std::cout << "Zamykam plik" << std::endl;
-				return true;
-			}
-			//JE¯ELI PLIK JEST OTWARTY PRZEZ INNY PROCES
-			if (openfiletable[filename] != pid)
-			{
-				//TO NIE MO  GO ZAMKN¥Æ
-				std::cout << "Brak dostepu do pliku" << std::endl;
-				return false;
-			}*/
-
-
-			//Sprawdzanie czy plik jest w tablicy otwartych plików
-			//JEŒLI PLIK  ZNAJDUJE SIÊ W TABLICY OTWARTYCH PLIKÓW:
-
-			//JE¯ELI PLIK JEST OTWARTY PRZEZ INNY PROCES TO NIE MO¯ESZ GO ZAMKN¥Æ
-			//JE¯ELI PLIK JEST OTWARTY PRZEZ TEN PROCES TO MO¯ESZ GO ZAMKN¥Æ
-		//JEŒLI PLIKU NIE MA TO NIE MA CZEGO ZAMYKAÆ
-
-
+	}
 	else
 	{
 		std::cout << "Plik nie istnieje" << std::endl;
 		return false;
 	}
-
-
-
-
-	return false;
 }
 bool Filesystem::renameFile(const string &filename, const string &newfilename)
 {
-	return renameFile(filename, newfilename, cpu.getRunningPID());
+	return renameFile(filename, newfilename, System::CPU.getRunningPID());
 }
 bool Filesystem::renameFile(const string &filename, const string &newfilename, const string &pid)
 {
@@ -252,11 +184,11 @@ bool Filesystem::renameFile(const string &filename, const string &newfilename, c
 			{
 				if (maincatalogue[i].name == filename)
 				{
-					int adres = maincatalogue[i].adres;
-					int towrite = maincatalogue[i].towrite;
+
+					File tempfile = maincatalogue[i];
+					tempfile.name = newfilename;
 					maincatalogue.erase(maincatalogue.begin() + (i));
-					File tempfile(newfilename, adres);
-					tempfile.towrite = towrite;
+
 					maincatalogue.push_back(tempfile);
 				}
 			}
@@ -270,7 +202,7 @@ bool Filesystem::renameFile(const string &filename, const string &newfilename, c
 }
 bool Filesystem::overwriteFile(const string &filename, const string &content)
 {
-	return overwriteFile(filename, content, cpu.getRunningPID());
+	return overwriteFile(filename, content, System::CPU.getRunningPID());
 }
 bool Filesystem::overwriteFile(const string &filename, const string &content, const string &pid)
 {
@@ -291,6 +223,26 @@ bool Filesystem::overwriteFile(const string &filename, const string &content, co
 				maincatalogue[i].towrite = 0;
 			}
 		}
+		int b = 0;
+		for (int i = 0; i < 32; i++)
+		{
+			if (maindrive.drivespace[i + indexblock] == 0)
+			{
+				break;
+			}
+			else
+				b++;
+		}
+		//	std::cout << "B:" << b << std::endl;
+		//	std::cout << content.size()/32+1 << "-To wymagane bloki" << (countFreeBlocks(blockTable) + b);
+		if (((content.length() / 32) + 1) > (countFreeBlocks(blockTable) + b))
+		{
+
+			std::cout << "E007:Za malo miejsca na dysku" << std::endl;
+			return false;
+
+		}
+
 		//USUWANIE DANYCH
 		for (int i = 0; i < 32; i++)
 		{
@@ -315,31 +267,48 @@ bool Filesystem::overwriteFile(const string &filename, const string &content, co
 		}
 
 
+		int g;
 
 		std::vector<int> blockvector;
 		int rozmiar = content.size();
-		for (int i = 0; i < ((rozmiar + 1) / 32 + 1); i++)//Rezerwacja bloków danych i przypisanie do bloku indeksowego 
+		for (int i = 0; i < ((rozmiar + 1) / 32)+1; i++)//Rezerwacja bloków danych i przypisanie do bloku indeksowego 
 		{
 			int f = hireFreeBlock(blockTable);
-			blockvector.push_back(f * 32);//ZAPISUJE ADRESY BLOKÓW DANYCH DO ZAPISU
-			maindrive.drivespace[indexblock + i] = f;
+			if (f != -1)
+			{
+				blockvector.push_back(f * 32);
+				g = f * 32;//ZAPISUJE ADRESY BLOKÓW DANYCH DO ZAPISU
+				maindrive.drivespace[indexblock + i] = f;
+			}
+			else
+			{
+				std::cout << "E001:ZA MALO MIEJSCA NA DYSKU";
+				return false;
+			}
+
 
 		}
 
 		std::vector <char> towrite;
-
 		std::copy(content.begin(), content.end(), std::back_inserter(towrite));
-
 		int j = 0;
 		int ij = 0;
 		int a = 0;
 		for (int i = 0; i < content.size(); i++)
 		{
-
+			if (j >= blockvector.size())
+			{
+				break;
+			}
 			if (i >= 32)
 			{
 				i = 0;
 				j++;
+				if (j >= blockvector.size())
+				{
+					j = j - 1;
+					break;
+				}
 			}
 
 			maindrive.drivespace[blockvector[j] + i] = towrite[ij];
@@ -351,7 +320,10 @@ bool Filesystem::overwriteFile(const string &filename, const string &content, co
 			}
 			a = i + 1;
 		}
-		ij = blockvector[j];
+		//std::cout << "JESTEM:" << j << " A rozmiar to:" << blockvector.size();
+
+		ij = blockvector[j]; //TU NIE DZIA£A
+
 		maincatalogue[at].towrite = ij + a + 1;
 		//ZAPIS DANYCH DO BLOKÓW
 
@@ -363,7 +335,7 @@ bool Filesystem::overwriteFile(const string &filename, const string &content, co
 }
 bool Filesystem::writeToFile(const string &filename, const string &content)
 {
-	return overwriteFile(filename, content, cpu.getRunningPID());
+	return writeToFile(filename, content, System::CPU.getRunningPID());
 }
 bool Filesystem::writeToFile(const string &filename, const string &content, const string &pid)
 {
@@ -373,9 +345,9 @@ bool Filesystem::writeToFile(const string &filename, const string &content, cons
 
 		int rozmiar = content.length();
 		//std::cout << "\nRozmiar Pliku:" << rozmiar << std::endl;
-		if (((rozmiar / 32) + 1) > countFreeBlocks(blockTable))
+		if (((rozmiar / 32)) > countFreeBlocks(blockTable))
 		{
-			std::cout << "Za malo miejsca na dysku" << std::endl;
+			std::cout << "E003:Za malo miejsca na dysku" << std::endl;
 			return false;
 
 		}
@@ -412,7 +384,17 @@ bool Filesystem::writeToFile(const string &filename, const string &content, cons
 
 		for (int i = 0; i < requiredblocks; i++)//Rezerwacja bloków danych i przypisanie do bloku indeksowego 
 		{
-			maindrive.drivespace[blokindeksowy + i + 1] = hireFreeBlock(blockTable);
+			int f = hireFreeBlock(blockTable);
+			if (f == -1)
+			{
+				std::cout << "\nE004:Brak wolnego miejsca na dysku\n";
+				return false;
+			}
+			else
+			{
+				maindrive.drivespace[blokindeksowy + i + 1] = f;
+			}
+
 		}
 		std::vector <char> towrite;
 		int  it;
@@ -462,13 +444,13 @@ bool Filesystem::writeToFile(const string &filename, const string &content, cons
 	}
 	else
 	{
-		std::cout << "Blad zapisu";
+		std::cout << "E005:Blad zapisu";
 		return false;
 	}
 }
 bool Filesystem::readFile(const string &filename, int length, string &content)
 {
-	return readFile(filename, cpu.getRunningPID(), length, content);
+	return readFile(filename, System::CPU.getRunningPID(), length, content);
 }
 bool Filesystem::readFile(const string &filename, const string &pid, int length, string &content)//LEPIEJ CHYBA PRZEZ REFERENCJE 
 {
@@ -547,7 +529,7 @@ bool Filesystem::readFile(const string &filename, const string &pid, int length,
 }
 bool Filesystem::deleteFile(const string &filename)
 {
-	return deleteFile(filename, cpu.getRunningPID());
+	return deleteFile(filename, System::CPU.getRunningPID());
 }
 bool Filesystem::deleteFile(const string &filename, const string &pid)
 {
@@ -600,7 +582,9 @@ bool Filesystem::deleteFile(const string &filename, const string &pid)
 
 		}
 		blockTable[tempfile.adres] = false;//ZWOLNIENIE BLOKU DYSKOWEGO
-
+		maincatalogue[at].sem.delete_sem();//ZWALNIAM KOLEJKÊ
+		maincatalogue.erase(maincatalogue.begin() + at);
+		openfiletable.erase(filename);
 	}
 
 	return true;
@@ -610,31 +594,35 @@ bool Filesystem::verify(const string &filename)
 {
 	if (!fileExists(filename))
 	{
-		std::cout << "Plik o podanej nazwie nie istnieje";
+		std::cout << "E006:Plik o podanej nazwie nie istnieje" << std::endl;
 		return false;
 	}
-	/*
-	if (Filesystem::openfiletable.count(filename) == 1)
+	else
 	{
-		if (openfiletable[filename] == pid)
+		for (int i = 0; i < maincatalogue.size(); i++)
 		{
-			return true;
+			if (maincatalogue[i].name == filename)
+			{
+				if (maincatalogue[i].isOpen == true)
+				{
+
+					return true;
+				}
+				else
+				{
+					std::cout << "E010:Plik jest zamkniety" << std::endl;
+					return false;
+				}
+			}
+
 		}
-		if (openfiletable[filename] != pid)
-		{
-			std::cout << "Odmowa dostepu";
-			return false;
-		}
+
 	}
-	else {
-		std::cout << "Plik nie zostal otwarty" << std::endl;
-		return false;
-	}*/
-	return true;
 }
 
 void Filesystem::displaydrivecontent()
 {
+	std::cout << std::endl;
 	for (int i = 0; i < 32; i++)
 	{
 		displayblock(i);
@@ -664,20 +652,28 @@ void Filesystem::displayvector()
 }
 void Filesystem::displayblock(int block)
 {
-	std::cout << "|" << block << "|";
-	for (int i = block * 32; i < (block + 1) * 32; i++)
+	if (block < 32)
 	{
-		if (maindrive.drivespace[i] < 32 && maindrive.drivespace[i] != 0)
+		std::cout << "|" << block << "|";
+		for (int i = block * 32; i < (block + 1) * 32; i++)
 		{
-			int f = maindrive.drivespace[i];
-			std::cout << f << " ";
+			if (maindrive.drivespace[i] < 32 && maindrive.drivespace[i] != 0)
+			{
+				int f = maindrive.drivespace[i];
+				std::cout << f << " ";
+			}
+			else
+			{
+				std::cout << maindrive.drivespace[i] << " ";
+			}
 		}
-		else
-		{
-			std::cout << maindrive.drivespace[i] << " ";
-		}
+		std::cout << std::endl;
 	}
-	std::cout << std::endl;
+	else
+	{
+		std::cout << "E011:Blok o podanym numerze nie istnieje";
+	}
+
 }
 void Filesystem::printqueue(string &filename)
 {
