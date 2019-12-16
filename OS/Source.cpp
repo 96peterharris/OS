@@ -14,6 +14,7 @@ int main() {
 		PCB::printMap();
 		if (i > 4) {
 			System::FS.displaydrivecontent();
+			System::FS.displaycatalogue();
 		}
 		//System::RAM.printProcess(PCB::getPCB("p1"));
 		//System::RAM.printAllRam();
