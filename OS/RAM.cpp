@@ -115,7 +115,7 @@ bool Ram::buddy(PCB* pcb, int segment, std::string bytes, int divisionLvl) {
                 blocks[startAddrBlocks+i] = 1;
             }
             if(segment == 2) {
-                (pcb->messages.at(pcb->messages.size())).RAMadrress =  startAddr;
+                (pcb->messages.at(pcb->messages.size()-1)).RAMadrress =  startAddr;
             }
             else {
                 pcb->segTab[segment]->baseRAM = startAddr;
@@ -203,6 +203,8 @@ std::string Ram::readMessage(int ramAddr) {
 bool Ram::deleteFromRam(PCB* pcb) {
     //if (!pcb->segTab[0]->vi && !pcb->segTab[1]->vi) return 0;
     //segment 0
+	System::VM.printPCBsegments(pcb->getPid());
+
     int numOfBlocks;
     int num1 = pcb->segTab[0]->limit/8;
     int num2 = pcb->segTab[0]->limit%8;

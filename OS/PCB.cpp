@@ -181,3 +181,7 @@ bool PCB::readFile(std::string name, std::string &text) {
 	}
 	return true;
 }
+
+bool PCB::deleteMessageRAM() {
+	return true;
+}

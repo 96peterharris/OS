@@ -63,24 +63,47 @@ void CPU_Scheduling::cpu_sch()
 	else//This condition is using when recivedQueue is not empty
 	{
 		//Updating process queue
-		PCB::update();
-		
+		if (PCB::update() == false)
+		{
+			commandCounter = 0;
+			running = recivedQueue->at(0);
+			running->setRunning();
+			System::VM.loadProg(running);
+		}
 		if (PCB::NEW_PROCESS == true)
 		{
 			//std::sort(recivedQueue->begin(), recivedQueue->end(), [](PCB* a, PCB* b) { return a->getPriority() > b->getPriority(); });
 			
+			if (running->getState() == WAITING)
+			{
+				PCB::update();
+				commandCounter = 0;
+				running = recivedQueue->at(0);
+				running->setRunning();
+				System::VM.loadProg(running);
+			}
+			else
+			{
+				running->setReady();
+				PCB::update();
+				running = recivedQueue->at(0);
+				commandCounter = 0;
+				running->setRunning();
+				System::VM.loadProg(running);
+			}
 			
-			if (running->state != WAITING || running->state == TERMINATED) {
+			/*if (running->state != WAITING || running->state == TERMINATED) {
 				running->setReady();
 			}
-			else {
+			else 
+			{
 				running = recivedQueue->at(0);
 			}
 			getProcesses();
 			running = recivedQueue->at(0);
 			commandCounter = 0;
 			running->setRunning();
-			System::VM.loadProg(running);
+			System::VM.loadProg(running);*/
 		}
 		else
 		{
