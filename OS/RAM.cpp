@@ -42,16 +42,15 @@ bool Ram::saveInRam(PCB* pcb, int segment, char ch, int logAddr) {
  * @return buddy function's value, true for success or false for failure.
  */
 bool Ram::loadToRam(PCB* pcb, std::string bytes, int segment) {
-    int ok = 0;
-    bool buddyOk = buddy(pcb, segment, bytes, 0);
+    /*bool buddyOk = buddy(pcb, segment, bytes, 0);
     if (!buddyOk) {
-        ok++;
         buddyOk = buddy(pcb, segment, bytes, 0);
         if (!buddyOk)
             return false;
         else return true;
     }
-    return true;
+    return true;*/
+	return buddy(pcb, segment, bytes, 0);
 }
 
 /**
@@ -103,7 +102,8 @@ bool Ram::buddy(PCB* pcb, int segment, std::string bytes, int divisionLvl) {
         if (!ok){
             clearRam();
 
-            return 0;
+            //return 0;
+			buddy(pcb, segment, bytes, divisionLvl);
         }
         else {
             for (int i = 0; i < fileSize; i++)
@@ -203,11 +203,16 @@ std::string Ram::readMessage(int ramAddr) {
 bool Ram::deleteFromRam(PCB* pcb) {
 	//if (!pcb->segTab[0]->vi && !pcb->segTab[1]->vi) return 0;
 	//segment 0
+
+	int blockSize;
 	int numOfBlocks;
-	int num1 = pcb->segTab[0]->limit / 8;
-	int num2 = pcb->segTab[0]->limit % 8;
-	if (num2 == 0) numOfBlocks = num1;
-	else numOfBlocks = num1 + 1;
+	for (int i = 3; i < 9; i++) {
+		if (std::pow(2, i) >= pcb->segTab[0]->limit) {
+			blockSize = std::pow(2, i);
+			numOfBlocks = blockSize / 8;
+			break;
+		}
+	}
 
 	int firstBlock = pcb->segTab[0]->baseRAM / 8;
 
@@ -219,10 +224,18 @@ bool Ram::deleteFromRam(PCB* pcb) {
 	}
 	//segment 1
 	if (pcb->segTab.size() == 2) {
-		num1 = pcb->segTab[1]->limit / 8;
+		/*num1 = pcb->segTab[1]->limit / 8;
 		num2 = pcb->segTab[1]->limit % 8;
 		if (num2 == 0) numOfBlocks = num1;
-		else numOfBlocks = num1 + 1;
+		else numOfBlocks = num1 + 1;*/
+
+		for (int i = 3; i < 9; i++) {
+			if (std::pow(2, i) >= pcb->segTab[0]->limit) {
+				blockSize = std::pow(2, i);
+				numOfBlocks = blockSize / 8;
+				break;
+			}
+		}
 
 		firstBlock = pcb->segTab[1]->baseRAM / 8;
 
