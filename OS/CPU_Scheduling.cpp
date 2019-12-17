@@ -130,8 +130,8 @@ void CPU_Scheduling::nextStep()
 		else//When interprate return false
 		{
 			increasePriority();
-			cpu_sch();
 			running->setTerminated();
+			cpu_sch();
 			commandCounter = 0;
 			//increasePriority();
 		}
@@ -158,11 +158,17 @@ void CPU_Scheduling::nextStep()
 		running->setReady();
 		cpu_sch();
 		commandCounter = 0;
-		PCB::NEW_PROCESS = false;
+		//PCB::NEW_PROCESS = false;
 		if (interprate(running) == true)
 		{
 			//std::cout << "\n interpreter true";
 			commandCounter++;
+		}
+		else
+		{
+			running->setTerminated();
+			cpu_sch();
+			commandCounter = 0;
 		}
 	}
 }
