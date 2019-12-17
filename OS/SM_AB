@@ -1,7 +1,7 @@
 .text
-SM p2 TEST
-SM p1 A
-MV CX 12
+SM pr TEST
+MV CX 2
 SB CX 1
-JN CX 28
+JN CX 19
+CP s2 si 5
 HT
