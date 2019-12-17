@@ -9,11 +9,10 @@ protected:
 	//The data hold by the semaphore.
 	int value;
 	std::vector<std::string> queue;
-	bool signaled;
 
 public:
 	//Constructor and deconstructor.
-	Semaphore(int v) : value(v) { signaled = false; }
+	Semaphore(int v) : value(v) {}
 	~Semaphore() {}
 
 	//Operations to do on the semaphore.
