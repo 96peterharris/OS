@@ -31,6 +31,8 @@ private:
 
 	bool firstTime = true;
 
+	bool findWaiting();
+
 public:
 	//Constructor
 	CPU_Scheduling();

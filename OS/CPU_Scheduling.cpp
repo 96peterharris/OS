@@ -44,6 +44,19 @@ void CPU_Scheduling::getProcesses()
 
 	this->recivedQueue = PCB::getReadyQueuePointer();
 }
+bool CPU_Scheduling::findWaiting()
+{
+	auto match = std::find_if(recivedQueue->begin(), recivedQueue->end(), [](PCB* a) { return a->getState() == 2; });
+
+	if (*match != nullptr)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
 /**
  * Managing current running process.
  *
@@ -73,7 +86,7 @@ void CPU_Scheduling::cpu_sch()
 		}
 		if (PCB::NEW_PROCESS == true)
 		{
-			if (running->getState() == WAITING)
+			if (findWaiting() == true)
 			{
 				PCB::update();
 				commandCounter = 0;
