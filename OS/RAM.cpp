@@ -230,7 +230,7 @@ bool Ram::deleteFromRam(PCB* pcb) {
 		else numOfBlocks = num1 + 1;*/
 
 		for (int i = 3; i < 9; i++) {
-			if (std::pow(2, i) >= pcb->segTab[0]->limit) {
+			if (std::pow(2, i) >= pcb->segTab[1]->limit) {
 				blockSize = std::pow(2, i);
 				numOfBlocks = blockSize / 8;
 				break;
@@ -238,6 +238,7 @@ bool Ram::deleteFromRam(PCB* pcb) {
 		}
 
 		firstBlock = pcb->segTab[1]->baseRAM / 8;
+
 
 		//update
 		if (pcb->getState() == WAITING) {
@@ -259,7 +260,6 @@ bool Ram::deleteFromRam(PCB* pcb) {
 		}
 		pcb->segTab[1]->vi = 0;
 	}
-
 	pcb->segTab[0]->vi = 0;
 	return 1;
 }
