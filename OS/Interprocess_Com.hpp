@@ -5,10 +5,9 @@
 
 #include <algorithm>
 #include <exception>
+#include <string>
 
-#include "PCB.hpp"
-
-
+class PCB;
 
 struct messageNotFound : public std::exception
 {
@@ -26,6 +25,14 @@ struct receiverNotFound : public std::exception
 	}
 };
 
+struct RAMreadingError : public std::exception
+{
+	const char* what() const throw ()
+	{
+		return "Error while reading RAM";
+	}
+};
+
 class Message {
 public:
 	std::string pid_sender;
@@ -40,12 +47,13 @@ public:
 	//ReadMessage
 	//LoadToRam
 
+	bool printMessage();
+
 };
 
-bool sendMessage(std::string pid_receiver, std::string content);
-bool receiveMessage(std::string pid_sender);
 
-bool operator==(Message& m1, Message& m2) {
-	if (m1.pid_sender == m2.pid_sender && m1.content == m2.content && m1.RAMadrress == m2.RAMadrress) return true;
-	return false;
-}
+
+bool showMessages(PCB* pcb);
+std::string prepareMessage(Message mess);
+
+bool operator==(Message& m1, Message& m2);

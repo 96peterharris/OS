@@ -1,12 +1,24 @@
-#include "CPU_Scheduling.hpp"
-#include "PCB.hpp"
+#include "Headers.h"
 
 int main() {
-	PCB pcb;
-	pcb.createProcess("pierwszy", 99, 9, READY);
-	pcb.createProcess("drugi", 99, 8, READY);
+	PCB::createDummy();
+	System::CPU.cpu_sch();
 
-	CPU_Scheduling cpuS;
-	cpuS.running();
-
+	PCB::createProcess("pr", "pr2", 2);
+	//PCB::createProcess("p4", "si", 6);
+	//PCB::printMap();
+	//PCB::update();
+	std::cout << std::endl;
+	
+	for (int i = 0; i < 50; i++)
+	{
+		System::CPU.displayRunning();
+		System::CPU.displayPCBqueue();
+		System::CPU.nextStep();
+		std::cout << "\n" << "_____________________________________" << std::endl;
+		if (i > 9) {
+			System::VM.printPCBsegTab("pr");
+			System::RAM.printAllRam();
+		}
+	}
 }

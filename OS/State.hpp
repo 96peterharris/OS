@@ -12,24 +12,15 @@ enum State
 
 };
 
-std::string getStateName(State e) {
-	switch (e) {
-
-		case NEW: 
-			return "NEW";   
-			break;
-		case RUNNING:
-			return "RUNNING";
-			break;
-		case WAITING: 
-			return "WAITING";  
-			break;
-		case READY: 
-			return "READY"; 
-			break;
-		case TERMINATED: 
-			return "TERMINATED"; 
-			break;
+inline const char* stateToString(State s)
+{
+	switch (s)
+	{
+		case NEW:   return "NEW";
+		case RUNNING:   return "RUNNING";
+		case WAITING: return "WAITING";
+		case READY: return "READY";
+		case TERMINATED: return "TERMINATED";
+		default:      return "[UNKNOW STATE]";
 	}
-
-};
+}
