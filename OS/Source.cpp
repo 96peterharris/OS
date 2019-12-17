@@ -35,6 +35,7 @@ int main() {
 
 	PCB* ptr = PCB::getPCB("p4");
 	ptr->setWaiting();
+	System::CPU.cpu_sch();
 	System::CPU.displayRunning();
 	System::CPU.displayPCBqueue();
 
