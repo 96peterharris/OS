@@ -3,6 +3,7 @@
 int main() {
 	PCB::createDummy();
 	System::CPU.cpu_sch();
+	
 	PCB::createProcess("pr", "pr2", 8);
 	
 	for (int i = 0; i < 50; i++)

@@ -18,7 +18,11 @@ void CPU_Scheduling::increasePriority()
 {
 	for (int i = 0; i < recivedQueue->size() - 1; i++)
 	{
-		if (recivedQueue->at(i)->getPriority() < 12 && recivedQueue->at(i)->getPid() != "DM")
+		if (recivedQueue->size() < 1)
+		{
+			return;
+		}
+		else if (recivedQueue->at(i)->getPriority() < 12 && recivedQueue->at(i)->getPid() != "DM")
 		{
 			int tmp = recivedQueue->at(i)->getPriority();
 			tmp += 3;
