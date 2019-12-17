@@ -81,11 +81,12 @@ public:
 	void displayblock(int block);//DZIA£A
 	void displaydrivecontent();//DZIA£A
 	void printqueue(string &name);
+	
+	std::vector<File> maincatalogue;
 private:
 	Drive maindrive;
 	std::bitset<Drive::blocks> blockTable;
 	//MAPA Z NAZW¥ PLIKU I PID
 	std::map <string, string>  openfiletable;
 
-	std::vector<File> maincatalogue;
 };

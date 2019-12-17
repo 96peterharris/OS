@@ -56,6 +56,7 @@ void CPU_Scheduling::cpu_sch()
 	if (running != nullptr) {
 		if (running->state == RUNNING) {
 			running->setReady();
+			PCB::NEW_PROCESS = false;
 		}
 		else if (running->state == WAITING) {
 			//keep

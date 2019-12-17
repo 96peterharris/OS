@@ -118,6 +118,7 @@ bool PCB::resumeProcess(std::string pid) {
 	else {
 		return false;
 	}
+	//FIXME: czy tu nie powinno byc PCB::update?
 }
 
 bool PCB::haltProcess(std::string pid) {
@@ -184,6 +185,6 @@ bool PCB::readFile(std::string name, std::string &text) {
 	return true;
 }
 void PCB::setTerminated() { if (state == RUNNING) { this->state = TERMINATED; removeProcess(this->pid); } }
-void PCB::setReady() { if (state == WAITING || state == RUNNING) this->state = READY; }
-void PCB::setWaiting() { if (state == RUNNING || state == READY) { this->state = WAITING; System::CPU.cpu_sch(); } }
+void PCB::setReady() { if (state == WAITING || state == RUNNING) this->state = READY; PCB::NEW_PROCESS = true; }
+void PCB::setWaiting() { if (state == RUNNING || state == READY) { this->state = WAITING; PCB::NEW_PROCESS = true; } }
 void PCB::setRunning() { if (state == READY) this->state = RUNNING; }

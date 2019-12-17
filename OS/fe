@@ -1,17 +1,19 @@
 .text
+SW fil
 OP fil
 WF fil _0
 OW fil ow
-WF fil _1
+SW bil
 OP bil
 WF bil _ch1
+SW sil
 OP dil
 WF dil _c1
 WF fil _2
-CL bil
-NF fil new
-WF new _3
-DF bil
 CL fil
+NF bil new
+WF new _3
+CL new
+DF bil
 CL dil
 HT

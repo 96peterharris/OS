@@ -109,7 +109,6 @@ bool Filesystem::openFile(const string &filename, const string &pid)
 			if (maincatalogue[i].name == filename)
 			{
 
-				maincatalogue[i].sem.wait_sem(pid);
 				maincatalogue[i].isOpen = true;
 				openfiletable.insert(std::pair <string, string>(filename, pid));
 				return true;

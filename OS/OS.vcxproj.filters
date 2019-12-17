@@ -118,5 +118,11 @@
     <Text Include="fe">
       <Filter>Pliki zasobów</Filter>
     </Text>
+    <Text Include="fl">
+      <Filter>Pliki zasobów</Filter>
+    </Text>
+    <Text Include="pr3">
+      <Filter>Pliki zasobów</Filter>
+    </Text>
   </ItemGroup>
 </Project>
