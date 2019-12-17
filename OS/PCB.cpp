@@ -183,3 +183,7 @@ bool PCB::readFile(std::string name, std::string &text) {
 	}
 	return true;
 }
+void PCB::setTerminated() { if (state == RUNNING) { this->state = TERMINATED; removeProcess(this->pid); } }
+void PCB::setReady() { if (state == WAITING || state == RUNNING) this->state = READY; }
+void PCB::setWaiting() { if (state == RUNNING || state == READY) { this->state = WAITING; System::CPU.cpu_sch(); } }
+void PCB::setRunning() { if (state == READY) this->state = RUNNING; }

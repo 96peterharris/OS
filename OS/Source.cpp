@@ -2,6 +2,8 @@
 
 int main() {
 	PCB::createDummy();
+	System::CPU.cpu_sch();
+
 	PCB::createProcess("p1", "si", 2);
 	PCB::createProcess("p2", "si", 1);
 	PCB::createProcess("p4", "si", 3);
@@ -17,7 +19,7 @@ int main() {
 		System::CPU.displayRunning();
 		System::CPU.displayPCBqueue();
 	}*/
-
+	//System::CPU.cpu_sch();
 	System::CPU.nextStep();
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
@@ -35,7 +37,7 @@ int main() {
 
 	PCB* ptr = PCB::getPCB("p4");
 	ptr->setWaiting();
-	System::CPU.cpu_sch();
+	
 	System::CPU.displayRunning();
 	System::CPU.displayPCBqueue();
 
@@ -47,6 +49,8 @@ int main() {
 	std::cout << "==============================" << std::endl;
 	System::CPU.displayRunning();
 
+	PCB::createProcess("p5", "si", 10);
+
 
 
 	System::CPU.nextStep();
@@ -55,6 +59,6 @@ int main() {
 	
 	System::CPU.displayPCBqueue();
 
-	
+
 
 }

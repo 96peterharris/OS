@@ -53,64 +53,24 @@ void CPU_Scheduling::getProcesses()
 */
 void CPU_Scheduling::cpu_sch()
 {
-	if (recivedQueue == nullptr)//This condition is using on start
-	{
-		getProcesses();//Getting process queue
-		running = recivedQueue->at(0);
-		running->setRunning();
-		commandCounter = 0;
-		System::VM.loadProg(running);
+	PCB::update();
+	if (running != nullptr) {
+		if (running->state == RUNNING) {
+			running->setReady();
+		}
+		else if (running->state == WAITING) {
+			//keep
+		}
 	}
-	else//This condition is using when recivedQueue is not empty
-	{
-		//Updating process queue
-		if (PCB::update() == false)
-		{
-			commandCounter = 0;
-			running = recivedQueue->at(0);
-			running->setRunning();
-			System::VM.loadProg(running);
-		}
-		if (PCB::NEW_PROCESS == true)
-		{
-			if (running->getState() == WAITING)
-			{
-				PCB::update();
-				commandCounter = 0;
-				running = recivedQueue->at(0);
-				running->setRunning();
-				System::VM.loadProg(running);
-			}
-			else
-			{
-				running->setReady();
-				PCB::update();
-				running = recivedQueue->at(0);
-				commandCounter = 0;
-				running->setRunning();
-				System::VM.loadProg(running);
-			}
-		}
-		else
-		{
-			if (running->getState() == TERMINATED)
-			{
-				PCB::update();
-				running = recivedQueue->at(0);
-				commandCounter = 0;
-				running->setRunning();
-				System::VM.loadProg(running);
-			}
-			else
-			{
-				running = recivedQueue->at(0);
-				commandCounter = 0;
-				running->setRunning();
-				System::VM.loadProg(running);
-			}
-		}
 
+	if (recivedQueue == nullptr) {
+		getProcesses();
 	}
+	running = recivedQueue->at(0);
+	running->setRunning();
+	commandCounter = 0;
+	System::VM.loadProg(running);
+	PCB::update();
 }
 /**
  * This function is responsible for execute next step of program.
@@ -120,56 +80,30 @@ void CPU_Scheduling::cpu_sch()
 */
 void CPU_Scheduling::nextStep()
 {
-	if ((commandCounter < 5) && (PCB::NEW_PROCESS == false))//This condition is using in situation when commandCounter is lover than five and when wasn't createed any new processes 
+	if (interprate(running) == true) 
 	{
-		if (interprate(running) == true)
+		if (PCB::NEW_PROCESS == true) 
 		{
-			//std::cout << "\n interpreter true";
-			commandCounter++;
-		}
-		else//When interprate return false
-		{
-			increasePriority();
-			running->setTerminated();
-			cpu_sch();
-			commandCounter = 0;
-			//increasePriority();
-		}
-	}
-	else if ((commandCounter < 5) && (PCB::NEW_PROCESS == true))//This condidition is using when we add dynamically process
-	{
-		cpu_sch();
-		if (interprate(running) == true)
-		{
-			//std::cout << "\n interpreter true";
-			commandCounter++;
 			PCB::NEW_PROCESS = false;
+			cpu_sch();
 		}
 		else
 		{
-			running->setTerminated();
-			cpu_sch();
-			commandCounter = 0;
+			if (commandCounter < 4) 
+			{
+				commandCounter++;
+			}
+			else 
+			{
+				increasePriority();
+				cpu_sch();
+			}
 		}
 	}
-	else
-	{
-		increasePriority();
-		running->setReady();
-		cpu_sch();
+	else {
 		commandCounter = 0;
-		//PCB::NEW_PROCESS = false;
-		if (interprate(running) == true)
-		{
-			//std::cout << "\n interpreter true";
-			commandCounter++;
-		}
-		else
-		{
-			running->setTerminated();
-			cpu_sch();
-			commandCounter = 0;
-		}
+		running->setTerminated();
+		cpu_sch();
 	}
 }
 /**
