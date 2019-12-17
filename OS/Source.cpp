@@ -17,7 +17,9 @@ int main() {
 			//System::FS.displaycatalogue();
 			//System::VM.printVM();
 			System::VM.printPCBsegTab("p1");
+			System::VM.printPCBsegTab("p2");
 			System::VM.printPCBsegTab("f1");
+			//System::VM.printPCBsegTab("f2");
 			System::VM.printPCBsegTab("DM");
 
 			System::RAM.printAllRam();
