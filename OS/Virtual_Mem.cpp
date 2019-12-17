@@ -185,7 +185,7 @@ bool Virtual_Mem::loadProg(PCB * pcb)
 	for (int i = 0; i < segTab->size(); i++) {
 		if (segTab->at(i)->vi == 0) {
 			std::string data;
-			for (int k = 0; k < segTab->at(i)->limit; k++) {
+			for (int k = segTab->at(i)->baseVM; k < segTab->at(i)->limit + segTab->at(i)->baseVM; k++) {
 				data += pagefile.at(k);
 			}
 			System::RAM.loadToRam(pcb, data, i);
