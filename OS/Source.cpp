@@ -17,6 +17,7 @@ int main() {
 		System::CPU.nextStep();
 		std::cout << "\n" << "_____________________________________" << std::endl;
 		if (i > 9) {
+			System::VM.printPCBsegTab("pr");
 			System::RAM.printAllRam();
 		}
 	}

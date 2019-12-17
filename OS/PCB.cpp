@@ -81,14 +81,14 @@ bool PCB::removeProcess(std::string pid) {
 	PCB* tPCB = getPCB(pid);
 	if (tPCB != nullptr) {
 		//tPCB->setTerminated();
+		System::VM.deleteProg(tPCB);
 
 		processesMap.erase(pid);
 
-		System::VM.deleteProg(tPCB);
 
 		delete tPCB;
 		//call fbi remove etc
-
+		System::CPU.cpu_sch();
 		return true;
 	}
 	else {
