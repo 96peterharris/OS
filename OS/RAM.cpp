@@ -42,14 +42,6 @@ bool Ram::saveInRam(PCB* pcb, int segment, char ch, int logAddr) {
  * @return buddy function's value, true for success or false for failure.
  */
 bool Ram::loadToRam(PCB* pcb, std::string bytes, int segment) {
-    /*bool buddyOk = buddy(pcb, segment, bytes, 0);
-    if (!buddyOk) {
-        buddyOk = buddy(pcb, segment, bytes, 0);
-        if (!buddyOk)
-            return false;
-        else return true;
-    }
-    return true;*/
 	return buddy(pcb, segment, bytes, 0);
 }
 

@@ -16,7 +16,7 @@ int main() {
 		System::CPU.displayPCBqueue();
 		System::CPU.nextStep();
 		std::cout << "\n" << "_____________________________________" << std::endl;
-		if (i > 9) {
+		if (i > 9 && i <16) {
 			System::VM.printPCBsegTab("pr");
 			System::RAM.printAllRam();
 		}
