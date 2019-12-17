@@ -1,7 +1,5 @@
 #pragma once
-//Wojtek
-
-//Mateusz jak cos to wszystkie couty mozesz zmienic na te swoje SFMLowe okienka nara
+//VoiTee
 
 #include <algorithm>
 #include <exception>
@@ -48,7 +46,7 @@ public:
 	//LoadToRam
 
 	bool printMessage();
-
+	bool RAMtoMessage(std::string RAMbytes);
 };
 
 
