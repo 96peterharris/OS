@@ -29,6 +29,10 @@ private:
 	//This method is use for download vector with PCB's in READY state
 	void getProcesses();
 
+	bool firstTime = true;
+
+	bool findWaiting();
+
 public:
 	//Constructor
 	CPU_Scheduling();
