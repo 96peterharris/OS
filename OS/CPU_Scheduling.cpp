@@ -16,7 +16,7 @@ CPU_Scheduling::CPU_Scheduling()
 */
 void CPU_Scheduling::increasePriority()
 {
-	for (int i = 1; i < recivedQueue->size() - 1; i++)
+	for (int i = 0; i < recivedQueue->size() - 1; i++)
 	{
 		if (recivedQueue->at(i)->getPriority() < 12 && recivedQueue->at(i)->getPid() != "DM")
 		{
@@ -53,7 +53,6 @@ void CPU_Scheduling::getProcesses()
 */
 void CPU_Scheduling::cpu_sch()
 {
-	PCB::update();
 	if (running != nullptr) {
 		if (running->state == RUNNING) {
 			running->setReady();
@@ -62,6 +61,7 @@ void CPU_Scheduling::cpu_sch()
 			//keep
 		}
 	}
+	PCB::update();
 
 	if (recivedQueue == nullptr) {
 		getProcesses();

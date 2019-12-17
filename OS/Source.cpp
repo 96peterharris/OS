@@ -12,9 +12,12 @@ int main() {
 	
 	for (int i = 0; i < 50; i++)
 	{
-		System::CPU.nextStep();
-		std::cout << "==============================" << std::endl;
 		System::CPU.displayRunning();
 		System::CPU.displayPCBqueue();
+		System::CPU.nextStep();
+		std::cout << "\n" << "_____________________________________" << std::endl;
+		if (i > 9) {
+			System::RAM.printAllRam();
+		}
 	}
 }
