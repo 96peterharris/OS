@@ -3,7 +3,9 @@ CP p1 si 3
 CF fil
 CF bil
 CF dil
+CP ss SM_AB 3
 CP f1 fe 3
+RM
 RP p1
 CP f2 fe 5
 HT
