@@ -1,6 +1,7 @@
 //Enrique
 #include "PCB.hpp"
 #include "Sync_Mech.hpp"
+#include "Interprocess_Com.hpp"
 #include "Headers.h"
 
 bool PCB::NEW_PROCESS = false;
