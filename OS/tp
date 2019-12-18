@@ -1,0 +1,17 @@
+.text
+MV DX 35
+CF fil
+CF dil
+SW fil
+OP fil
+WF fil
+WF fil
+WF fil
+WF fil
+WF fil
+WF fil
+WF fil
+CL fil
+CP p1 ZS 5
+CP p2 ZS 6
+HT

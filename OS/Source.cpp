@@ -4,7 +4,7 @@ int main() {
 	PCB::createDummy();
 	System::CPU.cpu_sch();
 	
-	PCB::createProcess("pr", "pr2", 8);
+	PCB::createProcess("pr", "tp", 8);
 	
 	for (int i = 0; i < 100; i++)
 	{
@@ -36,11 +36,11 @@ int main() {
 
 		System::RAM.printAllRam();
 		
+		*/
 		System::FS.displaycatalogue();
 		System::FS.displaydrivecontent();
 		System::FS.displayoft();
 		System::FS.displayvector();
-		*/
 
 
 	}

@@ -157,7 +157,7 @@ bool interprate(PCB *pcb) {
 	}
 	else if (command == "WF")
 	{
-		args = getArgs(pcb, 2, takenBytes);
+		args = getArgs(pcb, 1, takenBytes);
 		std::string tmp = "";
 		ret = System::FS.writeToFile(args[0], tmp += pcb->getRegister().getD());
 	}
@@ -165,7 +165,8 @@ bool interprate(PCB *pcb) {
 	{
 		args = getArgs(pcb, 1, takenBytes);
 		std::string tmp = "";
-		ret = MOV(pcb, "DX", tmp += System::FS.readCharFile(args[0], pcb->getRegister().getC()));
+		System::FS.readFile(args[0], pcb->getPid(), 1, tmp);
+		ret = MOV(pcb, "DX", tmp);
 	}
 	// SEMAFORY
 

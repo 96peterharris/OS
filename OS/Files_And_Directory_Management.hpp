@@ -81,8 +81,6 @@ public:
 	void displayblock(int block);//DZIA£A
 	void displaydrivecontent();//DZIA£A
 	void printqueue(string &name);
-
-	char readCharFile(const string &filename, int i);
 	
 	std::vector<File> maincatalogue;
 private:

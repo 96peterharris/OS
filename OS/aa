@@ -1,0 +1,14 @@
+.text
+MV AX [0]
+SW fil
+OP fil
+SW dil
+OP dil
+RF fil CX
+WT fil
+AD CX 3
+SB AX 1
+JN CX 
+HT
+.data
+[0] 4
