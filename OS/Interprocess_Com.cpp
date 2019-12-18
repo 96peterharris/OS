@@ -16,7 +16,7 @@ Message::Message(std::string sender, std::string content) {
 bool PCB::sendMessage(std::string pid_receiver, std::string content) {
 
 	PCB* receiver = getPCB(pid_receiver);
-	Message temp = Message(pid_receiver, content);
+	Message temp = Message(this->pid, content);
 
 	if (receiver != nullptr) {
 		receiver->messages.push_back(temp);
@@ -28,6 +28,7 @@ bool PCB::sendMessage(std::string pid_receiver, std::string content) {
 
 	//semaphore action
 	if(!receiver->pSem.signal_sem()) return false;
+	else receiver->receiveMessage();
 	
 	return true;
 }

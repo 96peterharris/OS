@@ -154,6 +154,7 @@ char Ram::readFromRam(PCB* pcb, int segment, int logAddr) {
  * @return String containing message.
  */
 std::string Ram::readMessage(int ramAddr) {
+	//printAllRam();
     int space = 0;
     std::string msg = "";
     int i = ramAddr;
@@ -166,13 +167,24 @@ std::string Ram::readMessage(int ramAddr) {
     msg.pop_back();
 
     size_t size = msg.size();
-    int numOfBlocks;
+    /*
+	int numOfBlocks;
     int num1 = size/8;
     int num2 = size%8;
     if (num2==0) numOfBlocks = num1;
     else numOfBlocks = num1+1;
+	*/
+	int blockSize;
+	int numOfBlocks;
+	for (int i = 3; i < 9; i++) {
+		if (std::pow(2, i) >= size) {
+			blockSize = std::pow(2, i);
+			numOfBlocks = blockSize / 8;
+			break;
+		}
+	}
 
-    int firstBlock = size/8;
+    int firstBlock = ramAddr/8;
 
     for (int i = firstBlock; i < numOfBlocks+firstBlock; i++) {
         blocks[i] = 0;
@@ -180,6 +192,7 @@ std::string Ram::readMessage(int ramAddr) {
             ram[i*8+j] = ' ';
         }
     }
+	//printAllRam();
     return msg;
 }
 
