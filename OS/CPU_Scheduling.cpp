@@ -27,15 +27,12 @@ void CPU_Scheduling::increasePriority()
 			int tmp = recivedQueue->at(i)->getPriority();
 			tmp += 3;
 			recivedQueue->at(i)->setPriority(tmp);
-			//std::sort(recivedQueue->begin(), recivedQueue->end(), [](PCB* a, PCB* b) { return a->getPriority() > b->getPriority(); });
 		}
 		else if (recivedQueue->at(i)->getPriority() >= 12 && recivedQueue->at(i)->getPid() != "DM")
 		{
 			recivedQueue->at(i)->setPriority(15);
-			//std::sort(recivedQueue->begin(), recivedQueue->end(), [](PCB* a, PCB* b) { return a->getPriority() > b->getPriority(); });
 		}
 	}
-	//std::sort(recivedQueue->begin(), recivedQueue->end(), [](PCB* a, PCB* b) { return a->getPriority() > b->getPriority(); });
 }
 /**
  * Getting readyQueuePointer and store it in recivedQueue.
@@ -57,17 +54,21 @@ void CPU_Scheduling::getProcesses()
 */
 void CPU_Scheduling::cpu_sch()
 {
-	if (running != nullptr) {
-		if (running->state == RUNNING) {
+	if (running != nullptr) 
+	{
+		if (running->state == RUNNING)
+		{
 			running->setReady();
 		}
-		else if (running->state == WAITING) {
+		else if (running->state == WAITING)
+		{
 			//keep
 		}
 	}
 	PCB::update();
 
-	if (recivedQueue == nullptr) {
+	if (recivedQueue == nullptr) //This part is using on start
+	{
 		getProcesses();
 	}
 	running = recivedQueue->at(0);
@@ -104,7 +105,8 @@ void CPU_Scheduling::nextStep()
 			}
 		}
 	}
-	else {
+	else
+	{
 		commandCounter = 0;
 		running->setTerminated();
 		cpu_sch();
