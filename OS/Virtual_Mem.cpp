@@ -66,6 +66,9 @@ bool Virtual_Mem::createProg(PCB *pcb, std::string data)
 	int k = 0;
 	for (int i = 0; i < segTabSize; i++) { //for every segment in program
 		size_t freeSpace = size_t(findFreeSpace(data.length()));
+		if (freeSpace == -1) {
+			return false;
+		}
 		int maxPos = 0, index = 0;
 		k += 6;
 		std::string snumber;
@@ -154,7 +157,7 @@ bool Virtual_Mem::createProg(PCB *pcb, std::string data)
 			}
 			k++;
 		}
-		if(i == 1 && maxPos < ramString.size()) ramString.pop_back();
+		if (i == 1 && maxPos < ramString.size()) ramString.pop_back();
 		SegmentVM segment;
 		segment.base = freeSpace;
 		if (i == 0) { //text segment
@@ -171,11 +174,13 @@ bool Virtual_Mem::createProg(PCB *pcb, std::string data)
 		segmentPCB->vi = 0;
 		segTab->push_back(segmentPCB);
 
-		System::RAM.loadToRam(pcb, ramString, i);
+		if (System::RAM.loadToRam(pcb, ramString, i) == false) {
+			return false;
+		}
 		ramString.clear();
 	}
 	std::sort(pfSegTab.begin(), pfSegTab.end());
-	return 1;
+	return true;
 }
 
 bool Virtual_Mem::loadProg(PCB * pcb)
@@ -188,11 +193,13 @@ bool Virtual_Mem::loadProg(PCB * pcb)
 			for (int k = 0; k < segTab->at(i)->limit; k++) {
 				data += pagefile.at(k);
 			}
-			System::RAM.loadToRam(pcb, data, i);
+			if (System::RAM.loadToRam(pcb, data, i) == false) {
+				return false;
+			}
 		}
 	}
 	std::sort(pfSegTab.begin(), pfSegTab.end());
-	return 1;
+	return true;
 }
 
 /**
@@ -222,7 +229,7 @@ bool Virtual_Mem::deleteProg(PCB *pcb)
 		}
 	}
 	std::sort(pfSegTab.begin(), pfSegTab.end());
-	return 1;
+	return true;
 }
 
 /**
@@ -262,37 +269,42 @@ bool Virtual_Mem::loadToVM(PCB * pcb, const std::string data)
 	for (int i = 0; i < limit; i++) {
 		pagefile.at(base + i) = data.at(i);
 	}
-	return 1;
+	return true;
 }
 
 void Virtual_Mem::printPCBsegTab(std::string pid)
 {
 	PCB* pcb = PCB::getPCB(pid);
-	std::vector<SegmentPCB*>* segTab = pcb->getSegTab();
-	std::cout << "Process " << pid << " segment table:\n";
-	std::cout << " ----------------------------------\n";
-	std::cout << " | BaseVM | BaseRAM | Limit | v/i |\n";
-	for (int i = 0; i < segTab->size(); i++) {
-		std::cout << " | ";
-		if (segTab->at(i)->baseVM > 999)	  std::cout << "  ";
-		else if (segTab->at(i)->baseVM > 99) std::cout << "   ";
-		else if (segTab->at(i)->baseVM > 9)  std::cout << "    ";
-		else								  std::cout << "     ";
-		std::cout << segTab->at(i)->baseVM << " | ";
-
-		if (segTab->at(i)->baseRAM > 99)	  std::cout << "    ";
-		else if (segTab->at(i)->baseRAM > 9) std::cout << "     ";
-		else								  std::cout << "      ";
-		std::cout << segTab->at(i)->baseRAM << " | ";
-
-		if (segTab->at(i)->limit > 999) 	 std::cout << " ";
-		else if (segTab->at(i)->limit > 99) std::cout << "  ";
-		else if (segTab->at(i)->limit > 9)  std::cout << "   ";
-		else if (segTab->at(i)->limit > 0)  std::cout << "    ";
-		std::cout << segTab->at(i)->limit << " |  ";
-		std::cout << segTab->at(i)->vi << "  |\n";
+	if (pcb == nullptr) {
+		std::cout << "Process doesn't exist.\n";
 	}
-	std::cout << " ----------------------------------\n";
+	else {
+		std::vector<SegmentPCB*>* segTab = pcb->getSegTab();
+		std::cout << "Process " << pid << " segment table:\n";
+		std::cout << " ----------------------------------\n";
+		std::cout << " | BaseVM | BaseRAM | Limit | v/i |\n";
+		for (int i = 0; i < segTab->size(); i++) {
+			std::cout << " | ";
+			if (segTab->at(i)->baseVM > 999)	  std::cout << "  ";
+			else if (segTab->at(i)->baseVM > 99) std::cout << "   ";
+			else if (segTab->at(i)->baseVM > 9)  std::cout << "    ";
+			else								  std::cout << "     ";
+			std::cout << segTab->at(i)->baseVM << " | ";
+
+			if (segTab->at(i)->baseRAM > 99)	  std::cout << "    ";
+			else if (segTab->at(i)->baseRAM > 9) std::cout << "     ";
+			else								  std::cout << "      ";
+			std::cout << segTab->at(i)->baseRAM << " | ";
+
+			if (segTab->at(i)->limit > 999) 	 std::cout << " ";
+			else if (segTab->at(i)->limit > 99) std::cout << "  ";
+			else if (segTab->at(i)->limit > 9)  std::cout << "   ";
+			else if (segTab->at(i)->limit > 0)  std::cout << "    ";
+			std::cout << segTab->at(i)->limit << " |  ";
+			std::cout << segTab->at(i)->vi << "  |\n";
+		}
+		std::cout << " ----------------------------------\n";
+	}
 }
 
 void Virtual_Mem::printVMsegTab()
@@ -320,60 +332,65 @@ void Virtual_Mem::printVMsegTab()
 void Virtual_Mem::printPCBsegments(std::string pid)
 {
 	PCB* pcb = PCB::getPCB(pid);
-	auto segTab = pcb->getSegTab();
-	std::cout << "Process " << pid << " segments content:\n";
-	for (int k = 0; k < segTab->size(); k++) {
-		if (k == 0) {
-			std::cout << "Segment .text:\n";
-			for (int i = 0; i < 60; i++) {
-				if (i == 0) std::cout << " ";
-				else std::cout << "-";
+	if (pcb == nullptr) {
+		std::cout << "Process doesn't exist.\n";
+	}
+	else {
+		auto segTab = pcb->getSegTab();
+		std::cout << "Process " << pid << " segments content:\n";
+		for (int k = 0; k < segTab->size(); k++) {
+			if (k == 0) {
+				std::cout << "Segment .text:\n";
+				for (int i = 0; i < 60; i++) {
+					if (i == 0) std::cout << " ";
+					else std::cout << "-";
+				}
+				std::cout << "\n| 0  ";
+				for (int i = 1; i < 20; i++) {
+					std::cout << i << " ";
+					if (i < 9) std::cout << " ";
+				}
+				std::cout << "|\n ";
+				for (int i = 0; i < 59; i++) {
+					std::cout << "-";
+				}
+				std::cout << " ";
+				int last = segTab->at(0)->limit;
+				for (int i = 0; i < last; i++) {
+					if (i == 0) std::cout << "\n| " << pagefile.at(segTab->at(0)->baseVM + i) << "  ";
+					else if (i % 20 == 0) std::cout << "|\n| " << pagefile.at(segTab->at(0)->baseVM + i) << "  ";
+					else if (i % 20 == 19) std::cout << pagefile.at(segTab->at(0)->baseVM + i) << " ";
+					else std::cout << pagefile.at(segTab->at(0)->baseVM + i) << "  ";
+				}
+				std::cout << ">END<";
+				std::cout << " \n\n";
 			}
-			std::cout << "\n| 0  ";
-			for (int i = 1; i < 20; i++) {
-				std::cout << i << " ";
-				if (i < 9) std::cout << " ";
+			else {
+				std::cout << "Segment .data:\n";
+				for (int i = 0; i < 31; i++) {
+					if (i == 0) std::cout << " ";
+					else std::cout << "-";
+				}
+				std::cout << "\n| 0  ";
+				for (int i = 1; i < 10; i++) {
+					std::cout << i << " ";
+					if (i < 9) std::cout << " ";
+				}
+				std::cout << "|\n ";
+				for (int i = 0; i < 30; i++) {
+					std::cout << "-";
+				}
+				std::cout << " ";
+				int last = segTab->at(1)->limit;
+				for (int i = 0; i < last; i++) {
+					if (i == 0) std::cout << "\n| " << pagefile.at(segTab->at(1)->baseVM + i) << "  ";
+					else if (i % 10 == 0) std::cout << "|\n| " << pagefile.at(segTab->at(1)->baseVM + i) << "  ";
+					else if (i % 10 == 9) std::cout << pagefile.at(segTab->at(1)->baseVM + i) << " ";
+					else std::cout << pagefile.at(segTab->at(1)->baseVM + i) << "  ";
+				}
+				std::cout << ">END<";
+				std::cout << " \n\n";
 			}
-			std::cout << "|\n ";
-			for (int i = 0; i < 59; i++) {
-				std::cout << "-";
-			}
-			std::cout << " ";
-			int last = segTab->at(0)->limit;
-			for (int i = 0; i < last; i++) {
-				if (i == 0) std::cout << "\n| " << pagefile.at(segTab->at(0)->baseVM + i) << "  ";
-				else if (i % 20 == 0) std::cout << "|\n| " << pagefile.at(segTab->at(0)->baseVM + i) << "  ";
-				else if (i % 20 == 19) std::cout << pagefile.at(segTab->at(0)->baseVM + i) << " ";
-				else std::cout << pagefile.at(segTab->at(0)->baseVM + i) << "  ";
-			}
-			std::cout << ">END<";
-			std::cout << " \n\n";
-		}
-		else {
-			std::cout << "Segment .data:\n";
-			for (int i = 0; i < 31; i++) {
-				if (i == 0) std::cout << " ";
-				else std::cout << "-";
-			}
-			std::cout << "\n| 0  ";
-			for (int i = 1; i < 10; i++) {
-				std::cout << i << " ";
-				if (i < 9) std::cout << " ";
-			}
-			std::cout << "|\n ";
-			for (int i = 0; i < 30; i++) {
-				std::cout << "-";
-			}
-			std::cout << " ";
-			int last = segTab->at(1)->limit;
-			for (int i = 0; i < last; i++) {
-				if (i == 0) std::cout << "\n| " << pagefile.at(segTab->at(1)->baseVM + i) << "  ";
-				else if (i % 10 == 0) std::cout << "|\n| " << pagefile.at(segTab->at(1)->baseVM + i) << "  ";
-				else if (i % 10 == 9) std::cout << pagefile.at(segTab->at(1)->baseVM + i) << " ";
-				else std::cout << pagefile.at(segTab->at(1)->baseVM + i) << "  ";
-			}
-			std::cout << ">END<";
-			std::cout << " \n\n";
 		}
 	}
 }
