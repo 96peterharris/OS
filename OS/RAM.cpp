@@ -107,7 +107,8 @@ bool Ram::buddy(PCB* pcb, int segment, std::string bytes, int divisionLvl) {
                 blocks[startAddrBlocks+i] = 1;
             }
             if(segment == 2) {
-				(pcb->messages.at(pcb->messages.size() - 1)).RAMadrress = startAddr; return true;
+				(pcb->messages.at(pcb->messages.size() - 1)).RAMadrress = startAddr;
+				return true;
             }
             else {
                 pcb->segTab[segment]->baseRAM = startAddr;
@@ -206,59 +207,65 @@ std::string Ram::readMessage(int ramAddr) {
  * @return true for success or false for failure.
  */
 bool Ram::deleteFromRam(PCB* pcb) {
-
-	//segment 0
 	int blockSize;
 	int numOfBlocks;
-	for (int i = 3; i < 9; i++) {
-		if (std::pow(2, i) >= pcb->segTab[0]->limit) {
-			blockSize = std::pow(2, i);
-			numOfBlocks = blockSize / 8;
-			break;
-		}
-	}
-
-	int firstBlock = pcb->segTab[0]->baseRAM / 8;
-
-	for (int i = firstBlock; i < numOfBlocks + firstBlock; i++) {
-		blocks[i] = 0;
-		for (int j = 0; j < 8; j++) {
-			ram[i * 8 + j] = ' ';
-		}
-	}
-	//segment 1
-	if (pcb->segTab.size() == 2) {
+	int firstBlock;
+	if (isInRam(pcb, 0)) {
+		//segment 0
+		
 		for (int i = 3; i < 9; i++) {
-			if (std::pow(2, i) >= pcb->segTab[1]->limit) {
+			if (std::pow(2, i) >= pcb->segTab[0]->limit) {
 				blockSize = std::pow(2, i);
 				numOfBlocks = blockSize / 8;
 				break;
 			}
 		}
 
-		firstBlock = pcb->segTab[1]->baseRAM / 8;
+		firstBlock = pcb->segTab[0]->baseRAM / 8;
 
-
-		//update
-		if (pcb->getState() == WAITING) {
-			std::string bytes;
-			for (int i = firstBlock; i < numOfBlocks + firstBlock; i++) {
-				for (int j = 0; j < 8; j++) {
-					bytes.push_back(i * 8 + j);
-				}
-			}
-			System::VM.loadToVM(pcb, bytes);
-		}
-
-		//segment 1
 		for (int i = firstBlock; i < numOfBlocks + firstBlock; i++) {
 			blocks[i] = 0;
 			for (int j = 0; j < 8; j++) {
 				ram[i * 8 + j] = ' ';
 			}
 		}
-		pcb->segTab[1]->vi = 0;
 	}
+		//segment 1
+	if (pcb->segTab.size() == 2) {
+		if (isInRam(pcb, 1)) {
+			for (int i = 3; i < 9; i++) {
+				if (std::pow(2, i) >= pcb->segTab[1]->limit) {
+					blockSize = std::pow(2, i);
+					numOfBlocks = blockSize / 8;
+					break;
+				}
+			}
+
+			firstBlock = pcb->segTab[1]->baseRAM / 8;
+
+
+			//update
+			if (pcb->getState() == WAITING) {
+				std::string bytes;
+				for (int i = firstBlock; i < numOfBlocks + firstBlock; i++) {
+					for (int j = 0; j < 8; j++) {
+						bytes.push_back(i * 8 + j);
+					}
+				}
+				System::VM.loadToVM(pcb, bytes);
+			}
+
+			//segment 1
+			for (int i = firstBlock; i < numOfBlocks + firstBlock; i++) {
+				blocks[i] = 0;
+				for (int j = 0; j < 8; j++) {
+					ram[i * 8 + j] = ' ';
+				}
+			}
+			pcb->segTab[1]->vi = 0;
+		}
+	}
+	if (isInRam(pcb, 0))
 	pcb->segTab[0]->vi = 0;
 	return 1;
 }

@@ -19,6 +19,7 @@ bool PCB::sendMessage(std::string pid_receiver, std::string content) {
 	Message temp = Message(this->pid, content);
 
 	if (receiver != nullptr) {
+		
 		receiver->messages.push_back(temp);
 
 		if (!System::RAM.loadToRam(receiver, prepareMessage(temp), 2)) return false;
@@ -39,9 +40,8 @@ bool PCB::receiveMessage() {
 
 	if (messages.empty()) {
 		//semaphore action
-		if (pSem.wait_sem(this->pid))
-			return true;
-		return false;
+		pSem.wait_sem(this->pid);
+		return true;
 	}
 
 	//trying receivin from PCB
@@ -51,7 +51,7 @@ bool PCB::receiveMessage() {
 	Message RAM_received;
 	RAM_received.RAMtoMessage(System::RAM.readMessage(received.RAMadrress));
 	RAM_received.RAMadrress = received.RAMadrress;		
-	received.content = System::RAM.readMessage(received.RAMadrress);
+	//received.content = System::RAM.readMessage(received.RAMadrress);
 
 		//comparing if RAM values and object values are similar
 		if (!(received == RAM_received)) return false;
@@ -67,7 +67,7 @@ bool PCB::receiveMessage() {
 }
 
 
-bool showMessages(PCB* pcb) {
+bool PCB::showMessages(PCB* pcb) {
 
 	if (pcb == nullptr) return false;
 	for (auto mess : pcb->messages) {
@@ -93,14 +93,16 @@ bool Message::RAMtoMessage(std::string RAMbytes) {
 	//
 
 	//setting parameters based on RAM
-	(RAM_received).pid_sender.push_back(RAMbytes.at(0) + RAMbytes.at(1));
+	
+	this->pid_sender.push_back(RAMbytes.at(0));
+	this->pid_sender.push_back(RAMbytes.at(1));
 	for (int i = 3; i < RAMbytes.size(); i++) {
-		(RAM_received).pid_sender.push_back(RAMbytes.at(i));
+		this->content.push_back(RAMbytes.at(i));
 	}
-	(RAM_received).size = (RAM_received).content.size();
+	this->size = this->content.size();
 	//(RAM_received).RAMadrress = (received).RAMadrress;
 	//
-
+	
 
 	return true;
 }

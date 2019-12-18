@@ -685,3 +685,10 @@ void Filesystem::printqueue(string &filename)
 		}
 	}
 }
+
+char Filesystem::readCharFile(const string &filename, int i)
+{
+	string tmp = "";
+	readFile(filename, 996, tmp);
+	return tmp.at(i);
+}

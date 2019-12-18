@@ -3,7 +3,7 @@
 
 /**
 * Rises the semaphore value and if possible removes the longest waiting process from queue and changes its state to ready.
-* @return true if proces state was changed to waiting or false if not.
+* @return true if no problem was found or false if the proces counldn't change the state but it should.
 */
 bool Semaphore::signal_sem() {
 	value++;
@@ -14,13 +14,13 @@ bool Semaphore::signal_sem() {
 		if (PCB::resumeProcess(pcbid)) return true;
 		else return false;
 	}
-	return false;
+	return true;
 }
 
 /**
 * Lowers the semaphore value and if it is lower or equal to 0 it pushes the PID into the waiting queue chainging this proces state to waiting.
 * @param pcbid takes the PID of the running proces.
-* @return true if no problem was found or false if the proces counldn't change the state but it should.
+* @return true if proces state was changed to waiting or false if not.
 */
 bool Semaphore::wait_sem(std::string pcbid) {
 	if (value <= 0) {
@@ -31,7 +31,7 @@ bool Semaphore::wait_sem(std::string pcbid) {
 	}
 	else {
 		value--;
-		return true;
+		return false;
 	}
 }
 
