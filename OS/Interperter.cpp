@@ -133,33 +133,33 @@ bool interprate(PCB *pcb) {
 	else if (command == "CL")
 	{
 		args = getArgs(pcb, 1, takenBytes);
-		ret = System::FS.closeFile(args[0]);
+		ret = System::FS.closeFile(args[0], pcb->getPid());
 	}
 	else if (command == "DF")
 	{
 		args = getArgs(pcb, 1, takenBytes);
-		ret = System::FS.deleteFile(args[0]);
+		ret = System::FS.deleteFile(args[0],pcb->getPid());
 	}
 	else if (command == "OP")
 	{
 		args = getArgs(pcb, 1, takenBytes);
-		ret = System::FS.openFile(args[0]);
+		ret = System::FS.openFile(args[0],pcb->getPid());
 	}
 	else if (command == "OW")
 	{
 		args = getArgs(pcb, 2, takenBytes);
-		ret = System::FS.overwriteFile(args[0], args[1]);
+		ret = System::FS.overwriteFile(args[0], args[1], pcb->getPid());
 	}
 	else if (command == "NF")
 	{
 		args = getArgs(pcb, 2, takenBytes);
-		ret = System::FS.renameFile(args[0], args[1]);
+		ret = System::FS.renameFile(args[0], args[1], pcb->getPid());
 	}
 	else if (command == "WF")
 	{
 		args = getArgs(pcb, 1, takenBytes);
 		std::string tmp = "";
-		ret = System::FS.writeToFile(args[0], tmp += pcb->getRegister().getD());
+		ret = System::FS.writeToFile(args[0], tmp += pcb->getRegister().getD(), pcb->getPid());
 	}
 	else if (command == "RF")
 	{

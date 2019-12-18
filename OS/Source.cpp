@@ -44,4 +44,11 @@ int main() {
 
 
 	}
+	System::FS.deleteFile("fil");
+
+	System::FS.displaycatalogue();
+	System::FS.displaydrivecontent();
+	System::FS.displayoft();
+	System::FS.displayvector();
+
 }

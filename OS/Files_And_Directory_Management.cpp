@@ -896,7 +896,7 @@ bool Filesystem::deleteFile(const string &filename)
 			//USUWA W WEKTORZE
 		}
 		blockTable[tempfile.adres] = false;//ZWOLNIENIE BLOKU DYSKOWEGO
-		//maincatalogue[at].sem.delete_sem();//ZWALNIAM KOLEJKÊ
+		maincatalogue[at].sem.delete_sem();//ZWALNIAM KOLEJKÊ
 		maincatalogue.erase(maincatalogue.begin() + at);
 		openfiletable.erase(filename);
 		return true;
@@ -954,7 +954,7 @@ bool Filesystem::deleteFile(const string &filename, const string &pid)
 			//USUWA W WEKTORZE
 		}
 		blockTable[tempfile.adres] = false;//ZWOLNIENIE BLOKU DYSKOWEGO
-		//maincatalogue[at].sem.delete_sem();//ZWALNIAM KOLEJKÊ
+		maincatalogue[at].sem.delete_sem();//ZWALNIAM KOLEJKÊ
 		maincatalogue.erase(maincatalogue.begin() + at);
 		openfiletable.erase(filename);
 	}
