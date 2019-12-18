@@ -43,38 +43,38 @@ public:
 	//TD
 	//READFILE
 	//OGARN¥Æ DOBRZE SPRAWDZANIE CZY WGL JEST TYLE MIEJSCA
-	bool openFile(const string &filename, const string &pid);//DZIA£A
-	bool openFile(const string &filename);//DZIA£A
+	bool openFile(const string &filename, const string &pid);
+	bool openFile(const string &filename);
 
-	bool closeFile(const string &filename, const string &pid);//DZIA£A
-	bool closeFile(const string &filename);//DZIA£A
+	bool closeFile(const string &filename, const string &pid);
+	bool closeFile(const string &filename);
 
-	bool deleteFile(const string &filename, const string &pid); //NIE DZIA£A
+	bool deleteFile(const string &filename, const string &pid); 
 	bool deleteFile(const string &filename);
 
-	bool overwriteFile(const string &filename, const string &content, const string &pid);//DZIA£A
-	bool overwriteFile(const string &filename, const string &content);//DZIA£A
+	bool overwriteFile(const string &filename, const string &content, const string &pid);
+	bool overwriteFile(const string &filename, const string &content);
 
-	bool writeToFile(const string &filename, const string &content, const string &pid);//DZIA£A
-	bool writeToFile(const string &filename, const string &content);//DZIA£A
+	bool writeToFile(const string &filename, const string &content, const string &pid);
+	bool writeToFile(const string &filename, const string &content);
 
-	bool verify(const string &filename);//DZIA£a
+	bool verify(const string &filename);
 
-	bool readFile(const string &filename, const string &pid, int length, string &content);//zobaczymy
-	bool readFile(const string &filename, int length, string &content);//zobaczymy
+	bool readFile(const string &filename, const string &pid, int length, string &content);
+	bool readFile(const string &filename, int length);
 
-	bool renameFile(const string &filename, const string  &newfilename, const string &pid);//DZIA£A
-	bool renameFile(const string &filename, const string  &newfilename);//DZIA£A
+	bool renameFile(const string &filename, const string  &newfilename, const string &pid);
+	bool renameFile(const string &filename, const string  &newfilename);
 
-	bool createFile(const string &filename);//DZIA£a
-	bool fileExists(const string &filename);//DZIA£a
-	int countFreeBlocks(std::bitset<Drive::blocks> &bt);//DZIA£a
+	bool createFile(const string &filename);
+	bool fileExists(const string &filename);
+	int countFreeBlocks(std::bitset<Drive::blocks> &bt);
 
 
-	int findFreeBlock(std::bitset<Drive::blocks> &bt);//DZIA£a
+	int findFreeBlock(std::bitset<Drive::blocks> &bt);
 	int hireFreeBlock(std::bitset<Drive::blocks> &bt);
 
-	void displaycatalogue();//DZIA£A
+	void displaycatalogue();
 	void stats();//DZIA£a
 	void displayoft();//DZIA£A
 	void displayvector();//DZIA£A

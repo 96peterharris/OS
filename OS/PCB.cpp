@@ -191,7 +191,7 @@ void PCB::printMap() {
 	std::cout << "\n=====================================================================================================\n";
 }
 
-void printSemQueue(std::string pid) {
+void PCB::printSemQueue(std::string pid) {
 	PCB* tPCB = PCB::getPCB(pid);
 	tPCB->pSem.print_queue();
 }
