@@ -170,9 +170,11 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="fe" />
+    <Text Include="fl" />
     <Text Include="SM_AB" />
     <Text Include="si" />
     <Text Include="pr2" />
+    <Text Include="pr3" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

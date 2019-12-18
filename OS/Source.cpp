@@ -3,22 +3,31 @@
 int main() {
 	PCB::createDummy();
 	System::CPU.cpu_sch();
-
-	PCB::createProcess("pr", "pr2", 2);
-	//PCB::createProcess("p4", "si", 6);
-	//PCB::printMap();
-	//PCB::update();
-	std::cout << std::endl;
 	
-	for (int i = 0; i < 50; i++)
+	PCB::createProcess("pr", "pr2", 8);
+	
+	for (int i = 0; i < 100; i++)
 	{
-		System::CPU.displayRunning();
-		System::CPU.displayPCBqueue();
+		std::cout << "\n" << "_____________________________________\t" << "i = " << i << "\t_____________________________________" << std::endl;
+		
 		System::CPU.nextStep();
-		std::cout << "\n" << "_____________________________________" << std::endl;
-		if (i > 9) {
-			System::VM.printPCBsegTab("pr");
-			System::RAM.printAllRam();
-		}
+		
+		PCB::printMap();
+		
+		std::cout << "\n\n";
+		/*
+		
+		System::VM.printVM();
+		System::VM.printVMsegTab();
+
+		System::RAM.printAllRam();
+		
+		System::FS.displaycatalogue();
+		System::FS.displaydrivecontent();
+		System::FS.displayoft();
+		System::FS.displayvector();
+		*/
+
+
 	}
 }

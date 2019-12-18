@@ -103,6 +103,7 @@ public:
 	static void printPCB(std::string pid);
 	static void printMap();
 	static void printReadyQueue();
+	static void printSemQueue(std::string pid);
 
 	//To IPC work
 
