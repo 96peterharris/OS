@@ -9,9 +9,7 @@
 #include "Drive.hpp"
 #include "Sync_Mech.hpp"
 
-//SEMAFOR W PLIKU COŒ DZIA£A
-//CZY MOGÊ ZAMIAST ZNAKU ODPOWIADAJ¥CEGO NUMEROWI BLOKU WYŒWIETLAÆ NUMER TEGO BLOKU PRZY WYŒWIETLANIU DYSKU?
-//SKORO MAMY WSKAZYWAÆ NA Nastêpne pole do zapisu, to co wtedy gdy ostatnie zapisane pole bêdzie ostatnim polem bloku?
+
 class Filesystem
 {
 
@@ -40,16 +38,14 @@ class Filesystem
 	};
 public:
 	Filesystem() {}
-	//TD
-	//READFILE
-	//OGARN¥Æ DOBRZE SPRAWDZANIE CZY WGL JEST TYLE MIEJSCA
+
 	bool openFile(const string &filename, const string &pid);
 	bool openFile(const string &filename);
 
 	bool closeFile(const string &filename, const string &pid);
 	bool closeFile(const string &filename);
 
-	bool deleteFile(const string &filename, const string &pid); 
+	bool deleteFile(const string &filename, const string &pid);
 	bool deleteFile(const string &filename);
 
 	bool overwriteFile(const string &filename, const string &content, const string &pid);
@@ -59,6 +55,7 @@ public:
 	bool writeToFile(const string &filename, const string &content);
 
 	bool verify(const string &filename);
+	bool guiverify(const string &filename);
 
 	bool readFile(const string &filename, const string &pid, int length, string &content);
 	bool readFile(const string &filename, int length);
@@ -75,18 +72,17 @@ public:
 	int hireFreeBlock(std::bitset<Drive::blocks> &bt);
 
 	void displaycatalogue();
-	void stats();//DZIA£a
-	void displayoft();//DZIA£A
-	void displayvector();//DZIA£A
-	void displayblock(int block);//DZIA£A
-	void displaydrivecontent();//DZIA£A
+	void stats();
+	void displayoft();
+	void displayvector();
+	void displayblock(int block);
+	void displaydrivecontent();//USELESS
 	void printqueue(string &name);
-	
-	std::vector<File> maincatalogue;
 private:
 	Drive maindrive;
 	std::bitset<Drive::blocks> blockTable;
 	//MAPA Z NAZW¥ PLIKU I PID
 	std::map <string, string>  openfiletable;
 
+	std::vector<File> maincatalogue;
 };
