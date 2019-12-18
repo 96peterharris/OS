@@ -31,7 +31,6 @@ bool Filesystem::fileExists(const string &filename)
 }
 bool Filesystem::createFile(const string &filename)
 {
-
 	if (fileExists(filename))
 	{
 		std::cout << "E001:Plik o podanej nazwie juz istnieje" << std::endl;;
@@ -39,8 +38,7 @@ bool Filesystem::createFile(const string &filename)
 	}
 	else
 	{
-		//Tworzenie pliku
-		//Jeœli mamy 0 lub 1 wolny blok to odrzuca operacjê gdy¿ przy tworzeniu pliku potrzebujemy przynajmniej 2 wolne bloki 
+		//Tworzenie pliku		
 		if (countFreeBlocks(blockTable) < 2)
 		{
 			std::cout << "E002:Za malo miejsca na dysku" << std::endl;;
@@ -60,7 +58,6 @@ bool Filesystem::createFile(const string &filename)
 			maincatalogue.push_back(tempfile);
 		}
 		return true;
-
 	}
 }
 //ZLICZANIE WOLNYCH BLOKÓW//DZIA£A
@@ -83,9 +80,6 @@ int Filesystem::hireFreeBlock(std::bitset<Drive::blocks> &bt) //"ZATRUDNIANIE" W
 		return bn;
 	}
 	return -1;
-
-	//std::cout << "Rezerwuje:" << bn << std::endl;
-
 }
 //WYŒWIETLA STATYSTYKI//DZIA£A
 void Filesystem::stats()
@@ -108,8 +102,7 @@ bool Filesystem::openFile(const string &filename, const string &pid)
 		{
 			if (maincatalogue[i].name == filename)
 			{
-
-				maincatalogue[i].sem.wait_sem(pid);
+				//maincatalogue[i].sem.wait_sem(pid);
 				maincatalogue[i].isOpen = true;
 				openfiletable.insert(std::pair <string, string>(filename, pid));
 				return true;
@@ -122,8 +115,6 @@ bool Filesystem::openFile(const string &filename, const string &pid)
 		std::cout << "E006:Plik o podanej nazwie nie istnieje" << std::endl;
 		return false;
 	}
-
-	
 }
 //USUWA PLIK Z TABLICY OTWARTYCH PLIKÓW
 bool Filesystem::closeFile(const string &filename)
@@ -151,12 +142,8 @@ bool Filesystem::closeFile(const string &filename, const string &pid)
 					std::cout << "E009:Plik nie jest otwarty" << std::endl;
 					return false;
 				}
-
-
-
 			}
 		}
-
 	}
 	else
 	{
@@ -172,7 +159,6 @@ bool Filesystem::renameFile(const string &filename, const string &newfilename, c
 {
 	if (verify(filename))
 	{
-
 		if (fileExists(newfilename))
 		{
 			std::cout << "Plik o nazwie docelowej juz istnieje";
@@ -184,17 +170,13 @@ bool Filesystem::renameFile(const string &filename, const string &newfilename, c
 			{
 				if (maincatalogue[i].name == filename)
 				{
-
 					File tempfile = maincatalogue[i];
 					tempfile.name = newfilename;
 					maincatalogue.erase(maincatalogue.begin() + (i));
-
 					maincatalogue.push_back(tempfile);
 				}
 			}
-
 			return true;
-
 		}
 	}
 	return false;
@@ -208,7 +190,6 @@ bool Filesystem::overwriteFile(const string &filename, const string &content, co
 {
 	if (verify(filename))
 	{
-
 		int indexblock;
 		File tempfile;
 		int at;
@@ -237,10 +218,8 @@ bool Filesystem::overwriteFile(const string &filename, const string &content, co
 		//	std::cout << content.size()/32+1 << "-To wymagane bloki" << (countFreeBlocks(blockTable) + b);
 		if (((content.length() / 32) + 1) > (countFreeBlocks(blockTable) + b))
 		{
-
 			std::cout << "E007:Za malo miejsca na dysku" << std::endl;
 			return false;
-
 		}
 
 		//USUWANIE DANYCH
@@ -262,13 +241,8 @@ bool Filesystem::overwriteFile(const string &filename, const string &content, co
 				maindrive.drivespace[i + indexblock] = 0; //USUWA BLOK Z BLOKU INDEKSOWEGO
 				//USUWA W WEKTORZE
 			}
-
-
 		}
-
-
-		int g;
-
+	//	int g;
 		std::vector<int> blockvector;
 		int rozmiar = content.size();
 		for (int i = 0; i < ((rozmiar + 1) / 32)+1; i++)//Rezerwacja bloków danych i przypisanie do bloku indeksowego 
@@ -277,7 +251,7 @@ bool Filesystem::overwriteFile(const string &filename, const string &content, co
 			if (f != -1)
 			{
 				blockvector.push_back(f * 32);
-				g = f * 32;//ZAPISUJE ADRESY BLOKÓW DANYCH DO ZAPISU
+		//		g = f * 32;//ZAPISUJE ADRESY BLOKÓW DANYCH DO ZAPISU
 				maindrive.drivespace[indexblock + i] = f;
 			}
 			else
@@ -285,10 +259,7 @@ bool Filesystem::overwriteFile(const string &filename, const string &content, co
 				std::cout << "E001:ZA MALO MIEJSCA NA DYSKU";
 				return false;
 			}
-
-
 		}
-
 		std::vector <char> towrite;
 		std::copy(content.begin(), content.end(), std::back_inserter(towrite));
 		int j = 0;
@@ -326,10 +297,6 @@ bool Filesystem::overwriteFile(const string &filename, const string &content, co
 
 		maincatalogue[at].towrite = ij + a + 1;
 		//ZAPIS DANYCH DO BLOKÓW
-
-
-
-
 	}
 	return true;
 }
@@ -341,17 +308,13 @@ bool Filesystem::writeToFile(const string &filename, const string &content, cons
 {
 	if (verify(filename))
 	{
-
-
 		int rozmiar = content.length();
 		//std::cout << "\nRozmiar Pliku:" << rozmiar << std::endl;
 		if (((rozmiar / 32)) > countFreeBlocks(blockTable))
 		{
 			std::cout << "E003:Za malo miejsca na dysku" << std::endl;
 			return false;
-
 		}
-
 		//std::cout << "zapisuje do pliku";
 		//ADRES BLOKU INDEKSOWEGO 
 		int blokindeksowy;
@@ -394,7 +357,6 @@ bool Filesystem::writeToFile(const string &filename, const string &content, cons
 			{
 				maindrive.drivespace[blokindeksowy + i + 1] = f;
 			}
-
 		}
 		std::vector <char> towrite;
 		int  it;
@@ -428,16 +390,11 @@ bool Filesystem::writeToFile(const string &filename, const string &content, cons
 
 							break;
 						}
-
 					}
 					placetowrite = 32 * blokidanych[jmp];
-					//	std::cout << "ZAPIS NA:" << placetowrite;
 				}
 				//Przesuwamy siê do nastêpnego bloku dyskowego
-				//placetowrite ==  maindrive.drivespace[lastusedindex-1];
 			}
-			//	std::cout << placetowrite-1<<" ";
-
 		}
 		maincatalogue[at].towrite = placetowrite;
 		return true;
@@ -515,8 +472,6 @@ bool Filesystem::readFile(const string &filename, const string &pid, int length,
 					break;
 				}
 			}
-
-
 		}
 		content = tempstr;
 		maincatalogue[at].toread = read;
@@ -566,8 +521,6 @@ bool Filesystem::deleteFile(const string &filename, const string &pid)
 		int b = 0;
 		for (int i = 0; i < removalvector.size(); i++)
 		{
-
-
 			int blocknumber = removalvector[i]; //Numer obecnie usuwanego bloku dyskowego
 			int currentblock = 32 * blocknumber;//Adres tego bloku
 			for (int j = 31; j > -1; j--)
@@ -577,9 +530,6 @@ bool Filesystem::deleteFile(const string &filename, const string &pid)
 			blockTable[blocknumber] = false;//PO WYZEROWANIU DANYCH BLOK JEST ZWALNIANY
 			maindrive.drivespace[i + indexblock] = 0; //W BLOKU INDEKSOWYM USUWAMY BLOK DYSKOWY
 			//USUWA W WEKTORZE
-
-
-
 		}
 		blockTable[tempfile.adres] = false;//ZWOLNIENIE BLOKU DYSKOWEGO
 		maincatalogue[at].sem.delete_sem();//ZWALNIAM KOLEJKÊ
@@ -589,7 +539,6 @@ bool Filesystem::deleteFile(const string &filename, const string &pid)
 
 	return true;
 }
-
 bool Filesystem::verify(const string &filename)
 {
 	if (!fileExists(filename))
@@ -614,12 +563,9 @@ bool Filesystem::verify(const string &filename)
 					return false;
 				}
 			}
-
 		}
-
 	}
 }
-
 void Filesystem::displaydrivecontent()
 {
 	std::cout << std::endl;
@@ -647,8 +593,9 @@ void Filesystem::displayoft()
 }
 void Filesystem::displayvector()
 {
+	std::cout << "Wektor blokow:\n";
 	for (int i = 0; i < blockTable.size(); i++)
-		std::cout << blockTable[i];
+		std::cout << blockTable[i]<<" " ;
 }
 void Filesystem::displayblock(int block)
 {
