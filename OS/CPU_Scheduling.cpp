@@ -54,7 +54,7 @@ void CPU_Scheduling::getProcesses()
 */
 void CPU_Scheduling::cpu_sch()
 {
-	if (running != nullptr) 
+	if (running != nullptr) //This part is using in other situations
 	{
 		if (running->state == RUNNING)
 		{
