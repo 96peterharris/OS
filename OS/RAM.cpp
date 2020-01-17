@@ -108,6 +108,7 @@ bool Ram::buddy(PCB* pcb, int segment, std::string bytes, int divisionLvl) {
             }
             if(segment == 2) {
 				(pcb->messages.at(pcb->messages.size() - 1)).RAMadrress = startAddr;
+				ok = true;
 				return true;
             }
             else {
@@ -119,7 +120,7 @@ bool Ram::buddy(PCB* pcb, int segment, std::string bytes, int divisionLvl) {
     }
     else{
         divisionLvl++;
-        buddy(pcb, segment, bytes, divisionLvl);
+        return buddy(pcb, segment, bytes, divisionLvl);
     }
 }
 

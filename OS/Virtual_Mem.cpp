@@ -216,14 +216,13 @@ bool Virtual_Mem::deleteProg(PCB *pcb)
 	auto segTab = pcb->getSegTab();
 	size_t size = segTab->size();
 	for (int i = 0; i < size; i++) { //for every segment (.text, .data)
-		SegmentVM segment = pfSegTab.at(i);
 		for (int k = 0; k < pfSegTab.size(); k++) {
+			SegmentVM segment = pfSegTab.at(k);
 			if (segment.base == segTab->at(i)->baseVM && segment.limit == segTab->at(i)->limit) {
 				pfSegTab.erase(pfSegTab.begin() + k);
 				segTab->erase(segTab->begin() + i);
 				i--;
 				size--;
-				std::cout << ":c";
 				break;
 			}
 		}
@@ -402,24 +401,34 @@ void Virtual_Mem::printVM()
 
 	std::cout << "Pagefile bytes:\n";
 	for (int i = 0; i < 90; i++) {
-		if (i == 0) std::cout << " ";
+		if (i == 0) std::cout << "     ";
 		else std::cout << "-";
 	}
-	std::cout << "\n| 0  ";
+	std::cout << "\n    | 0  ";
 	for (int i = 1; i < 30; i++) {
 		std::cout << i << " ";
 		if (i < 9) std::cout << " ";
 	}
-	std::cout << "|\n ";
+	std::cout << "|\n     ";
 	for (int i = 0; i < 89; i++) {
 		std::cout << "-";
 	}
 	std::cout << " ";
 	for (int i = 0; i < last; i++) {
-		if (i == 0) std::cout << "\n| " << pagefile.at(i) << "  ";
-		else if (i % 30 == 0) std::cout << "|\n| " << pagefile.at(i) << "  ";
-		else if (i % 30 == 29) std::cout << pagefile.at(i) << " ";
-		else std::cout << pagefile.at(i) << "  ";
+		char sign = pagefile.at(i);
+		if (sign == 8) sign = ' ';
+		if (i == 0) {
+			std::cout << "\n   0| " << sign << "  ";
+		}
+		else if (i % 30 == 0) {
+			std::cout << "|\n";
+			if (i < 10) std::cout << "   ";
+			else if (i < 100) std::cout << "  ";
+			else if (i < 1000) std::cout << " ";
+			std::cout << i << "| " << sign << "  ";
+		}
+		else if (i % 30 == 29) std::cout << sign << " ";
+		else std::cout << sign << "  ";
 	}
 	std::cout << " \n\n";
 }

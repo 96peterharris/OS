@@ -189,7 +189,7 @@ bool interprate(PCB *pcb) {
 	for (auto v : args) {
 		std::cout << " " << v;
 	}
-	
+	std::cout << "\n";
 	return ret;
 }
 

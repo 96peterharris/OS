@@ -24,18 +24,19 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>OS</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <ProjectName>OS</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -98,12 +99,16 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>
+      </PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)\SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
+      <AdditionalLibraryDirectories>$(ProjectDir)\SFML\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-system-d.lib;sfml-audio-d.lib;sfml-window-d.lib;sfml-graphics-d.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -128,55 +133,139 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SFML_STATIC</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
+      <AdditionalLibraryDirectories>D:\SFML\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-system.lib;sfml-audio.lib;sfml-window.lib;sfml-graphics.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="arythmetics.hpp" />
-    <ClInclude Include="CPU_Scheduling.hpp" />
-    <ClInclude Include="Drive.hpp" />
-    <ClInclude Include="Files_And_Directory_Management.hpp" />
-    <ClInclude Include="GUI.hpp" />
-    <ClInclude Include="Headers.h" />
-    <ClInclude Include="Interpreter.hpp" />
-    <ClInclude Include="Interprocess_Com.hpp" />
-    <ClInclude Include="jumps.hpp" />
-    <ClInclude Include="PCB.hpp" />
-    <ClInclude Include="RAM.hpp" />
-    <ClInclude Include="Register.hpp" />
-    <ClInclude Include="State.hpp" />
-    <ClInclude Include="Sync_Mech.hpp" />
-    <ClInclude Include="Virtual_Mem.hpp" />
-  </ItemGroup>
-  <ItemGroup>
+    <ClCompile Include="Button.cpp" />
+    <ClCompile Include="CommunicationState.cpp" />
+    <ClCompile Include="ControlPanelState.cpp" />
     <ClCompile Include="CPU_Scheduling.cpp" />
+    <ClCompile Include="CreateFileInput.cpp" />
+    <ClCompile Include="CreateProcessInput.cpp" />
+    <ClCompile Include="DeleteFileInput.cpp" />
+    <ClCompile Include="DeleteProcessInput.cpp" />
+    <ClCompile Include="DiscBlockInput.cpp" />
+    <ClCompile Include="DiscQueueInput.cpp" />
+    <ClCompile Include="DiscState.cpp" />
+    <ClCompile Include="FileManagerState.cpp" />
     <ClCompile Include="Files_And_Directory_Management.cpp" />
-    <ClCompile Include="GUI.cpp" />
     <ClCompile Include="Headers.cpp" />
+    <ClCompile Include="HelpState.cpp" />
+    <ClCompile Include="InitState.cpp" />
+    <ClCompile Include="InputField.cpp" />
     <ClCompile Include="Interperter.cpp" />
     <ClCompile Include="Interprocess_Com.cpp" />
+    <ClCompile Include="IPCSendInput.cpp" />
+    <ClCompile Include="IPCShowMessageInput.cpp" />
+    <ClCompile Include="LoadingState.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MainMenuState.cpp" />
+    <ClCompile Include="OverwriteFileInput.cpp" />
     <ClCompile Include="PCB.cpp" />
+    <ClCompile Include="PCBInput.cpp" />
+    <ClCompile Include="PCBSegmentsInput.cpp" />
+    <ClCompile Include="PCBSegTabInput.cpp" />
+    <ClCompile Include="PCBSemInput.cpp" />
+    <ClCompile Include="ProcessesManagementState.cpp" />
+    <ClCompile Include="ProcessSchedulingState.cpp" />
+    <ClCompile Include="ProgramsState.cpp" />
     <ClCompile Include="RAM.cpp" />
-    <ClCompile Include="Source.cpp" />
+    <ClCompile Include="RAMInput.cpp" />
+    <ClCompile Include="RAMMessageInput.cpp" />
+    <ClCompile Include="RAMProcessInput.cpp" />
+    <ClCompile Include="RAMSegmentInput.cpp" />
+    <ClCompile Include="RAMState.cpp" />
+    <ClCompile Include="ReadInput.cpp" />
+    <ClCompile Include="RenameFileInput.cpp" />
+    <ClCompile Include="Shell.cpp" />
+    <ClCompile Include="GUIState.cpp" />
     <ClCompile Include="Sync_Mech.cpp" />
+    <ClCompile Include="TimeBar.cpp" />
     <ClCompile Include="Virtual_Mem.cpp" />
+    <ClCompile Include="VMState.cpp" />
+    <ClCompile Include="WriteFileInput.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="fe" />
-    <Text Include="fl" />
-    <Text Include="tp" />
-    <Text Include="SM_AB" />
-    <Text Include="si" />
-    <Text Include="pr2" />
-    <Text Include="pr3" />
-    <Text Include="ZS" />
+    <ClInclude Include="arythmetics.hpp" />
+    <ClInclude Include="Button.h" />
+    <ClInclude Include="CommunicationState.h" />
+    <ClInclude Include="ControlPanelState.h" />
+    <ClInclude Include="CPU_Scheduling.hpp" />
+    <ClInclude Include="CreateFileInput.h" />
+    <ClInclude Include="CreateProcessInput.h" />
+    <ClInclude Include="DeleteFileInput.h" />
+    <ClInclude Include="DeleteProcessInput.h" />
+    <ClInclude Include="DiscBlockInput.h" />
+    <ClInclude Include="DiscQueueInput.h" />
+    <ClInclude Include="DiscState.h" />
+    <ClInclude Include="Drive.hpp" />
+    <ClInclude Include="FileManagerState.h" />
+    <ClInclude Include="Files_And_Directory_Management.hpp" />
+    <ClInclude Include="Headers.h" />
+    <ClInclude Include="HelpState.h" />
+    <ClInclude Include="InitState.h" />
+    <ClInclude Include="InputField.h" />
+    <ClInclude Include="Interpreter.hpp" />
+    <ClInclude Include="Interprocess_Com.hpp" />
+    <ClInclude Include="IPCSendInput.h" />
+    <ClInclude Include="IPCShowMessageInput.h" />
+    <ClInclude Include="jumps.hpp" />
+    <ClInclude Include="LoadingState.h" />
+    <ClInclude Include="MainMenuState.h" />
+    <ClInclude Include="OverwriteFileInput.h" />
+    <ClInclude Include="PCB.hpp" />
+    <ClInclude Include="PCBInput.h" />
+    <ClInclude Include="PCBSegmentsInput.h" />
+    <ClInclude Include="PCBSegTabInput.h" />
+    <ClInclude Include="PCBSemInput.h" />
+    <ClInclude Include="ProcessesManagementState.h" />
+    <ClInclude Include="ProcessSchedulingState.h" />
+    <ClInclude Include="ProgramsState.h" />
+    <ClInclude Include="RAM.hpp" />
+    <ClInclude Include="RAMInput.h" />
+    <ClInclude Include="RAMMessageInput.h" />
+    <ClInclude Include="RAMProcessInput.h" />
+    <ClInclude Include="RAMSegmentInput.h" />
+    <ClInclude Include="RAMState.h" />
+    <ClInclude Include="ReadInput.h" />
+    <ClInclude Include="Register.hpp" />
+    <ClInclude Include="RenameFileInput.h" />
+    <ClInclude Include="Shell.h" />
+    <ClInclude Include="GUIState.h" />
+    <ClInclude Include="State.hpp" />
+    <ClInclude Include="Sync_Mech.hpp" />
+    <ClInclude Include="TimeBar.h" />
+    <ClInclude Include="Virtual_Mem.hpp" />
+    <ClInclude Include="VMState.h" />
+    <ClInclude Include="WriteFileInput.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="a1" />
+    <None Include="a2" />
+    <None Include="aa" />
+    <None Include="fe" />
+    <None Include="fl" />
+    <None Include="ks" />
+    <None Include="pr" />
+    <None Include="pr2" />
+    <None Include="pr3" />
+    <None Include="rm" />
+    <None Include="si" />
+    <None Include="SM" />
+    <None Include="SM_AB" />
+    <None Include="tp" />
+    <None Include="ZS" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

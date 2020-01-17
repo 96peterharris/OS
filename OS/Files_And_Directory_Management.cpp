@@ -1,7 +1,9 @@
 //Krzysio
 #include "Files_And_Directory_Management.hpp"
 #include "CPU_Scheduling.hpp"
-
+//USUWANIE CLOSE I OPENFILE W READ DLA GUI
+//USUWANIE W OPENFILE DLA GUI DODAWANIA PLIKU DO TABLICY PLIKÓW i w zamykaniu usunieto usuwanie z OFT
+//RENAME FILE
 #include "Headers.h"
 int Filesystem::findFreeBlock(std::bitset<Drive::blocks> &bt)
 {
@@ -100,7 +102,7 @@ bool Filesystem::openFile(const string &filename)
 
 				//maincatalogue[i].sem.wait_sem(pid);
 				maincatalogue[i].isOpen = true;
-				openfiletable.insert(std::pair <string, string>(filename, "GUI_PROCESS"));
+			//	openfiletable.insert(std::pair <string, string>(filename, "GUI_PROCESS"));
 				return true;
 			}
 		}
@@ -108,7 +110,7 @@ bool Filesystem::openFile(const string &filename)
 	}
 	else
 	{
-		std::cout << "E006:File does not exist" << std::endl << std::endl;
+		std::cout << "E016:File does not exist" << std::endl << std::endl;
 		return false;
 	}
 }
@@ -147,7 +149,7 @@ bool Filesystem::closeFile(const string &filename)
 				if (maincatalogue[i].isOpen == true)
 				{
 					//maincatalogue[i].sem.signal_sem();
-					openfiletable.erase(filename);
+					//openfiletable.erase(filename);
 					maincatalogue[i].isOpen = false;
 					//maincatalogue[i].toread = 0;
 					return true;
@@ -199,10 +201,15 @@ bool Filesystem::closeFile(const string &filename, const string &pid)
 }
 bool Filesystem::renameFile(const string &filename, const string &newfilename)
 {
+	if (newfilename.size() == 0)//DODANY
+	{
+		std::cout << "E014:New Filename Is Empty" << std::endl << std::endl;
+		return false;
+	}//KONIEC DODANIA
 	//GUI
 	if (guiverify(filename))
 	{
-		openFile(filename);
+		
 		if (fileExists(newfilename))
 		{
 			std::cout << "E011:New filename is already in use" << std::endl << std::endl;
@@ -210,6 +217,7 @@ bool Filesystem::renameFile(const string &filename, const string &newfilename)
 		}
 		else
 		{
+			openFile(filename);
 			for (int i = 0; i < maincatalogue.size(); i++)
 			{
 				if (maincatalogue[i].name == filename)
@@ -220,7 +228,8 @@ bool Filesystem::renameFile(const string &filename, const string &newfilename)
 					maincatalogue.push_back(tempfile);
 				}
 			}
-			closeFile(filename);
+			closeFile(newfilename);//TU NA LINII DODANE
+			std::cout << "File name changed to " << newfilename << "\n\n";
 			return true;
 		}
 	}
@@ -228,6 +237,11 @@ bool Filesystem::renameFile(const string &filename, const string &newfilename)
 	{
 		return false;
 	}
+	
+	
+	
+		
+	
 
 }
 bool Filesystem::renameFile(const string &filename, const string &newfilename, const string &pid)
@@ -369,10 +383,11 @@ bool Filesystem::overwriteFile(const string &filename, const string &content)
 		}
 		//std::cout << "JESTEM:" << j << " A rozmiar to:" << blockvector.size();
 
-		ij = blockvector[j]; //TU NIE DZIA£A
+		ij = blockvector[j]; 
 
 		maincatalogue[at].towrite = ij + a + 1;
 		closeFile(filename);
+		std::cout << "File overwritten succesfully.\n\n";
 		return true;
 		//ZAPIS DANYCH DO BLOKÓW
 	}
@@ -591,6 +606,7 @@ bool Filesystem::writeToFile(const string &filename, const string &content)
 		}
 		maincatalogue[at].towrite = placetowrite;
 		closeFile(filename);
+		std::cout << "Data written to file succesfully.\n\n";
 		return true;
 	}
 	else
@@ -705,7 +721,7 @@ bool Filesystem::readFile(const string &filename, int length)
 	//GUI
 	if (fileExists(filename))
 	{
-		openFile(filename);
+	
 		int blokindeksowy;
 		File tempfile;
 		int at;
@@ -766,8 +782,8 @@ bool Filesystem::readFile(const string &filename, int length)
 				}
 			}
 		}
-		std::cout << "READ:" << tempstr;
-		closeFile(filename);
+		std::cout << "READ:" << tempstr << "\n\n";
+		
 		return true;
 	}
 	else
@@ -899,6 +915,7 @@ bool Filesystem::deleteFile(const string &filename)
 		maincatalogue[at].sem.delete_sem();//ZWALNIAM KOLEJKÊ
 		maincatalogue.erase(maincatalogue.begin() + at);
 		openfiletable.erase(filename);
+		std::cout << "File " << filename << " deleted.\n\n";
 		return true;
 	}
 	else
@@ -992,7 +1009,7 @@ bool Filesystem::guiverify(const string &filename)
 {
 	if (!fileExists(filename))
 	{
-		std::cout << "E006:File does not exist" << std::endl << std::endl;
+		std::cout << "E026:File does not exist" << std::endl << std::endl;
 		return false;
 	}
 	else

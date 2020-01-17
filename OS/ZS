@@ -1,19 +1,18 @@
 .text
 MV CX [0]
-MU CX [1]
+MU CX 3
 SW fil
 OP fil
 SW dil
 OP dil
 RF fil
-SB CX [1]
+SB CX 3
 WF dil
 RF fil
 RF fil
-JN CX 48
+JN CX 46
 CL dil
 CL fil
 HT
 .data
 [0] 2
-[1] 3

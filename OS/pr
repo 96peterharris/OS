@@ -1,0 +1,7 @@
+.text
+CP s1 si 5
+CP sm SM 4
+CP fp tp 3
+RM
+RP s1
+HT

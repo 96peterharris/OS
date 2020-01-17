@@ -1,0 +1,6 @@
+.text
+MV BX 4
+SB BX 1
+JN BX 8
+RM
+HT

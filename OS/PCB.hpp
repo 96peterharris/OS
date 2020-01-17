@@ -111,6 +111,7 @@ public:
 
 	bool sendMessage(std::string pid_receiver, std::string content);
 	bool receiveMessage();
+	bool receiveMessage(bool signal);
 	bool deleteMessageRAM();
 	static bool showMessages(PCB * pcb);
 };

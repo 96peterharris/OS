@@ -1,0 +1,8 @@
+.text
+SM pr TEST
+MV CX 2
+SB CX 1
+JN CX 19
+CP s2 rm 8
+SM s2 Abc
+HT
